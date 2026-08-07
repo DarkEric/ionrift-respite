@@ -17,6 +17,7 @@ import {
     buildFollowUpDataForActivity,
     buildCheckLabelForActivity
 } from "../../data/RestConstants.js";
+import { localize, localizeData } from "../../utils/I18n.js";
 
 /**
  * Resolve the armour sleep hint for an actor doing a given activity.
@@ -37,9 +38,15 @@ function _resolveArmorHint(actor, activity, armorRuleEnabled) {
     });
     if (!equippedArmor) return null;
     if (activity.armorSleepWaiver) {
-        return { text: "Sleeping light between rotations. Armor stays on, weapon close. No HP or HD recovery penalty.", type: "positive" };
+        return {
+            text: localize("IONRIFT.RESPITE.ACTIVITY.ArmorSleepWaiverHint"),
+            type: "positive"
+        };
     }
-    return { text: "Sleeping in armor. Recover only 1/4 Hit Dice, exhaustion not reduced (Xanathar's). Consider doffing first.", type: "warning" };
+    return {
+        text: localize("IONRIFT.RESPITE.ACTIVITY.ArmorSleepPenaltyHint"),
+        type: "warning"
+    };
 }
 
 /**
@@ -147,7 +154,8 @@ export function buildActivityDetailContext(activityId, activity, actor, partySta
     const outcomeHints = [];
     for (const tier of ["success", "exceptional", "failure"]) {
         for (const eff of (activity.outcomes?.[tier]?.effects ?? [])) {
-            if (eff.description) outcomeHints.push({ text: eff.description, type: tier });
+            const text = localizeData(eff.descriptionKey, eff.description ?? "");
+            if (text) outcomeHints.push({ text, type: tier });
         }
     }
 

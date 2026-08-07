@@ -18,7 +18,8 @@
                     {
                         "type": "initiative_bonus",
                         "value": 3,
-                        "description": "+3 initiative, immune to surprise. Party gains +1 initiative if the alarm sounds."
+                        "description": "+3 initiative, immune to surprise. Party gains +1 initiative if the alarm sounds.",
+                        "descriptionKey": "IONRIFT.RESPITE.DATA.ACTIVITY.act_keep_watch.SuccessEffect"
                     }
                 ]
             }
@@ -27,7 +28,8 @@
             "initiative": 3,
             "surpriseImmune": true,
             "partyInitiative": 1,
-            "description": "+3 initiative, cannot be surprised. Party gains +1 initiative (alarm)."
+            "description": "+3 initiative, cannot be surprised. Party gains +1 initiative (alarm).",
+            "descriptionKey": "IONRIFT.RESPITE.DATA.ACTIVITY.act_keep_watch.CombatModifiers"
         },
         "armorSleepWaiver": true,
         "category": "camp",

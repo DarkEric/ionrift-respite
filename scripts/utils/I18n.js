@@ -44,7 +44,21 @@ export function applyDataKeys(record, fieldMap) {
 
 /** @param {object} activity */
 export function localizeActivityRecord(activity) {
-  return applyDataKeys(activity, { name: "nameKey", description: "descriptionKey" });
+  applyDataKeys(activity, { name: "nameKey", description: "descriptionKey" });
+  if (activity?.combatModifiers) {
+    applyDataKeys(activity.combatModifiers, { description: "descriptionKey" });
+  }
+  const outcomes = activity?.outcomes;
+  if (outcomes && typeof outcomes === "object") {
+    for (const tier of Object.values(outcomes)) {
+      if (!tier || typeof tier !== "object") continue;
+      applyDataKeys(tier, { narrative: "narrativeKey" });
+      for (const effect of (tier.effects ?? [])) {
+        applyDataKeys(effect, { description: "descriptionKey" });
+      }
+    }
+  }
+  return activity;
 }
 
 /** @param {object} event */

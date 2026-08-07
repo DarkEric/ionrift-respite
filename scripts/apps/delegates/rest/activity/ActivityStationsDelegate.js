@@ -1,5 +1,5 @@
 import { Logger } from "../../../../utils/Logger.js";
-import { localize, format } from "../../../../utils/I18n.js";
+import { localize, format, localizeData } from "../../../../utils/I18n.js";
 import { TerrainRegistry } from "../../../../services/events/resolve/TerrainRegistry.js";
 import { CopySpellHandler } from "../../../../services/crafting/outcomes/CopySpellHandler.js";
 import { MealPhaseHandler } from "../../../../services/meal/phase/MealPhaseHandler.js";
@@ -937,17 +937,20 @@ export class ActivityStationsDelegate {
         const outcomeHints = [];
         if (tile.outcomes?.success?.effects?.length) {
             for (const eff of tile.outcomes.success.effects) {
-                outcomeHints.push({ text: eff.description, type: "success" });
+                const text = localizeData(eff.descriptionKey, eff.description ?? "");
+                if (text) outcomeHints.push({ text, type: "success" });
             }
         }
         if (tile.outcomes?.exceptional?.effects?.length) {
             for (const eff of tile.outcomes.exceptional.effects) {
-                outcomeHints.push({ text: eff.description, type: "exceptional" });
+                const text = localizeData(eff.descriptionKey, eff.description ?? "");
+                if (text) outcomeHints.push({ text, type: "exceptional" });
             }
         }
         if (tile.outcomes?.failure?.effects?.length) {
             for (const eff of tile.outcomes.failure.effects) {
-                outcomeHints.push({ text: eff.description, type: "failure" });
+                const text = localizeData(eff.descriptionKey, eff.description ?? "");
+                if (text) outcomeHints.push({ text, type: "failure" });
             }
         }
 
@@ -1034,9 +1037,9 @@ export class ActivityStationsDelegate {
                     const actorForHint = game.actors.get(selectedCharacter.id);
                     const equippedArmor = actorForHint?.items?.find(i => i.type === "equipment" && i.system?.equipped && ["medium", "heavy"].includes(i.system?.type?.value ?? i.system?.armor?.type));
                     if (equippedArmor && tile.armorSleepWaiver) {
-                        armorHint = { text: "Sleeping light between rotations. Armor stays on, weapon close. No HP or HD recovery penalty.", type: "positive" };
+                        armorHint = { text: localize("IONRIFT.RESPITE.ACTIVITY.ArmorSleepWaiverHint"), type: "positive" };
                     } else if (equippedArmor && !tile.armorSleepWaiver) {
-                        armorHint = { text: "Sleeping in armor. Recover only 1/4 Hit Dice, exhaustion not reduced (Xanathar's). Consider doffing first.", type: "warning" };
+                        armorHint = { text: localize("IONRIFT.RESPITE.ACTIVITY.ArmorSleepPenaltyHint"), type: "warning" };
                     }
                 }
             } catch (e) { /* setting may not exist yet */ }
