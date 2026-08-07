@@ -1,5 +1,5 @@
 import { Logger as RespiteLog } from "./utils/Logger.js";
-import { localize, format } from "./utils/I18n.js";
+import { localize, format, localizeData } from "./utils/I18n.js";
 import "./i18n/registerBabele.js";
 import { CalendarHandler } from "./services/rest/session/CalendarHandler.js";
 import { TerrainRegistry } from "./services/events/resolve/TerrainRegistry.js";
@@ -63,6 +63,34 @@ import { dispatch as socketDispatch } from "./services/socket/SocketRouter.js";
 import { isNativeShortRestUnsuppressed } from "./services/rest/flow/NativeRestPass.js";
 import { reassertMealExhaustionFloor } from "./services/meal/phase/MealExhaustionGuard.js";
 import { MODULE_ID, MODULE_LABEL } from "./data/moduleId.js";
+
+const REST_PHASE_LABEL_KEYS = {
+    setup: "IONRIFT.RESPITE.PHASE.Setup",
+    travel: "IONRIFT.RESPITE.PHASE.Travel",
+    camp: "IONRIFT.RESPITE.PHASE.MakeCamp",
+    activity: "IONRIFT.RESPITE.PHASE.Activities",
+    meal: "IONRIFT.RESPITE.PHASE.Meal",
+    events: "IONRIFT.RESPITE.PHASE.Events",
+    resolve: "IONRIFT.RESPITE.PHASE.Resolution"
+};
+
+/** @param {number} ageMs */
+function formatSavedAgeLabel(ageMs) {
+    if (ageMs < 3600000) {
+        return format("IONRIFT.RESPITE.APP.AgeMinutes", { n: Math.max(0, Math.round(ageMs / 60000)) });
+    }
+    if (ageMs < 86400000) {
+        return format("IONRIFT.RESPITE.APP.AgeHours", { n: Math.max(1, Math.round(ageMs / 3600000)) });
+    }
+    return format("IONRIFT.RESPITE.APP.AgeDays", { n: Math.max(1, Math.round(ageMs / 86400000)) });
+}
+
+/** @param {string|null|undefined} phase */
+function localizeRestPhaseLabel(phase) {
+    if (!phase) return localize("IONRIFT.RESPITE.APP.Unknown");
+    const key = REST_PHASE_LABEL_KEYS[phase];
+    return key ? localize(key) : phase;
+}
 
 // Shared logger reference; falls back to console if ionrift-lib unavailable.
 let Logger;
@@ -823,25 +851,31 @@ Hooks.once("ready", async () => {
     const savedRest = game.settings.get(MODULE_ID, "activeRest");
     if (savedRest?.engine) {
         const age = Date.now() - (savedRest.timestamp ?? 0);
-        const ageLabel = age < 3600000
-            ? `${Math.round(age / 60000)} minutes ago`
-            : age < 86400000
-                ? `${Math.round(age / 3600000)} hours ago`
-                : `${Math.round(age / 86400000)} days ago`;
+        const ageLabel = formatSavedAgeLabel(age);
 
         // Block new rest creation while the resume prompt is open
         respiteFlowActive = true;
 
         const isPastSetup = savedRest.phase && savedRest.phase !== "setup";
         const rewardWarning = isPastSetup
-            ? `<p style="color: #e8a44a;"><i class="fas fa-exclamation-triangle"></i> <strong>Warning:</strong> Activities have been selected. Spell copies or event discoveries may have already granted items. Discarding and re-resting could produce duplicate rewards.</p>`
+            ? localize("IONRIFT.RESPITE.APP.InterruptedRestRewardWarning")
             : "";
+        const phaseLabel = localizeRestPhaseLabel(savedRest.phase);
+        const terrainTag = savedRest.engine.terrainTag;
+        const terrainLabel = terrainTag
+            ? TerrainRegistry.resolveLabel(terrainTag)
+            : localize("IONRIFT.RESPITE.APP.Unknown");
 
         let resume = false;
         try {
             resume = await game.ionrift.library.confirm({
                 title: localize("IONRIFT.RESPITE.APP.InterruptedRestTitle"),
-                content: format("IONRIFT.RESPITE.APP.InterruptedRestContent", { age: ageLabel, phase: savedRest.phase ?? localize("IONRIFT.RESPITE.APP.Unknown"), terrain: savedRest.engine.terrainTag ?? localize("IONRIFT.RESPITE.APP.Unknown"), warning: rewardWarning }),
+                content: format("IONRIFT.RESPITE.APP.InterruptedRestContent", {
+                    age: ageLabel,
+                    phase: phaseLabel,
+                    terrain: terrainLabel,
+                    warning: rewardWarning
+                }),
                 yesLabel: localize("IONRIFT.RESPITE.APP.ResumeRest"),
                 noLabel: localize("IONRIFT.RESPITE.COMMON.Discard"),
                 yesIcon: "fas fa-campground",
@@ -890,9 +924,7 @@ Hooks.once("ready", async () => {
                     } catch (e) {
                         clearActiveRestApp();
                         console.error(`${MODULE_ID} | Failed to open restored rest UI:`, e);
-                        ui.notifications.warn(
-                            "Could not open the rest window. Saved rest is still in world settings. Reload after updating the module, or discard Active Rest in module settings if you must start over."
-                        );
+                        ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.CouldNotOpenRestWindow"));
                         resumeUiOk = false;
                     }
 
@@ -935,11 +967,12 @@ Hooks.once("ready", async () => {
     const savedShortRest = game.settings.get(MODULE_ID, "activeShortRest");
     if (savedShortRest?.timestamp && !respiteFlowActive) {
         const age = Date.now() - (savedShortRest.timestamp ?? 0);
-        const ageLabel = age < 3600000
-            ? `${Math.round(age / 60000)} minutes ago`
-            : age < 86400000
-                ? `${Math.round(age / 3600000)} hours ago`
-                : `${Math.round(age / 86400000)} days ago`;
+        const ageLabel = formatSavedAgeLabel(age);
+        const shelterId = savedShortRest.activeShelter ?? "none";
+        const shelterLabel = localizeData(
+            `IONRIFT.RESPITE.SHELTER.LABEL.${shelterId}`,
+            shelterId
+        );
 
         respiteFlowActive = true;
 
@@ -947,7 +980,10 @@ Hooks.once("ready", async () => {
         try {
             resume = await game.ionrift.library.confirm({
                 title: localize("IONRIFT.RESPITE.APP.InterruptedShortRestTitle"),
-                content: `<p>An interrupted short rest was found (saved ${ageLabel}).</p><p><strong>Shelter:</strong> ${savedShortRest.activeShelter ?? "none"}</p>`,
+                content: format("IONRIFT.RESPITE.APP.InterruptedShortRestContent", {
+                    age: ageLabel,
+                    shelter: shelterLabel
+                }),
                 yesLabel: localize("IONRIFT.RESPITE.APP.ResumeShortRest"),
                 noLabel: localize("IONRIFT.RESPITE.COMMON.Discard"),
                 yesIcon: "fas fa-mug-hot",
