@@ -5,6 +5,7 @@
 import { STUB_RECIPES } from "../../../data/stub-content.js";
 import { isHomebrewProvisionOnly, isChefTreatCookingOnly } from "../../travel/settings/TravelSettings.js";
 import { MODULE_ID } from "../../../data/moduleId.js";
+import { localize, format } from "../../../utils/I18n.js";
 
 export const CUSTOM_RECIPE_MAX_PER_PROFESSION = 20;
 
@@ -15,16 +16,16 @@ export const CUSTOM_RECIPE_MAX_PER_PROFESSION = 20;
  */
 export const HOMEBREW_PROFESSION_IDS = ["cooking"];
 
-/** Labels and icons for the homebrew recipe editor profession picker. */
+/** i18n label keys and icons for the homebrew recipe editor profession picker. */
 export const HOMEBREW_PROFESSION_DISPLAY = {
-    cooking: { label: "Cooking", icon: "fas fa-utensils" },
-    brewing: { label: "Brewing", icon: "fas fa-wine-bottle" },
-    tailoring: { label: "Tailoring", icon: "fas fa-scissors" },
-    leatherworking: { label: "Leatherworking", icon: "fas fa-shield-alt" },
-    alchemy: { label: "Alchemy", icon: "fas fa-flask" },
-    fletching: { label: "Fletching", icon: "fas fa-bow-arrow" },
-    tinkering: { label: "Tinkering", icon: "fas fa-cog" },
-    smithing: { label: "Smithing", icon: "fas fa-hammer" }
+    cooking: { label: "IONRIFT.RESPITE.PROFESSION.cooking", icon: "fas fa-utensils" },
+    brewing: { label: "IONRIFT.RESPITE.PROFESSION.brewing", icon: "fas fa-wine-bottle" },
+    tailoring: { label: "IONRIFT.RESPITE.PROFESSION.tailoring", icon: "fas fa-scissors" },
+    leatherworking: { label: "IONRIFT.RESPITE.PROFESSION.leatherworking", icon: "fas fa-shield-alt" },
+    alchemy: { label: "IONRIFT.RESPITE.PROFESSION.alchemy", icon: "fas fa-flask" },
+    fletching: { label: "IONRIFT.RESPITE.PROFESSION.fletching", icon: "fas fa-bow-arrow" },
+    tinkering: { label: "IONRIFT.RESPITE.PROFESSION.tinkering", icon: "fas fa-cog" },
+    smithing: { label: "IONRIFT.RESPITE.PROFESSION.smithing", icon: "fas fa-hammer" }
 };
 
 /** Canonical tool proficiency key per crafting profession (matches activity prerequisites). */
@@ -39,17 +40,17 @@ export const PROFESSION_TOOL_REQUIRED = {
     smithing: "smith"
 };
 
-/** Display labels for locked tool proficiency in the recipe editor. */
+/** i18n keys for locked tool proficiency in the recipe editor (localize at display time). */
 export const TOOL_PROFICIENCY_LABELS = {
-    cook: "Cook's utensils",
-    brewer: "Brewer's supplies",
-    alchemist: "Alchemist's supplies",
-    weaver: "Weaver's tools",
-    tailor: "Tailor's tools",
-    leatherworker: "Leatherworker's tools",
-    woodcarver: "Woodcarver's tools",
-    tinker: "Tinker's tools",
-    smith: "Smith's tools"
+    cook: "IONRIFT.RESPITE.TOOL.cook",
+    brewer: "IONRIFT.RESPITE.TOOL.brewer",
+    alchemist: "IONRIFT.RESPITE.TOOL.alchemist",
+    weaver: "IONRIFT.RESPITE.TOOL.weaver",
+    tailor: "IONRIFT.RESPITE.TOOL.tailor",
+    leatherworker: "IONRIFT.RESPITE.TOOL.leatherworker",
+    woodcarver: "IONRIFT.RESPITE.TOOL.woodcarver",
+    tinker: "IONRIFT.RESPITE.TOOL.tinker",
+    smith: "IONRIFT.RESPITE.TOOL.smith"
 };
 
 /**
@@ -105,7 +106,8 @@ export async function getHomebrewProfessionOptions() {
 
     return collectHomebrewProfessionIds({ overlayProfessions: [...sources.keys()] })
         .map(id => {
-            const baseLabel = HOMEBREW_PROFESSION_DISPLAY[id]?.label ?? id;
+            const labelKey = HOMEBREW_PROFESSION_DISPLAY[id]?.label;
+            const baseLabel = labelKey ? localize(labelKey) : id;
             const packSource = sources.get(id) ?? null;
             const label = packSource && id !== "cooking"
                 ? `${baseLabel} · ${packSource}`
@@ -202,14 +204,17 @@ export function describeRecipeSaveOverwrite(professionId, draft, list, { isUpdat
     );
     if (duplicateIndex >= 0) {
         const name = list[duplicateIndex]?.name ?? draft.id;
-        messages.push(`Recipe id "${draft.id}" replaces custom recipe "${name}".`);
+        messages.push(format("IONRIFT.RESPITE.RECIPE.ReplaceCustomId", { id: draft.id, name }));
     }
 
     const packMap = getPackRecipeIdMap(professionId, list);
     if (packMap.has(draft.id)) {
         const sameSavedOverride = isUpdate && list[selectedIndex]?.id === draft.id;
         if (!sameSavedOverride) {
-            messages.push(`Recipe id "${draft.id}" replaces pack recipe "${packMap.get(draft.id)}".`);
+            messages.push(format("IONRIFT.RESPITE.RECIPE.ReplacePackId", {
+                id: draft.id,
+                name: packMap.get(draft.id)
+            }));
         }
     }
 
