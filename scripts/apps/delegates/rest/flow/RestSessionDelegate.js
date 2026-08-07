@@ -530,9 +530,9 @@ export class RestSessionDelegate {
             ?? app.element?.querySelector(".window-title")
             ?? app.element?.querySelector("header.window-header h4");
         if (titleEl) {
-            let t = "Respite: Rest Phase";
-            if (app._phase === "activity" && app._isGM) t = "Respite: GM overview";
-            else if (app._phase === "activity" && !app._isGM) t = "Respite: Party progress";
+            let t = localize("IONRIFT.RESPITE.REST.WindowTitle");
+            if (app._phase === "activity" && app._isGM) t = localize("IONRIFT.RESPITE.REST.WindowTitleGmOverview");
+            else if (app._phase === "activity" && !app._isGM) t = localize("IONRIFT.RESPITE.REST.WindowTitlePartyProgress");
             titleEl.textContent = t;
         }
 

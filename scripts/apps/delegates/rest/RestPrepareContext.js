@@ -1235,16 +1235,16 @@ export class RestPrepareContext {
         })();
 
         const proceedBlockedHint = (() => {
-            if (app._phase !== "camp") return "Light the fire or choose cold camp";
+            if (app._phase !== "camp") return localize("IONRIFT.RESPITE.REST.LightFireOrColdCamp");
             const comfortOn = isComfortEnabled();
             const mapCampFire = requiresMapCampFire();
             if ((comfortOn || mapCampFire) && !app._isTotM && !safeRestSpot && !campfirePlaced) {
-                return "Place the campfire on the map first";
+                return localize("IONRIFT.RESPITE.REST.PlaceCampfireFirst");
             }
             if (comfortOn || mapCampFire) {
-                return "Light the fire or choose cold camp";
+                return localize("IONRIFT.RESPITE.REST.LightFireOrColdCamp");
             }
-            return "Place the campfire on the map first";
+            return localize("IONRIFT.RESPITE.REST.PlaceCampfireFirst");
         })();
 
         // Whether the Meal phase runs as a distinct step this rest (drives the stepper).
@@ -1270,13 +1270,13 @@ export class RestPrepareContext {
         const _includeTravelStep = _stepRestType === "long" && _enableProfessions && _useTravel;
         const _includeEventsStep = _stepRestType !== "short" && !setupSafeHaven;
         const _phaseStepDefs = [
-            { key: "setup", label: "Setup", include: true },
-            { key: "travel", label: "Travel", include: _includeTravelStep },
-            { key: "camp", label: "Make Camp", include: true },
-            { key: "activity", label: "Activities", include: true },
-            { key: "meal", label: "Meal", include: showMealStep },
-            { key: "events", label: "Events", include: _includeEventsStep },
-            { key: "resolve", label: "Resolution", include: true }
+            { key: "setup", label: localize("IONRIFT.RESPITE.PHASE.Setup"), include: true },
+            { key: "travel", label: localize("IONRIFT.RESPITE.PHASE.Travel"), include: _includeTravelStep },
+            { key: "camp", label: localize("IONRIFT.RESPITE.PHASE.MakeCamp"), include: true },
+            { key: "activity", label: localize("IONRIFT.RESPITE.PHASE.Activities"), include: true },
+            { key: "meal", label: localize("IONRIFT.RESPITE.PHASE.Meal"), include: showMealStep },
+            { key: "events", label: localize("IONRIFT.RESPITE.PHASE.Events"), include: _includeEventsStep },
+            { key: "resolve", label: localize("IONRIFT.RESPITE.PHASE.Resolution"), include: true }
         ].filter(s => s.include);
         const _currentStepIndex = _phaseStepDefs.findIndex(s => s.key === app._phase);
         const phaseSteps = _phaseStepDefs.map((s, i) => ({
@@ -1580,19 +1580,20 @@ export class RestPrepareContext {
             setupStatusLine: (() => {
                 const t = app._selectedTerrain ?? "forest";
                 const d = TerrainRegistry.getDefaults(t);
-                const comfort = (d.comfort ?? "sheltered").charAt(0).toUpperCase() + (d.comfort ?? "sheltered").slice(1);
-                const parts = [`${comfort} camp`];
+                const comfortKey = d.comfort ?? "sheltered";
+                const comfort = localize(`IONRIFT.RESPITE.COMFORT.LABEL.${comfortKey}`);
+                const parts = [format("IONRIFT.RESPITE.REST.ComfortCamp", { comfort })];
                 const w = app._resolveSetupWeather(t);
                 const wData = WEATHER_TABLE[w];
                 if (wData && (wData.comfortPenalty > 0 || wData.encounterDC !== 0)) {
                     const fx = [];
-                    if (wData.comfortPenalty > 0) fx.push(`comfort −${wData.comfortPenalty}`);
-                    if (wData.encounterDC > 0) fx.push(`encounter DC +${wData.encounterDC}`);
-                    if (wData.encounterDC < 0) fx.push(`encounter DC ${wData.encounterDC}`);
+                    if (wData.comfortPenalty > 0) fx.push(format("IONRIFT.RESPITE.REST.ComfortPenalty", { n: wData.comfortPenalty }));
+                    if (wData.encounterDC > 0) fx.push(format("IONRIFT.RESPITE.REST.EncounterDcPlus", { n: wData.encounterDC }));
+                    if (wData.encounterDC < 0) fx.push(format("IONRIFT.RESPITE.REST.EncounterDcMod", { n: wData.encounterDC }));
                     parts.push(fx.join(", "));
                 }
-                if (!setupSafeHaven && d.travelAvailable) parts.push("travel available");
-                if (tavernForcesTotm) parts.push("one-window flow for tavern");
+                if (!setupSafeHaven && d.travelAvailable) parts.push(localize("IONRIFT.RESPITE.REST.TravelAvailable"));
+                if (tavernForcesTotm) parts.push(localize("IONRIFT.RESPITE.REST.TavernOneWindow"));
                 return parts.join(" · ");
             })(),
             weatherOptions: (() => {
@@ -1618,21 +1619,21 @@ export class RestPrepareContext {
             selectedWeather: app._selectedWeather ?? app._resolveSetupWeather(app._selectedTerrain ?? "forest"),
             comfortOptions: (() => {
                 const opts = [
-                    { value: "safe", label: "Safe", hint: "Full HP. HD: half level recovered. No exhaustion risk. Taverns, strongholds, warded sanctuaries." },
-                    { value: "sheltered", label: "Sheltered", hint: "Full HP. HD: half level recovered. No exhaustion risk. Caves, solid ruins, decent cover." },
-                    { value: "rough", label: "Rough", hint: "Full HP. HD: half level minus 1 recovered. CON DC 10 or +1 exhaustion. Open wilderness, exposed camps." },
-                    { value: "hostile", label: "Hostile", hint: "3/4 HP. HD: half level minus 2 recovered. CON DC 15 or +1 exhaustion. Enemy territory, cursed ground." }
+                    { value: "safe", label: localize("IONRIFT.RESPITE.COMFORT.LABEL.safe"), hint: localize("IONRIFT.RESPITE.COMFORT.TIP.safe") },
+                    { value: "sheltered", label: localize("IONRIFT.RESPITE.COMFORT.LABEL.sheltered"), hint: localize("IONRIFT.RESPITE.COMFORT.TIP.sheltered") },
+                    { value: "rough", label: localize("IONRIFT.RESPITE.COMFORT.LABEL.rough"), hint: localize("IONRIFT.RESPITE.COMFORT.TIP.rough") },
+                    { value: "hostile", label: localize("IONRIFT.RESPITE.COMFORT.LABEL.hostile"), hint: localize("IONRIFT.RESPITE.COMFORT.TIP.hostile") }
                 ];
                 const match = opts.find(o => o.value === defaultComfort);
-                if (match) match.label += " (terrain default)";
+                if (match) match.label = format("IONRIFT.RESPITE.REST.TerrainDefaultLabel", { label: match.label });
                 return opts;
             })(),
             comfortReason: TerrainRegistry.resolveComfortReason(app._selectedTerrain ?? "forest"),
             restModeOptions: (() => {
                 const current = app._isTotM ? "theater" : "stations";
                 return [
-                    { value: "theater", label: "One window", selected: current === "theater" },
-                    { value: "stations", label: "Camp stations", selected: current === "stations" }
+                    { value: "theater", label: localize("IONRIFT.RESPITE.SETTINGS.restInterfaceModeChoices.theater"), selected: current === "theater" },
+                    { value: "stations", label: localize("IONRIFT.RESPITE.SETTINGS.restInterfaceModeChoices.stations"), selected: current === "stations" }
                 ];
             })(),
             setupStep: app._setupStep ?? 1,
@@ -1649,7 +1650,9 @@ export class RestPrepareContext {
             terrainBannerPos: "center", // banners are pre-cropped 640x120 strips
             selectedTerrainLabel: app._terrainLabel ?? "Forest",
             selectedRestType: app._selectedRestType ?? "long",
-            selectedRestTypeLabel: app._selectedRestType === "short" ? "Short Rest" : "Long Rest",
+            selectedRestTypeLabel: app._selectedRestType === "short"
+                ? localize("IONRIFT.RESPITE.REST.ShortRest")
+                : localize("IONRIFT.RESPITE.REST.LongRest"),
             isShortRest: (app._selectedRestType ?? "long") === "short",
             safeRestSpot,
             safeRestSpotDisplay: setupSafeHaven,
@@ -2129,7 +2132,7 @@ export class RestPrepareContext {
                     baseDC,
                     effectiveDC,
                     terrainLabel,
-                    totalLabel: `Encounter DC ${effectiveDC}`,
+                    totalLabel: format("IONRIFT.RESPITE.REST.EncounterDcValue", { dc: effectiveDC }),
                     chips,
                     playerFactors,
                     complication,

@@ -22,7 +22,7 @@ export class DietConfigApp extends foundry.applications.api.ApplicationV2 {
     static DEFAULT_OPTIONS = {
         id: "respite-diet-config",
         window: {
-            title: localize("IONRIFT.RESPITE.APP.FoodDietTitle"),
+            title: "IONRIFT.RESPITE.APP.FoodDietTitle",
             icon: "fas fa-utensils",
             resizable: true
         },
@@ -31,21 +31,25 @@ export class DietConfigApp extends foundry.applications.api.ApplicationV2 {
     };
 
     static FOOD_TAG_LABELS = {
-        meat: "Meat", plant: "Plant", prepared: "Prepared"
+        meat: "IONRIFT.RESPITE.DIET.TAG.Meat",
+        plant: "IONRIFT.RESPITE.DIET.TAG.Plant",
+        prepared: "IONRIFT.RESPITE.DIET.TAG.Prepared"
     };
 
     static FOOD_TAG_TIPS = {
-        meat: "Animal protein: Fresh Meat, Fish, Eggs, Jerky",
-        plant: "Foraged vegetation: Berries, Mushrooms, Herbs, Roots",
-        prepared: "Processed food: Rations, Porridge, and cooked meals"
+        meat: "IONRIFT.RESPITE.DIET.TIP.Meat",
+        plant: "IONRIFT.RESPITE.DIET.TIP.Plant",
+        prepared: "IONRIFT.RESPITE.DIET.TIP.Prepared"
     };
 
     static DRINK_LABELS = {
-        water: "Water", alcohol: "Alcohol", oil: "Oil / Fuel"
+        water: "IONRIFT.RESPITE.DIET.DRINK.Water",
+        alcohol: "IONRIFT.RESPITE.DIET.DRINK.Alcohol",
+        oil: "IONRIFT.RESPITE.DIET.DRINK.Oil"
     };
 
     static RESOURCE_LABELS = {
-        fuel: "Scrap"
+        fuel: "IONRIFT.RESPITE.DIET.RESOURCE.Scrap"
     };
 
     constructor(options = {}) {
@@ -113,9 +117,10 @@ export class DietConfigApp extends foundry.applications.api.ApplicationV2 {
         const el = document.createElement("div");
         el.classList.add("respite-diet-config");
 
-        const ftLabel = (t) => DietConfigApp.FOOD_TAG_LABELS[t] ?? t;
-        const ftTip = (t) => DietConfigApp.FOOD_TAG_TIPS[t] ?? "";
-        const dkLabel = (t) => DietConfigApp.DRINK_LABELS[t] ?? t;
+        const ftLabel = (t) => localize(DietConfigApp.FOOD_TAG_LABELS[t] ?? t);
+        const ftTip = (t) => localize(DietConfigApp.FOOD_TAG_TIPS[t] ?? "");
+        const dkLabel = (t) => localize(DietConfigApp.DRINK_LABELS[t] ?? t);
+        const scrapLabel = localize(DietConfigApp.RESOURCE_LABELS.fuel);
 
         let html = "";
 
@@ -125,30 +130,30 @@ export class DietConfigApp extends foundry.applications.api.ApplicationV2 {
             html += `
             <div class="diet-global-section">
                 <div class="diet-global-title">
-                    <i class="fas fa-drumstick-bite"></i> Meal tracking
+                    <i class="fas fa-drumstick-bite"></i> ${localize("IONRIFT.RESPITE.DIET.MealTracking")}
                 </div>
                 <label class="diet-global-toggle">
                     <input type="checkbox" class="diet-track-food-cb" ${trackOn ? "checked" : ""} />
                     <span class="diet-global-switch"></span>
                     <span class="diet-global-copy">
-                        <span class="diet-global-name">Track food &amp; water</span>
-                        <span class="diet-global-hint">Adds a Meal phase to long rests. Characters consume rations and water, with advisories for starvation and dehydration.</span>
+                        <span class="diet-global-name">${localize("IONRIFT.RESPITE.SETTINGS.trackFoodName")}</span>
+                        <span class="diet-global-hint">${localize("IONRIFT.RESPITE.DIET.TrackFoodHint")}</span>
                     </span>
                 </label>
                 <label class="diet-global-toggle ${trackOn ? "" : "is-disabled"}">
                     <input type="checkbox" class="diet-partial-cb" ${context.partialSustenance ? "checked" : ""} ${partialDisabled} />
                     <span class="diet-global-switch"></span>
                     <span class="diet-global-copy">
-                        <span class="diet-global-name">Partial sustenance <span class="diet-global-tag">house rule</span></span>
-                        <span class="diet-global-hint">In terrains needing double rations or water, partial fulfilment still helps: +2 to the CON save (water) or a longer grace period (food). Turn off for strict RAW.</span>
+                        <span class="diet-global-name">${localize("IONRIFT.RESPITE.DIET.PartialSustenance")} <span class="diet-global-tag">${localize("IONRIFT.RESPITE.DIET.HouseRule")}</span></span>
+                        <span class="diet-global-hint">${localize("IONRIFT.RESPITE.DIET.PartialSustenanceHint")}</span>
                     </span>
                 </label>
                 <label class="diet-global-toggle">
                     <input type="checkbox" class="diet-spoilage-suffix-cb" ${context.spoilageNameSuffix ? "checked" : ""} />
                     <span class="diet-global-switch"></span>
                     <span class="diet-global-copy">
-                        <span class="diet-global-name">Spoilage name suffixes</span>
-                        <span class="diet-global-hint">Append freshness to perishable names on grant (e.g. Bird Eggs (3d)) so stacks with different timers stay separate.</span>
+                        <span class="diet-global-name">${localize("IONRIFT.RESPITE.SETTINGS.spoilageNameSuffixName")}</span>
+                        <span class="diet-global-hint">${localize("IONRIFT.RESPITE.SETTINGS.spoilageNameSuffixHint")}</span>
                     </span>
                 </label>
             </div>`;
@@ -157,10 +162,10 @@ export class DietConfigApp extends foundry.applications.api.ApplicationV2 {
             <div class="diet-summary-bar">
                 <span class="diet-summary-count">
                     <i class="fas fa-utensils"></i>
-                    <strong>${context.rows.length}</strong> characters
+                    ${format("IONRIFT.RESPITE.DIET.CharactersCount", { count: context.rows.length })}
                 </span>
                 <span class="diet-summary-hint">
-                    Select a preset or expand to customise.
+                    ${localize("IONRIFT.RESPITE.DIET.SelectPresetHint")}
                 </span>
             </div>`;
         }
@@ -173,6 +178,7 @@ export class DietConfigApp extends foundry.applications.api.ApplicationV2 {
             ).join("");
 
             const expandIcon = row.expanded ? "fa-chevron-up" : "fa-chevron-down";
+            const dietLabel = ItemClassifier.localizeDietLabel(row.presetId, row.diet.label);
 
             html += `
             <div class="diet-actor-card ${row.expanded ? "expanded" : ""}" data-actor-id="${row.id}">
@@ -180,12 +186,12 @@ export class DietConfigApp extends foundry.applications.api.ApplicationV2 {
                     <img class="diet-actor-portrait" src="${row.img}" alt="${row.name}" />
                     <div class="diet-actor-info">
                         <span class="diet-actor-name">${row.name}</span>
-                        <span class="diet-actor-label">${row.diet.label}${row.isEssence ? ' <i class="fas fa-bolt diet-essence-icon"></i>' : ""}${row.isNone ? ' <i class="fas fa-ban diet-none-icon" title="No sustenance required"></i>' : ""}</span>
+                        <span class="diet-actor-label">${dietLabel}${row.isEssence ? ' <i class="fas fa-bolt diet-essence-icon"></i>' : ""}${row.isNone ? ` <i class="fas fa-ban diet-none-icon" title="${localize("IONRIFT.RESPITE.DIET.NoSustenanceRequired")}"></i>` : ""}</span>
                     </div>
                     <select class="diet-preset-select" data-actor-id="${row.id}">
                         ${presetOptions}
                     </select>
-                    <button type="button" class="diet-expand-btn" data-actor-id="${row.id}" title="Customise">
+                    <button type="button" class="diet-expand-btn" data-actor-id="${row.id}" title="${localize("IONRIFT.RESPITE.DIET.Customise")}">
                         <i class="fas ${expandIcon}"></i>
                     </button>
                 </div>`;
@@ -197,15 +203,14 @@ export class DietConfigApp extends foundry.applications.api.ApplicationV2 {
                     html += `
                     <div class="diet-none-hint">
                         <i class="fas fa-info-circle"></i>
-                        This character does not need food, water, or essence during rest, and cannot receive cooked meal buffs.
-                        Choose <strong>Maintenance</strong> or another essence preset if upkeep is required.
+                        ${localize("IONRIFT.RESPITE.DIET.NoneHint")}
                     </div>`;
                 } else if (row.isFood) {
                     // Food tags for biological characters
                     const canEatTags = row.diet.canEatTags ?? ["meat", "plant", "prepared"];
                     html += `
                     <div class="diet-field-row">
-                        <label class="diet-field-label">Can eat</label>
+                        <label class="diet-field-label">${localize("IONRIFT.RESPITE.DIET.CanEat")}</label>
                         <div class="diet-tag-group">
                             ${context.foodTags.map(t => {
                                 const active = canEatTags.includes(t);
@@ -223,12 +228,12 @@ export class DietConfigApp extends foundry.applications.api.ApplicationV2 {
                 if (row.eatsFuel) {
                     html += `
                     <div class="diet-field-row">
-                        <label class="diet-field-label">Can consume</label>
+                        <label class="diet-field-label">${localize("IONRIFT.RESPITE.DIET.CanConsume")}</label>
                         <div class="diet-tag-group">
                             <label class="diet-tag-label active">
                                 <input type="checkbox" class="diet-can-eat-cb" data-actor-id="${row.id}" data-type="fuel" checked />
                                 <span class="diet-tag-check"></span>
-                                <span class="diet-tag-text">Scrap</span>
+                                <span class="diet-tag-text">${scrapLabel}</span>
                             </label>
                         </div>
                     </div>`;
@@ -237,7 +242,7 @@ export class DietConfigApp extends foundry.applications.api.ApplicationV2 {
                 // Drink row (shown for everyone, relevant drinks differ by preset)
                 html += `
                     <div class="diet-field-row">
-                        <label class="diet-field-label">Can drink</label>
+                        <label class="diet-field-label">${localize("IONRIFT.RESPITE.DIET.CanDrink")}</label>
                         <div class="diet-tag-group">
                             ${context.drinkTypes.map(t => {
                                 const active = row.diet.canDrink.includes(t);
@@ -256,13 +261,13 @@ export class DietConfigApp extends foundry.applications.api.ApplicationV2 {
                     html += `
                     <div class="diet-essence-section">
                         <div class="diet-field-row">
-                            <label class="diet-field-label"><i class="fas fa-bolt"></i> Essence items</label>
+                            <label class="diet-field-label"><i class="fas fa-bolt"></i> ${localize("IONRIFT.RESPITE.DIET.EssenceItems")}</label>
                             <input type="text" class="diet-text-input diet-custom-food" data-actor-id="${row.id}"
                                 value="${essenceItems}"
-                                placeholder="e.g. Soul Fragment, Mana Crystal, Incense" />
+                                placeholder="${localize("IONRIFT.RESPITE.DIET.EssenceItemsPlaceholder")}" />
                         </div>
                         <span class="diet-essence-hint">
-                            Items consumed each rest for sustenance. Failing to recharge reduces hit die recovery.
+                            ${localize("IONRIFT.RESPITE.DIET.EssenceHint")}
                         </span>
                     </div>`;
                 } else {
@@ -277,27 +282,27 @@ export class DietConfigApp extends foundry.applications.api.ApplicationV2 {
                     html += showCustomFields ? `
                     <div class="diet-custom-section">
                         <div class="diet-field-row">
-                            <label class="diet-field-label">Additional food items</label>
+                            <label class="diet-field-label">${localize("IONRIFT.RESPITE.DIET.AdditionalFood")}</label>
                             <input type="text" class="diet-text-input diet-custom-food" data-actor-id="${row.id}"
                                 value="${(row.diet.customFoodNames ?? []).join(", ")}"
-                                placeholder="e.g. Goodberries, Arcane Rations" />
+                                placeholder="${localize("IONRIFT.RESPITE.DIET.AdditionalFoodPlaceholder")}" />
                         </div>
                         <div class="diet-field-row">
-                            <label class="diet-field-label">Additional drink items</label>
+                            <label class="diet-field-label">${localize("IONRIFT.RESPITE.DIET.AdditionalDrink")}</label>
                             <input type="text" class="diet-text-input diet-custom-water" data-actor-id="${row.id}"
                                 value="${(row.diet.customWaterNames ?? []).join(", ")}"
-                                placeholder="e.g. Healing Tea" />
+                                placeholder="${localize("IONRIFT.RESPITE.DIET.AdditionalDrinkPlaceholder")}" />
                         </div>
                         <div class="diet-field-row">
-                            <label class="diet-field-label">Excluded items</label>
+                            <label class="diet-field-label">${localize("IONRIFT.RESPITE.DIET.ExcludedItems")}</label>
                             <input type="text" class="diet-text-input diet-exclude-names" data-actor-id="${row.id}"
                                 value="${(row.diet.excludeNames ?? []).join(", ")}"
-                                placeholder="e.g. Fresh Meat, Smoked Fish" />
+                                placeholder="${localize("IONRIFT.RESPITE.DIET.ExcludedItemsPlaceholder")}" />
                         </div>
                     </div>
                     ` : `
                     <button type="button" class="diet-show-custom-btn" data-actor-id="${row.id}">
-                        <i class="fas fa-plus"></i> Add custom items or exclusions
+                        <i class="fas fa-plus"></i> ${localize("IONRIFT.RESPITE.DIET.AddCustomItems")}
                     </button>
                     `;
                 }
@@ -314,7 +319,7 @@ export class DietConfigApp extends foundry.applications.api.ApplicationV2 {
         html += `
         <div class="diet-actions">
             <button type="button" class="diet-save-btn">
-                <i class="fas fa-save"></i> Save Diets
+                <i class="fas fa-save"></i> ${localize("IONRIFT.RESPITE.DIET.SaveDiets")}
             </button>
         </div>`;
 
@@ -554,25 +559,23 @@ export class DietConfigApp extends foundry.applications.api.ApplicationV2 {
                 content: `
                     <div class="diet-balance-warning">
                         <p><i class="fas fa-exclamation-triangle"></i>
-                        <strong>${names.join(", ")}</strong> ${names.length === 1 ? "has" : "have"} sustenance set to <strong>None</strong>
-                        , while other characters still need food, water, or essence.</p>
-                        <p>This may create an imbalance. Consider switching to <strong>Essence</strong>
-                        so non-biological characters still face resource pressure.</p>
+                        ${format("IONRIFT.RESPITE.DIET.WARN.BalanceBody", { names: names.join(", ") })}</p>
+                        <p>${localize("IONRIFT.RESPITE.DIET.WARN.BalanceAdvice")}</p>
                     </div>`,
                 buttons: {
                     essence: {
                         icon: '<i class="fas fa-bolt"></i>',
-                        label: "Switch to Essence",
+                        label: localize("IONRIFT.RESPITE.DIET.WARN.SwitchToEssence"),
                         callback: () => resolve("add-essence")
                     },
                     save: {
                         icon: '<i class="fas fa-save"></i>',
-                        label: "Save anyway",
+                        label: localize("IONRIFT.RESPITE.DIET.WARN.SaveAnyway"),
                         callback: () => resolve("save")
                     },
                     cancel: {
                         icon: '<i class="fas fa-times"></i>',
-                        label: "Go back",
+                        label: localize("IONRIFT.RESPITE.DIET.WARN.GoBack"),
                         callback: () => resolve("cancel")
                     }
                 },
@@ -591,20 +594,18 @@ export class DietConfigApp extends foundry.applications.api.ApplicationV2 {
                 content: `
                     <div class="diet-balance-warning">
                         <p><i class="fas fa-exclamation-triangle"></i>
-                        <strong>${names.join(", ")}</strong> ${plural ? "require" : "requires"} sustenance
-                        but ${plural ? "have" : "has"} <strong>no food, drink, or essence items</strong> configured.</p>
-                        <p>${plural ? "These characters" : "This character"} won't be able to consume anything during rest
-                        and will eventually gain exhaustion.</p>
+                        ${format(plural ? "IONRIFT.RESPITE.DIET.WARN.EmptyBodyPlural" : "IONRIFT.RESPITE.DIET.WARN.EmptyBody", { names: names.join(", ") })}</p>
+                        <p>${localize(plural ? "IONRIFT.RESPITE.DIET.WARN.EmptyAdvicePlural" : "IONRIFT.RESPITE.DIET.WARN.EmptyAdvice")}</p>
                     </div>`,
                 buttons: {
                     save: {
                         icon: '<i class="fas fa-save"></i>',
-                        label: "Save anyway",
+                        label: localize("IONRIFT.RESPITE.DIET.WARN.SaveAnyway"),
                         callback: () => resolve("save")
                     },
                     cancel: {
                         icon: '<i class="fas fa-times"></i>',
-                        label: "Go back and fix",
+                        label: localize("IONRIFT.RESPITE.DIET.WARN.GoBackAndFix"),
                         callback: () => resolve("cancel")
                     }
                 },

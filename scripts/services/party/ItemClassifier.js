@@ -1,3 +1,5 @@
+import { localize } from "../../utils/I18n.js";
+
 /**
  * ItemClassifier
  * Unified item classification service for Respite's food, water, fuel,
@@ -134,25 +136,29 @@ const DEFAULT_DIET = {
  */
 const DIET_PRESETS = {
     standard: {
-        label: "Standard"
+        label: "Standard",
+        labelKey: "IONRIFT.RESPITE.DIET.PRESET.Standard"
     },
     herbivore: {
         canEat: ["food"],
         canEatTags: ["plant", "prepared"],
         canDrink: ["water"],
-        label: "Herbivore"
+        label: "Herbivore",
+        labelKey: "IONRIFT.RESPITE.DIET.PRESET.Herbivore"
     },
     carnivore: {
         canEat: ["food"],
         canEatTags: ["meat", "prepared"],
         canDrink: ["water"],
-        label: "Carnivore"
+        label: "Carnivore",
+        labelKey: "IONRIFT.RESPITE.DIET.PRESET.Carnivore"
     },
     omnivore: {
         canEat: ["food", "ingredient"],
         canEatTags: ["meat", "plant", "prepared"],
         canDrink: ["water", "alcohol"],
-        label: "Omnivore"
+        label: "Omnivore",
+        labelKey: "IONRIFT.RESPITE.DIET.PRESET.Omnivore"
     },
     construct: {
         canEat: [],
@@ -162,7 +168,8 @@ const DIET_PRESETS = {
         customWaterNames: [],
         excludeNames: [],
         sustenanceType: "none",
-        label: "Not Needed"
+        label: "Not Needed",
+        labelKey: "IONRIFT.RESPITE.DIET.PRESET.NotNeeded"
     },
     maintenance: {
         canEat: ["fuel"],
@@ -172,7 +179,8 @@ const DIET_PRESETS = {
         customWaterNames: ["oil flask", "lamp oil"],
         excludeNames: [],
         sustenanceType: "essence",
-        label: "Maintenance"
+        label: "Maintenance",
+        labelKey: "IONRIFT.RESPITE.DIET.PRESET.Maintenance"
     },
     undead: {
         canEat: [],
@@ -182,7 +190,8 @@ const DIET_PRESETS = {
         customWaterNames: [],
         excludeNames: [],
         sustenanceType: "essence",
-        label: "Undead"
+        label: "Undead",
+        labelKey: "IONRIFT.RESPITE.DIET.PRESET.Undead"
     },
     celestial: {
         canEat: [],
@@ -192,7 +201,8 @@ const DIET_PRESETS = {
         customWaterNames: [],
         excludeNames: [],
         sustenanceType: "essence",
-        label: "Celestial"
+        label: "Celestial",
+        labelKey: "IONRIFT.RESPITE.DIET.PRESET.Celestial"
     },
     elemental: {
         canEat: [],
@@ -202,10 +212,12 @@ const DIET_PRESETS = {
         customWaterNames: [],
         excludeNames: [],
         sustenanceType: "essence",
-        label: "Elemental"
+        label: "Elemental",
+        labelKey: "IONRIFT.RESPITE.DIET.PRESET.Elemental"
     },
     custom: {
-        label: "Custom"
+        label: "Custom",
+        labelKey: "IONRIFT.RESPITE.DIET.PRESET.Custom"
     }
 };
 
@@ -534,8 +546,20 @@ export class ItemClassifier {
     static getPresets() {
         return Object.entries(DIET_PRESETS).map(([id, preset]) => ({
             id,
-            label: preset.label ?? id
+            label: preset.labelKey ? localize(preset.labelKey) : (preset.label ?? id)
         }));
+    }
+
+    /**
+     * Localized display label for a diet preset or stored diet.label.
+     * @param {string|null|undefined} presetId
+     * @param {string} [fallback]
+     * @returns {string}
+     */
+    static localizeDietLabel(presetId, fallback = "") {
+        const preset = presetId ? DIET_PRESETS[presetId] : null;
+        if (preset?.labelKey) return localize(preset.labelKey);
+        return fallback || preset?.label || "";
     }
 
     /**

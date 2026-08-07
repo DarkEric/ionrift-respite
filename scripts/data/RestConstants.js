@@ -50,8 +50,8 @@ export function resolveWeather(key) {
     };
 }
 
-/** DnD5e skill abbreviation -> readable name */
-const SKILL_NAME_KEYS = {
+/** DnD5e skill abbreviation -> i18n key (resolve with localize at display time). */
+export const SKILL_NAME_KEYS = {
     acr: "IONRIFT.RESPITE.SKILL.acr", ani: "IONRIFT.RESPITE.SKILL.ani", arc: "IONRIFT.RESPITE.SKILL.arc", ath: "IONRIFT.RESPITE.SKILL.ath",
     dec: "IONRIFT.RESPITE.SKILL.dec", his: "IONRIFT.RESPITE.SKILL.his", ins: "IONRIFT.RESPITE.SKILL.ins", itm: "IONRIFT.RESPITE.SKILL.itm",
     inv: "IONRIFT.RESPITE.SKILL.inv", med: "IONRIFT.RESPITE.SKILL.med", nat: "IONRIFT.RESPITE.SKILL.nat", prc: "IONRIFT.RESPITE.SKILL.prc",

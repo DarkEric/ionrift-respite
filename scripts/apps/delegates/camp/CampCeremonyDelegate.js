@@ -1218,12 +1218,12 @@ export class CampCeremonyDelegate {
             const tierDisabledReason = (canPick, cost) => {
                 if (canPick) return "";
                 if (!hasTinder) return localize("IONRIFT.RESPITE.FIRE.HINT.NeedsTinderbox");
-                return `Need at least ${cost} firewood in the party.`;
+                return format("IONRIFT.RESPITE.NOTIFY.NeedAtLeastFirewood", { need: cost });
             };
             campFirePickerLevels = [
                 {
                     id: "embers",
-                    label: "Embers",
+                    label: localize("IONRIFT.RESPITE.FIRE.LEVEL.embers"),
                     costLabel: CampGearScanner.firewoodCostLabel("embers"),
                     disabled: !fs.canPickEmbers,
                     disabledReason: tierDisabledReason(fs.canPickEmbers, fs.costEmbers ?? 1),
@@ -1231,7 +1231,7 @@ export class CampCeremonyDelegate {
                 },
                 {
                     id: "campfire",
-                    label: "Campfire",
+                    label: localize("IONRIFT.RESPITE.FIRE.LEVEL.campfire"),
                     costLabel: CampGearScanner.firewoodCostLabel("campfire"),
                     disabled: !fs.canPickCampfire,
                     disabledReason: tierDisabledReason(fs.canPickCampfire, fs.costCampfire ?? 2),
@@ -1239,7 +1239,7 @@ export class CampCeremonyDelegate {
                 },
                 {
                     id: "bonfire",
-                    label: "Bonfire",
+                    label: localize("IONRIFT.RESPITE.FIRE.LEVEL.bonfire"),
                     costLabel: CampGearScanner.firewoodCostLabel("bonfire"),
                     disabled: !fs.canPickBonfire,
                     disabledReason: tierDisabledReason(fs.canPickBonfire, fs.costBonfire ?? 3),
@@ -1491,7 +1491,10 @@ export class CampCeremonyDelegate {
             const resultComfort = COMFORT_TIERS[resultIdx] ?? baseComfort;
             const resultLabel = TIER_LABELS[resultComfort] ?? resultComfort;
             const comfortHint = delta !== 0
-                ? `${TIER_LABELS[baseComfort] ?? baseComfort} to ${resultLabel}`
+                ? format("IONRIFT.RESPITE.CAMP.ComfortTransition", {
+                    from: TIER_LABELS[baseComfort] ?? baseComfort,
+                    to: resultLabel
+                })
                 : resultLabel;
             const isActive = !coldCamp && curLevel === id;
             const costNew = F[id] ?? 0;
@@ -1548,7 +1551,11 @@ export class CampCeremonyDelegate {
             campFireTabColdCamp: coldCamp,
             campFireTabGm: !!game.user?.isGM,
             campFirePreviewLevel: previewLevel,
-            campFirePreviewLabel: previewLevel ? (previewLevel.charAt(0).toUpperCase() + previewLevel.slice(1)) : null
+            campFirePreviewLabel: previewLevel
+                ? (localize(`IONRIFT.RESPITE.FIRE.LEVEL.${previewLevel}`) !== `IONRIFT.RESPITE.FIRE.LEVEL.${previewLevel}`
+                    ? localize(`IONRIFT.RESPITE.FIRE.LEVEL.${previewLevel}`)
+                    : (previewLevel.charAt(0).toUpperCase() + previewLevel.slice(1)))
+                : null
         };
     
     }
