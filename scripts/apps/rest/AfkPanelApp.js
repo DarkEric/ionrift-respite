@@ -3,6 +3,7 @@
  * Locked: pinned at saved coordinates (no drag). Unlocked: draggable; layout persists (client setting).
  */
 import { getPartyActors } from "../../services/party/partyActors.js";
+import { localize, format } from "../../utils/I18n.js";
 import * as RestAfkState from "../../services/rest/session/RestAfkState.js";
 import {
     setCharacterAfk

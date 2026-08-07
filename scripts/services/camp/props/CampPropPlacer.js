@@ -1,4 +1,5 @@
 import { Logger } from "../../../utils/Logger.js";
+import { localize, format } from "../../../utils/I18n.js";
 import { MODULE_ID } from "../../../data/moduleId.js";
 /**
  * CampPropPlacer
@@ -306,7 +307,7 @@ async function clearAllTorches() {
     });
 
     if (!torchTokens.length) {
-        ui.notifications.warn("No torch tokens found on this scene.");
+        ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.NoTorchTokens"));
         return;
     }
 
@@ -320,17 +321,17 @@ async function clearAllTorches() {
  */
 export async function placeTorch() {
     if (!game.user.isGM) {
-        ui.notifications.warn("Only the GM can place camp props.");
+        ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.OnlyGmPlaceProps"));
         return;
     }
 
-    ui.notifications.info("Click on the canvas to place a torch. Right-click or Escape to cancel.");
+    ui.notifications.info(localize("IONRIFT.RESPITE.NOTIFY.PlaceTorchHint"));
 
     try {
         const position = await _pickCanvasPoint();
         if (position) {
             await createTorchPair(position.x, position.y);
-            ui.notifications.info("Torch placed.");
+            ui.notifications.info(localize("IONRIFT.RESPITE.NOTIFY.TorchPlaced"));
         }
     } catch {
         // Cancelled
@@ -345,7 +346,7 @@ export async function placeTorch() {
  */
 export async function placePerimeter({ count = 4, radius = 3 } = {}) {
     if (!game.user.isGM) {
-        ui.notifications.warn("Only the GM can place camp props.");
+        ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.OnlyGmPlaceProps"));
         return;
     }
 
@@ -360,7 +361,7 @@ export async function placePerimeter({ count = 4, radius = 3 } = {}) {
     }
 
     // No selection. Ask GM to click a center point.
-    ui.notifications.info("Select a campfire token first, or click a center point for the perimeter.");
+    ui.notifications.info(localize("IONRIFT.RESPITE.NOTIFY.SelectCampfireOrCenter"));
     try {
         const position = await _pickCanvasPoint();
         if (position) {
@@ -396,17 +397,17 @@ export async function toggleTorches() {
  */
 export async function placeCampfire() {
     if (!game.user.isGM) {
-        ui.notifications.warn("Only the GM can place camp props.");
+        ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.OnlyGmPlaceProps"));
         return;
     }
 
-    ui.notifications.info("Click on the canvas to place the campfire. Right-click or Escape to cancel.");
+    ui.notifications.info(localize("IONRIFT.RESPITE.NOTIFY.PlaceCampfireHint"));
 
     try {
         const position = await _pickCanvasPoint();
         if (position) {
             await createCampfirePair(position.x, position.y);
-            ui.notifications.info("Campfire placed.");
+            ui.notifications.info(localize("IONRIFT.RESPITE.NOTIFY.CampfirePlacedSimple"));
         }
     } catch {
         // Cancelled
@@ -421,11 +422,11 @@ export async function placeCampfire() {
  */
 export async function placeCamp({ torchCount = 4, radius = 3 } = {}) {
     if (!game.user.isGM) {
-        ui.notifications.warn("Only the GM can place camp props.");
+        ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.OnlyGmPlaceProps"));
         return;
     }
 
-    ui.notifications.info("Click on the canvas to place the camp center. Right-click or Escape to cancel.");
+    ui.notifications.info(localize("IONRIFT.RESPITE.NOTIFY.PlaceCampCenterHint"));
 
     try {
         const position = await _pickCanvasPoint();

@@ -8,7 +8,7 @@
         <div class="respite-loading-spinner">
             <i class="fas fa-campground fa-2x fa-beat-fade" aria-hidden="true"></i>
         </div>
-        <p class="respite-loading-label">Preparing camp&hellip;</p>
+        <p class="respite-loading-label">{{localize 'IONRIFT.RESPITE.REST.PreparingCamp'}}</p>
     </div>
 {{else}}
 
@@ -25,30 +25,30 @@
         <span class="phase-label">{{phaseLabel}}</span>
 
         <button type="button" class="btn-phase-guide" data-action="openGuide"
-                data-tooltip="Open the Respite guide."
-                aria-label="Open Respite guide">
+                data-tooltip="{{localize 'IONRIFT.RESPITE.REST.OpenGuideTooltip'}}"
+                aria-label="{{localize 'IONRIFT.RESPITE.REST.OpenGuideAria'}}">
             <i class="fas fa-circle-question" aria-hidden="true"></i>
         </button>
 
         {{#if isGM}}
         <button type="button" class="btn-abandon-rest" data-action="abandonRest"
-                data-tooltip="{{#if eventsCommitPending}}Wait for the night check to finish.{{else}}Cancel this rest for all players{{/if}}"
+                data-tooltip="{{#if eventsCommitPending}}{{localize 'IONRIFT.RESPITE.REST.WaitNightCheck'}}{{else}}{{localize 'IONRIFT.RESPITE.REST.CancelRestAll'}}{{/if}}"
                 {{#if eventsCommitPending}}disabled{{/if}}>
-            <i class="fas fa-times"></i> Abandon Rest
+            <i class="fas fa-times"></i> {{localize 'IONRIFT.RESPITE.UI.AbandonRest'}}
         </button>
         {{/if}}
     </div>
 
     {{!-- Make Camp: persistent terrain / comfort / weather badges --}}
     {{#if campConditionsBar}}
-    <div class="camp-conditions-bar" role="status" aria-label="Camp conditions">
-        <span class="camp-conditions-bar-label">Conditions</span>
-        <span class="camp-status-chip terrain-chip" data-tooltip="Environment chosen during setup.">
+    <div class="camp-conditions-bar" role="status" aria-label="{{localize 'IONRIFT.RESPITE.REST.CampConditions'}}">
+        <span class="camp-conditions-bar-label">{{localize 'IONRIFT.RESPITE.REST.Conditions'}}</span>
+        <span class="camp-status-chip terrain-chip" data-tooltip="{{localize 'IONRIFT.RESPITE.REST.EnvironmentSetupTooltip'}}">
             <i class="{{campConditionsBar.terrainIcon}}" aria-hidden="true"></i> {{campConditionsBar.terrainLabel}}
         </span>
         {{#if campConditionsBar.safeRestSpot}}
-        <span class="camp-status-chip comfort-safe" data-tooltip="No comfort penalties or night events.">
-            <i class="fas fa-shield-halved" aria-hidden="true"></i> Safe rest spot
+        <span class="camp-status-chip comfort-safe" data-tooltip="{{localize 'IONRIFT.RESPITE.REST.SafeRestSpotTooltip'}}">
+            <i class="fas fa-shield-halved" aria-hidden="true"></i> {{localize 'IONRIFT.RESPITE.REST.SafeRestSpot'}}
         </span>
         {{else}}
         <span class="camp-status-chip comfort-{{campConditionsBar.campComfort}}"
@@ -88,12 +88,12 @@
         {{/each}}
         {{#unless campStatus.hasTent}}
         {{#unless safeRestSpot}}
-        <span class="camp-status-chip shelter-chip absent" data-tooltip="No tent pitched. The camp is exposed to weather and easier for enemies to find.">
-            <i class="fas fa-campground"></i> No Tent
+        <span class="camp-status-chip shelter-chip absent" data-tooltip="{{localize 'IONRIFT.RESPITE.REST.NoTentExposed'}}">
+            <i class="fas fa-campground"></i> {{localize 'IONRIFT.RESPITE.REST.NoTent'}}
         </span>
         {{else}}
-        <span class="camp-status-chip shelter-chip absent" data-tooltip="No tent pitched. Weather flavor only in a safe rest spot.">
-            <i class="fas fa-campground"></i> No Tent
+        <span class="camp-status-chip shelter-chip absent" data-tooltip="{{localize 'IONRIFT.RESPITE.REST.NoTentSafe'}}">
+            <i class="fas fa-campground"></i> {{localize 'IONRIFT.RESPITE.REST.NoTent'}}
         </span>
         {{/unless}}
         {{/unless}}
@@ -116,26 +116,26 @@
         <div class="respite-empty-party-hint">
             <i class="fas fa-users-slash"></i>
             {{#if (eq emptyPartyReason 'no_primary_party')}}
-            <p>No primary party detected.</p>
-            <p>A party group exists in this world but is not designated as the primary party. In the Actors sidebar, right-click the Group actor and choose <strong>Make Primary Party</strong>, then add your characters to it.</p>
+            <p>{{localize 'IONRIFT.RESPITE.REST.NoPrimaryParty'}}</p>
+            <p>{{{localize 'IONRIFT.RESPITE.REST.NoPrimaryPartyBody'}}}</p>
             {{else if (eq emptyPartyReason 'primary_party_empty')}}
-            <p>Primary party has no characters.</p>
-            <p>Open the primary party group and drag player characters onto it, or add members from the Members tab.</p>
+            <p>{{localize 'IONRIFT.RESPITE.REST.PrimaryPartyEmpty'}}</p>
+            <p>{{localize 'IONRIFT.RESPITE.REST.PrimaryPartyEmptyBody'}}</p>
             <button type="button" class="btn-primary respite-empty-party-action" onclick="game.ionrift?.library?.party?.openNativeManagement?.() ?? ui.notifications.warn('Party management requires ionrift-library.');">
-                <i class="fas fa-users"></i> Open Primary Party
+                <i class="fas fa-users"></i> {{localize 'IONRIFT.RESPITE.REST.OpenPrimaryParty'}}
             </button>
             {{else if (eq emptyPartyReason 'no_party_group')}}
-            <p>No party group found.</p>
-            <p>Create a Group actor in the Actors sidebar, add your player characters, then right-click it and choose <strong>Make Primary Party</strong>.</p>
+            <p>{{localize 'IONRIFT.RESPITE.REST.NoPartyGroup'}}</p>
+            <p>{{{localize 'IONRIFT.RESPITE.REST.NoPartyGroupBody'}}}</p>
             {{else if showPartyRosterEditor}}
-            <p>No characters in the party roster.</p>
-            <p>Create or import player-owned characters, then open Party Roster to choose who participates in Rest.</p>
+            <p>{{localize 'IONRIFT.RESPITE.REST.NoRosterChars'}}</p>
+            <p>{{localize 'IONRIFT.RESPITE.REST.NoRosterCharsBody'}}</p>
             <button type="button" class="btn-primary respite-empty-party-action" onclick="const App = game.ionrift?.library?.PartyRosterApp; if (App) new App().render(true); else ui.notifications.warn('Party Roster requires ionrift-library.');">
-                <i class="fas fa-users-cog"></i> Open Party Roster
+                <i class="fas fa-users-cog"></i> {{localize 'IONRIFT.RESPITE.REST.OpenPartyRoster'}}
             </button>
             {{else}}
-            <p>No player-owned characters found.</p>
-            <p>Create or import characters, assign them to players, then reopen Respite.</p>
+            <p>{{localize 'IONRIFT.RESPITE.REST.NoPlayerChars'}}</p>
+            <p>{{localize 'IONRIFT.RESPITE.REST.NoPlayerCharsBody'}}</p>
             {{/if}}
         </div>
     </div>
@@ -146,7 +146,7 @@
         <div class="respite-party-setup-warning">
             <i class="fas fa-star-half-stroke" aria-hidden="true"></i>
             {{#if (eq partySetupWarning 'no_primary_party')}}
-            <p><strong>No primary party detected.</strong> Rest is using characters from a non-primary group. Right-click the correct Group in the Actors sidebar and choose <strong>Make Primary Party</strong>.</p>
+            {{{localize 'IONRIFT.RESPITE.REST.NoPrimaryPartyWarning'}}}
             {{/if}}
         </div>
         {{/if}}
@@ -156,23 +156,23 @@
         {{!-- Scene: Rest Type + Environment + Weather --}}
         <div class="scene-grid">
             <div class="form-group scene-rest-type">
-                <label>Rest Type</label>
+                <label>{{localize 'IONRIFT.RESPITE.REST.RestType'}}</label>
                 <div class="rest-type-row">
                     <div class="rest-type-toggle">
                         <button type="button" class="rest-type-btn {{#unless (eq selectedRestType 'short')}}active{{/unless}}"
                             data-rest-type="long">
-                            <i class="fas fa-moon"></i> Long Rest
+                            <i class="fas fa-moon"></i> {{localize 'IONRIFT.RESPITE.REST.LongRest'}}
                         </button>
                         <button type="button" class="rest-type-btn {{#if (eq selectedRestType 'short')}}active{{/if}}"
                             data-rest-type="short">
-                            <i class="fas fa-mug-hot"></i> Short Rest
+                            <i class="fas fa-mug-hot"></i> {{localize 'IONRIFT.RESPITE.REST.ShortRest'}}
                         </button>
                         <input type="hidden" name="restType" value="{{#if (eq selectedRestType 'short')}}short{{else}}long{{/if}}">
                     </div>
                     {{#unless isShortRest}}
                     <label class="safe-rest-spot-toggle {{#if safeRestSpotDisplay}}is-active{{/if}}{{#if safeRestLocked}} is-locked{{/if}}{{#if safeRestPulse}} is-pulse{{/if}}" data-tooltip="{{safeRestTooltip}}">
                         <i class="fas fa-shield-halved" aria-hidden="true"></i>
-                        <span class="safe-rest-spot-label">Safe Rest</span>
+                        <span class="safe-rest-spot-label">{{localize 'IONRIFT.RESPITE.REST.SafeRest'}}</span>
                         <span class="safe-rest-switch"><input type="checkbox" name="safeRestSpot" value="1" {{#if safeRestSpotDisplay}}checked{{/if}}{{#if safeRestLocked}} disabled{{/if}}><span class="safe-rest-slider"></span></span>
                     </label>
                     {{/unless}}
@@ -183,7 +183,7 @@
             <hr class="setup-divider scene-grid-full">
 
             <div class="form-group scene-environment">
-                <label data-tooltip="{{terrainPreview}}">Environment:</label>
+                <label data-tooltip="{{terrainPreview}}">{{localize 'IONRIFT.RESPITE.REST.Environment'}}</label>
                 <select name="terrain">
                     {{#each terrainOptionGroups}}
                     <optgroup label="{{group}}">
@@ -197,7 +197,7 @@
             {{/unless}}
             {{#unless isShortRest}}
             <div class="form-group scene-weather {{#if setupSafeHaven}}scene-weather-flavor{{/if}}">
-                <label>Weather:</label>
+                <label>{{localize 'IONRIFT.RESPITE.REST.Weather'}}</label>
                 <select name="weather">
                     {{#each weatherOptions}}
                     <option value="{{value}}" title="{{hint}}" {{#if (eq value ../selectedWeather)}}selected{{/if}}>{{label}}</option>
@@ -208,13 +208,13 @@
         </div>
 
         {{#unless isShortRest}}
-        <div class="setup-status-line" data-tooltip="Summary of terrain and weather effects">{{setupStatusLine}}</div>
+        <div class="setup-status-line" data-tooltip="{{localize 'IONRIFT.RESPITE.REST.SetupStatusTooltip'}}">{{setupStatusLine}}</div>
         <hr class="setup-divider">
         {{/unless}}
 
         {{#if restConfigBadges.length}}
         {{#unless isShortRest}}
-        <div class="rest-config-summary" data-tooltip="What this rest includes, based on module settings.">
+        <div class="rest-config-summary" data-tooltip="{{localize 'IONRIFT.RESPITE.REST.ConfigBadgesTooltip'}}">
             {{#each restConfigBadges}}
             <span class="rest-config-badge {{#if on}}is-on{{else}}is-off{{/if}}" data-tooltip="{{tooltip}}">
                 <i class="{{icon}}"></i> {{label}}
@@ -227,7 +227,7 @@
         {{!-- Advanced Drawer (collapsed by default; open state survives day-stepper re-renders) --}}
         <details class="scene-advanced-drawer" {{#if setupAdvancedOpen}}open{{/if}}>
             <summary class="scene-advanced-toggle">
-                <i class="fas fa-cog"></i> Advanced
+                <i class="fas fa-cog"></i> {{localize 'IONRIFT.RESPITE.REST.Advanced'}}
             </summary>
             <div class="scene-advanced-body">
                 {{!-- Party Roster --}}
@@ -241,8 +241,8 @@
                         <span class="roster-indicator-overflow">+{{rosterInfo.overflow}}</span>
                         {{/if}}
                     </div>
-                    <span class="roster-indicator-label">{{rosterInfo.count}} characters</span>
-                    <button type="button" class="roster-indicator-edit" onclick="const App = game.ionrift?.library?.PartyRosterApp; if (App) new App().render(true); else ui.notifications.warn('Party Roster requires ionrift-library.');" data-tooltip="Edit Party Roster">
+                    <span class="roster-indicator-label">{{localize 'IONRIFT.RESPITE.REST.CharactersCount' count=rosterInfo.count}}</span>
+                    <button type="button" class="roster-indicator-edit" onclick="const App = game.ionrift?.library?.PartyRosterApp; if (App) new App().render(true); else ui.notifications.warn('Party Roster requires ionrift-library.');" data-tooltip="{{localize 'IONRIFT.RESPITE.REST.EditPartyRoster'}}">
                         <i class="fas fa-pencil-alt"></i>
                     </button>
                 </div>
@@ -250,27 +250,27 @@
                 {{#if trackFood}}
                 <div class="days-since-rest-block">
                     <div class="days-since-rest-row">
-                        <span class="days-label"><i class="fas fa-calendar-day"></i> Days Since Last Rest</span>
+                        <span class="days-label"><i class="fas fa-calendar-day"></i> {{localize 'IONRIFT.RESPITE.REST.DaysSinceLastRest'}}</span>
                         <div class="days-stepper">
                             <button type="button" class="days-btn" data-action="adjustDaysSinceRest" data-delta="-1" {{#if (eq daysSinceLastRest 1)}}disabled{{/if}}>−</button>
                             <span class="days-value">{{daysSinceLastRest}}</span>
                             <button type="button" class="days-btn" data-action="adjustDaysSinceRest" data-delta="1" {{#if (gte daysSinceLastRest 9)}}disabled{{/if}}>+</button>
                         </div>
                     </div>
-                    <span class="days-hint"><i class="fas fa-book"></i> Characters can only benefit from one long rest per 24 hours. (PHB p.186)</span>
+                    <span class="days-hint"><i class="fas fa-book"></i> {{localize 'IONRIFT.RESPITE.REST.PhbLongRestHint'}}</span>
                     {{#if (gte daysSinceLastRest 2)}}
-                    <span class="days-hint warning"><i class="fas fa-exclamation-triangle"></i> {{daysSinceLastRest}} days without rest. Characters are treated as having gone without food and water for that duration.</span>
+                    <span class="days-hint warning"><i class="fas fa-exclamation-triangle"></i> {{localize 'IONRIFT.RESPITE.REST.DaysWithoutRest' days=daysSinceLastRest}}</span>
                     {{/if}}
                 </div>
                 {{/if}}
                 <div class="form-group scene-rest-mode-override">
-                    <label>Rest Interface</label>
+                    <label>{{localize 'IONRIFT.RESPITE.REST.RestInterface'}}</label>
                     <select name="restInterfaceMode">
                         {{#each restModeOptions}}
                         <option value="{{value}}" {{#if selected}}selected{{/if}}>{{label}}</option>
                         {{/each}}
                     </select>
-                    <span class="comfort-hint">One window: this panel. Camp stations: pieces on the scene, move tokens to act.</span>
+                    <span class="comfort-hint">{{localize 'IONRIFT.RESPITE.REST.RestInterfaceHint'}}</span>
                 </div>
             </div>
         </details>
@@ -279,11 +279,11 @@
     <div class="respite-action-bar">
         {{#if isShortRest}}
         <button type="button" class="btn-primary" data-action="beginShortRest">
-            <i class="fas fa-mug-hot"></i> Begin Short Rest
+            <i class="fas fa-mug-hot"></i> {{localize 'IONRIFT.RESPITE.REST.BeginShortRest'}}
         </button>
         {{else}}
         <button type="button" class="btn-primary" data-action="beginRest">
-            <i class="fas fa-campground"></i> Begin Rest
+            <i class="fas fa-campground"></i> {{localize 'IONRIFT.RESPITE.REST.BeginRest'}}
         </button>
         {{/if}}
     </div>
@@ -293,7 +293,7 @@
     <div class="respite-setup">
         <div class="respite-waiting-message">
             <i class="fas fa-campground"></i>
-            <p>The GM is preparing the campsite...</p>
+            <p>{{localize 'IONRIFT.RESPITE.REST.GmPreparing'}}</p>
         </div>
     </div>
     {{/if}}
@@ -311,7 +311,7 @@
         {{#if isGM}}
         <div class="travel-header">
             <i class="fas fa-hiking"></i>
-            <span>Travel Resolution: {{travelContext.terrainLabel}}</span>
+            <span>{{localize 'IONRIFT.RESPITE.TRAVEL.Resolution' terrain=travelContext.terrainLabel}}</span>
         </div>
         {{/if}}
 
@@ -323,13 +323,13 @@
         {{#if isGM}}
         <div class="respite-action-bar">
             <button type="button" class="btn-primary travel-skip-pulse" data-action="skipTravelPhase">
-                <i class="fas fa-forward"></i> Continue
+                <i class="fas fa-forward"></i> {{localize 'IONRIFT.RESPITE.UI.Continue'}}
             </button>
         </div>
         {{else}}
         <div class="travel-player-info">
             <i class="fas fa-hiking"></i>
-            <span>The party presses on...</span>
+            <span>{{localize 'IONRIFT.RESPITE.TRAVEL.PressesOn'}}</span>
         </div>
         {{/if}}
 
@@ -342,17 +342,17 @@
             {{#if travelContext.canForage}}
             {{#if travelContext.forageDisabled}}
             <span class="travel-dc-chip travel-dc-chip--muted" data-tooltip="{{travelContext.forageDisabledTooltip}}">
-                <i class="fas fa-seedling"></i> Forage unavailable
+                <i class="fas fa-seedling"></i> {{localize 'IONRIFT.RESPITE.TRAVEL.ForageUnavailable'}}
             </span>
             {{else}}
             <span class="travel-dc-chip">
-                <i class="fas fa-seedling"></i> Forage DC {{travelContext.forageDC}}
+                <i class="fas fa-seedling"></i> {{localize 'IONRIFT.RESPITE.TRAVEL.ForageDC' dc=travelContext.forageDC}}
                 {{#if travelContext.forageGMAdj}}
                 <span class="encounter-chip"><i class="fas fa-wrench"></i> GM {{travelContext.forageGMAdj}}</span>
                 {{/if}}
                 <span class="encounter-gm-adj">
-                    <button type="button" class="encounter-adj-btn" data-action="adjustGlobalDC" data-activity="forage" data-delta="-1" data-tooltip="Reduce Forage DC">−</button>
-                    <button type="button" class="encounter-adj-btn" data-action="adjustGlobalDC" data-activity="forage" data-delta="1" data-tooltip="Increase Forage DC">+</button>
+                    <button type="button" class="encounter-adj-btn" data-action="adjustGlobalDC" data-activity="forage" data-delta="-1" data-tooltip="{{localize 'IONRIFT.RESPITE.TRAVEL.ReduceForageDC'}}">−</button>
+                    <button type="button" class="encounter-adj-btn" data-action="adjustGlobalDC" data-activity="forage" data-delta="1" data-tooltip="{{localize 'IONRIFT.RESPITE.TRAVEL.IncreaseForageDC'}}">+</button>
                 </span>
             </span>
             {{/if}}
@@ -360,17 +360,17 @@
             {{#if travelContext.canHunt}}
             {{#if travelContext.huntDisabled}}
             <span class="travel-dc-chip travel-dc-chip--muted" data-tooltip="{{travelContext.huntDisabledTooltip}}">
-                <i class="fas fa-crosshairs"></i> Hunt unavailable
+                <i class="fas fa-crosshairs"></i> {{localize 'IONRIFT.RESPITE.TRAVEL.HuntUnavailable'}}
             </span>
             {{else}}
             <span class="travel-dc-chip">
-                <i class="fas fa-crosshairs"></i> Hunt DC {{travelContext.huntDC}}
+                <i class="fas fa-crosshairs"></i> {{localize 'IONRIFT.RESPITE.TRAVEL.HuntDC' dc=travelContext.huntDC}}
                 {{#if travelContext.huntGMAdj}}
                 <span class="encounter-chip"><i class="fas fa-wrench"></i> GM {{travelContext.huntGMAdj}}</span>
                 {{/if}}
                 <span class="encounter-gm-adj">
-                    <button type="button" class="encounter-adj-btn" data-action="adjustGlobalDC" data-activity="hunt" data-delta="-1" data-tooltip="Reduce Hunt DC">−</button>
-                    <button type="button" class="encounter-adj-btn" data-action="adjustGlobalDC" data-activity="hunt" data-delta="1" data-tooltip="Increase Hunt DC">+</button>
+                    <button type="button" class="encounter-adj-btn" data-action="adjustGlobalDC" data-activity="hunt" data-delta="-1" data-tooltip="{{localize 'IONRIFT.RESPITE.TRAVEL.ReduceHuntDC'}}">−</button>
+                    <button type="button" class="encounter-adj-btn" data-action="adjustGlobalDC" data-activity="hunt" data-delta="1" data-tooltip="{{localize 'IONRIFT.RESPITE.TRAVEL.IncreaseHuntDC'}}">+</button>
                 </span>
             </span>
             {{/if}}
@@ -383,7 +383,7 @@
             {{#each travelContext.days}}
             <button type="button" class="travel-day-tab {{#if isActive}}active{{/if}} {{#if resolved}}resolved{{/if}}" data-action="switchTravelDay" data-day="{{day}}">
                 {{#if resolved}}<i class="fas fa-check"></i>{{/if}}
-                Day {{day}}{{#if isFinalDay}} <i class="fas fa-campground" data-tooltip="Arrival day. Travel activities available{{#if canScout}} (forage, hunt, scout){{else}} (forage, hunt){{/if}}."></i>{{/if}}
+                Day {{day}}{{#if isFinalDay}} <i class="fas fa-campground" data-tooltip="{{#if canScout}}{{localize 'IONRIFT.RESPITE.TRAVEL.ArrivalDayActivitiesScout'}}{{else}}{{localize 'IONRIFT.RESPITE.TRAVEL.ArrivalDayActivities'}}{{/if}}"></i>{{/if}}
             </button>
             {{/each}}
         </div>
@@ -397,7 +397,7 @@
             {{#if isFinalDay}}
             {{#if ../travelContext.canScout}}
             <div class="travel-scout-notice">
-                <i class="fas fa-campground"></i> Arrival day. Forage, hunt, scout, or take it easy before camp. Resolve the day below to see who did what.
+                <i class="fas fa-campground"></i> {{localize 'IONRIFT.RESPITE.TRAVEL.ArrivalDayNotice'}}
             </div>
             {{/if}}
             {{/if}}
@@ -410,23 +410,23 @@
                         <span class="travel-char-name">{{name}}{{#if confirmed}}<span class="travel-confirmed-pick">{{#if (eq activity 'forage')}}<i class="fas fa-seedling"></i> Forage
                         {{else if (eq activity 'hunt')}}<i class="fas fa-crosshairs"></i> Hunt
                         {{else if (eq activity 'scout')}}<i class="fas fa-binoculars"></i> Scout
-                        {{else}}<span class="travel-other-emoji" aria-hidden="true">&#127969;</span> Other{{/if}} <i class="fas fa-check travel-confirmed-icon" data-tooltip="Player locked in"></i></span>{{else}}<span class="travel-pending-pick" data-tooltip="Not confirmed yet">{{#if (eq activity 'forage')}}<i class="fas fa-seedling"></i> Forage
+                        {{else}}<span class="travel-other-emoji" aria-hidden="true">&#127969;</span> Other{{/if}} <i class="fas fa-check travel-confirmed-icon" data-tooltip="{{localize 'IONRIFT.RESPITE.TRAVEL.PlayerLockedIn'}}"></i></span>{{else}}<span class="travel-pending-pick" data-tooltip="{{localize 'IONRIFT.RESPITE.TRAVEL.NotConfirmedYet'}}">{{#if (eq activity 'forage')}}<i class="fas fa-seedling"></i> Forage
                         {{else if (eq activity 'hunt')}}<i class="fas fa-crosshairs"></i> Hunt
                         {{else if (eq activity 'scout')}}<i class="fas fa-binoculars"></i> Scout
                         {{else}}<span class="travel-other-emoji" aria-hidden="true">&#127969;</span> Other{{/if}}</span>{{/if}}</span>
-                        <span class="travel-char-mod">Survival {{survivalMod}}</span>
+                        <span class="travel-char-mod">{{localize 'IONRIFT.RESPITE.TRAVEL.SurvivalMod' mod=survivalMod}}</span>
                     </div>
 
                     {{#if result}}
                     <div class="travel-gm-result-cell">
                     <div class="travel-result {{#if (eq result.activity 'other')}}other{{else if result.nat20}}nat20{{else if result.nat1}}nat1{{else if result.success}}success{{else if (eq result.activity 'scout')}}scout{{else}}failure{{/if}}">
                         {{#if (eq result.activity 'other')}}<i class="fas fa-dice-d20"></i> {{result.total}} vs DC {{result.dc}} {{#if result.success}}✓{{else}}✗{{/if}}
-                        {{else if (eq result.activity 'scout')}}<i class="fas fa-binoculars"></i> Scouted ({{result.total}})
-                        {{else if result.nat20}}<i class="fas fa-star"></i> Nat 20!
-                        {{else if result.nat1}}<i class="fas fa-skull"></i> Nat 1!
-                        {{else if result.exceptional}}<i class="fas fa-award"></i> Exceptional
-                        {{else if result.success}}<i class="fas fa-check"></i> Success
-                        {{else}}<i class="fas fa-times"></i> Failed{{/if}}
+                        {{else if (eq result.activity 'scout')}}<i class="fas fa-binoculars"></i> {{localize 'IONRIFT.RESPITE.TRAVEL.Scouted' total=result.total}}
+                        {{else if result.nat20}}<i class="fas fa-star"></i> {{localize 'IONRIFT.RESPITE.TRAVEL.Nat20'}}
+                        {{else if result.nat1}}<i class="fas fa-skull"></i> {{localize 'IONRIFT.RESPITE.TRAVEL.Nat1'}}
+                        {{else if result.exceptional}}<i class="fas fa-award"></i> {{localize 'IONRIFT.RESPITE.TRAVEL.Exceptional'}}
+                        {{else if result.success}}<i class="fas fa-check"></i> {{localize 'IONRIFT.RESPITE.UI.Success'}}
+                        {{else}}<i class="fas fa-times"></i> {{localize 'IONRIFT.RESPITE.UI.Failed'}}{{/if}}
                         {{#unless (eq result.activity 'scout')}}{{#unless (eq result.activity 'other')}}<span class="travel-roll-total">({{result.total}})</span>{{/unless}}{{/unless}}
                     </div>
                     {{#if (eq result.activity 'forage')}}
@@ -437,7 +437,7 @@
                         {{/each}}
                     </div>
                     {{else}}
-                    <div class="travel-gm-yield-nothing">Nothing found.</div>
+                    <div class="travel-gm-yield-nothing">{{localize 'IONRIFT.RESPITE.TRAVEL.NothingFound'}}</div>
                     {{/if}}
                     {{/if}}
                     {{#if (eq result.activity 'hunt')}}
@@ -449,7 +449,7 @@
                     </div>
                     {{else}}
                     {{#unless result.success}}
-                    <div class="travel-gm-yield-nothing">Nothing found.</div>
+                    <div class="travel-gm-yield-nothing">{{localize 'IONRIFT.RESPITE.TRAVEL.NothingFound'}}</div>
                     {{/unless}}
                     {{/if}}
                     {{/if}}
@@ -469,47 +469,47 @@
 
                     {{else if (eq status 'awaiting_loot')}}
                     <div class="travel-gm-activity-pick">
-                    <span class="travel-pending-label travel-loot-await"><i class="fas fa-dice-d20"></i> Skill {{total}} — loot roll</span>
-                    {{#if awaitingPlayerResponse}}<span class="travel-player-await" data-tooltip="Waiting for loot roll"><i class="fas fa-circle-notch fa-spin"></i></span>{{/if}}
-                    <button type="button" class="btn-roll-for-player travel-fallback" data-action="rollTravelLootForPlayer" data-actor-id="{{id}}" data-day="{{../day}}" data-tooltip="Roll loot on their behalf">
+                    <span class="travel-pending-label travel-loot-await"><i class="fas fa-dice-d20"></i> {{localize 'IONRIFT.RESPITE.TRAVEL.SkillLootRoll' total=total}}</span>
+                    {{#if awaitingPlayerResponse}}<span class="travel-player-await" data-tooltip="{{localize 'IONRIFT.RESPITE.TRAVEL.WaitingLootRoll'}}"><i class="fas fa-circle-notch fa-spin"></i></span>{{/if}}
+                    <button type="button" class="btn-roll-for-player travel-fallback" data-action="rollTravelLootForPlayer" data-actor-id="{{id}}" data-day="{{../day}}" data-tooltip="{{localize 'IONRIFT.RESPITE.TRAVEL.RollLootBehalf'}}">
                         <i class="fas fa-dice"></i>
                     </button>
                     </div>
 
                     {{else if (eq status 'rolled')}}
-                    <span class="travel-result success"><i class="fas fa-check"></i> Rolled {{total}}</span>
+                    <span class="travel-result success"><i class="fas fa-check"></i> {{localize 'IONRIFT.RESPITE.TRAVEL.RolledTotal' total=total}}</span>
 
                     {{else if requested}}
                     <div class="travel-gm-activity-pick">
-                    <span class="travel-pending-label"><i class="fas fa-paper-plane"></i> Sent</span>
-                    {{#if awaitingPlayerResponse}}<span class="travel-player-await" data-tooltip="Waiting for a roll"><i class="fas fa-circle-notch fa-spin"></i></span>{{/if}}
-                    <button type="button" class="btn-roll-for-player travel-fallback" data-action="rollTravelForPlayer" data-actor-id="{{id}}" data-day="{{../day}}" data-tooltip="Roll on their behalf">
+                    <span class="travel-pending-label"><i class="fas fa-paper-plane"></i> {{localize 'IONRIFT.RESPITE.UI.sent'}}</span>
+                    {{#if awaitingPlayerResponse}}<span class="travel-player-await" data-tooltip="{{localize 'IONRIFT.RESPITE.TRAVEL.WaitingForRoll'}}"><i class="fas fa-circle-notch fa-spin"></i></span>{{/if}}
+                    <button type="button" class="btn-roll-for-player travel-fallback" data-action="rollTravelForPlayer" data-actor-id="{{id}}" data-day="{{../day}}" data-tooltip="{{localize 'IONRIFT.RESPITE.UI.RollOnBehalf'}}">
                         <i class="fas fa-dice"></i>
                     </button>
                     </div>
 
                     {{else if otherLockedIn}}
                     <div class="travel-gm-activity-pick travel-gm-other-locked">
-                        <span class="travel-gm-other-locked-label" data-tooltip="Other, confirmed for this day"><span class="travel-other-emoji" aria-hidden="true">&#127969;</span> Other</span>
-                        <span class="travel-gm-confirmed-badge" data-tooltip="Locked in as Other"><i class="fas fa-check"></i></span>
+                        <span class="travel-gm-other-locked-label" data-tooltip="{{localize 'IONRIFT.RESPITE.TRAVEL.OtherConfirmedDay'}}"><span class="travel-other-emoji" aria-hidden="true">&#127969;</span> Other</span>
+                        <span class="travel-gm-confirmed-badge" data-tooltip="{{localize 'IONRIFT.RESPITE.TRAVEL.LockedInOther'}}"><i class="fas fa-check"></i></span>
                     </div>
 
                     {{else}}
                     {{!-- Uncommitted: GM can change activities. Plain Other: Confirm until locked (see otherLockedIn). --}}
                     <div class="travel-gm-activity-pick">
                     <select class="travel-activity-select" data-actor-id="{{id}}" data-day="{{../day}}">
-                        <option value="nothing" {{#if (eq activity 'nothing')}}selected{{/if}}>🏕️ Other</option>
-                        {{#if ../../travelContext.canForage}}<option value="forage" {{#if ../../travelContext.forageDisabled}}disabled title="{{../../travelContext.forageDisabledTooltip}}" class="travel-option-disabled"{{/if}} {{#if (eq activity 'forage')}}selected{{/if}}>🌿 Forage</option>{{/if}}
-                        {{#if ../../travelContext.canHunt}}<option value="hunt" {{#if ../../travelContext.huntDisabled}}disabled title="{{../../travelContext.huntDisabledTooltip}}" class="travel-option-disabled"{{/if}} {{#if (eq activity 'hunt')}}selected{{/if}}>🎯 Hunt</option>{{/if}}
-                        {{#if ../canScout}}<option value="scout" {{#if (eq activity 'scout')}}selected{{/if}}>🔭 Scout</option>{{/if}}
+                        <option value="nothing" {{#if (eq activity 'nothing')}}selected{{/if}}>{{localize 'IONRIFT.RESPITE.TRAVEL.OptionOther'}}</option>
+                        {{#if ../../travelContext.canForage}}<option value="forage" {{#if ../../travelContext.forageDisabled}}disabled title="{{../../travelContext.forageDisabledTooltip}}" class="travel-option-disabled"{{/if}} {{#if (eq activity 'forage')}}selected{{/if}}>{{localize 'IONRIFT.RESPITE.TRAVEL.OptionForage'}}</option>{{/if}}
+                        {{#if ../../travelContext.canHunt}}<option value="hunt" {{#if ../../travelContext.huntDisabled}}disabled title="{{../../travelContext.huntDisabledTooltip}}" class="travel-option-disabled"{{/if}} {{#if (eq activity 'hunt')}}selected{{/if}}>{{localize 'IONRIFT.RESPITE.TRAVEL.OptionHunt'}}</option>{{/if}}
+                        {{#if ../canScout}}<option value="scout" {{#if (eq activity 'scout')}}selected{{/if}}>{{localize 'IONRIFT.RESPITE.TRAVEL.OptionScout'}}</option>{{/if}}
                     </select>
-                    {{#if awaitingPlayerResponse}}<span class="travel-player-await" data-tooltip="Waiting for this character"><i class="fas fa-circle-notch fa-spin"></i></span>{{/if}}
+                    {{#if awaitingPlayerResponse}}<span class="travel-player-await" data-tooltip="{{localize 'IONRIFT.RESPITE.TRAVEL.WaitingCharacter'}}"><i class="fas fa-circle-notch fa-spin"></i></span>{{/if}}
                     {{#if (eq activity 'nothing')}}
-                    <button type="button" class="travel-gm-confirm-for-btn" data-action="confirmTravelForPlayer" data-actor-id="{{id}}" data-day="{{../day}}" data-tooltip="Confirm Other on their behalf (absent player)">
-                        <i class="fas fa-check"></i> Confirm
+                    <button type="button" class="travel-gm-confirm-for-btn" data-action="confirmTravelForPlayer" data-actor-id="{{id}}" data-day="{{../day}}" data-tooltip="{{localize 'IONRIFT.RESPITE.TRAVEL.ConfirmOtherBehalf'}}">
+                        <i class="fas fa-check"></i> {{localize 'IONRIFT.RESPITE.UI.Confirm'}}
                     </button>
                     {{else}}
-                    <button type="button" class="btn-roll-for-player travel-gm-direct-roll" data-action="rollTravelForPlayer" data-actor-id="{{id}}" data-day="{{../day}}" data-tooltip="Roll on their behalf (absent player)">
+                    <button type="button" class="btn-roll-for-player travel-gm-direct-roll" data-action="rollTravelForPlayer" data-actor-id="{{id}}" data-day="{{../day}}" data-tooltip="{{localize 'IONRIFT.RESPITE.TRAVEL.RollBehalfAbsent'}}">
                         <i class="fas fa-dice"></i>
                     </button>
                     {{/if}}
@@ -522,23 +522,23 @@
             {{!-- Day action bar: single contextual button that morphs through the flow --}}
             <div class="respite-action-bar travel-day-resolve-bar">
                 {{#if resolved}}
-                <span class="travel-day-resolved-label"><i class="fas fa-check"></i> Day {{day}} resolved</span>
+                <span class="travel-day-resolved-label"><i class="fas fa-check"></i> {{localize 'IONRIFT.RESPITE.TRAVEL.DayResolved' day=day}}</span>
                 {{else}}
                 <div class="travel-resolve-day-wrap">
                 {{#if allRollsIn}}
                 <button type="button" class="btn-primary travel-resolve-day-btn" data-action="resolveTravelDay" data-day="{{day}}">
-                    <i class="fas fa-check"></i> Resolve Day {{day}}
+                    <i class="fas fa-check"></i> {{localize 'IONRIFT.RESPITE.TRAVEL.ResolveDay' day=day}}
                 </button>
                 {{else}}
                 <button type="button" class="btn-primary travel-resolve-day-btn disabled" data-day="{{day}}" disabled
-                    data-tooltip="Unlocks when every party member has rolled or confirmed.">
-                    <i class="fas fa-lock"></i> Waiting on travel rolls
+                    data-tooltip="{{localize 'IONRIFT.RESPITE.TRAVEL.UnlocksWhenReady'}}">
+                    <i class="fas fa-lock"></i> {{localize 'IONRIFT.RESPITE.TRAVEL.WaitingTravelRolls'}}
                 </button>
                 {{/if}}
                 </div>
                 {{#unless allRollsIn}}
-                <button type="button" class="travel-skip-link" data-action="skipTravelPhase" data-tooltip="Continue without resolving remaining travel days">
-                    <i class="fas fa-forward"></i> Continue to Camp
+                <button type="button" class="travel-skip-link" data-action="skipTravelPhase" data-tooltip="{{localize 'IONRIFT.RESPITE.TRAVEL.ContinueWithoutResolve'}}">
+                    <i class="fas fa-forward"></i> {{localize 'IONRIFT.RESPITE.UI.Continue'}} to Camp
                 </button>
                 {{/unless}}
                 {{/if}}
@@ -552,11 +552,11 @@
         <div class="travel-scouting-debrief {{scoutingDebrief.tier}}">
             <div class="travel-scouting-header">
                 <i class="fas fa-binoculars"></i>
-                <strong>Scouting: {{scoutingDebrief.tierLabel}}</strong>
-                {{#if scoutingDebrief.comfortBonus}}<span class="scouting-effect">Comfort +{{scoutingDebrief.comfortBonus}}</span>{{/if}}
-                {{#if scoutingDebrief.encounterCampModLabel}}<span class="scouting-effect">Night check mod {{scoutingDebrief.encounterCampModLabel}}</span>{{/if}}
+                <strong>{{localize 'IONRIFT.RESPITE.TRAVEL.ScoutingTier' tier=scoutingDebrief.tierLabel}}</strong>
+                {{#if scoutingDebrief.comfortBonus}}<span class="scouting-effect">{{localize 'IONRIFT.RESPITE.TRAVEL.ComfortBonus' bonus=scoutingDebrief.comfortBonus}}</span>{{/if}}
+                {{#if scoutingDebrief.encounterCampModLabel}}<span class="scouting-effect">{{localize 'IONRIFT.RESPITE.TRAVEL.NightCheckMod' mod=scoutingDebrief.encounterCampModLabel}}</span>{{/if}}
             </div>
-            <p class="travel-scouting-gm-advisory">Scouting roll is blind to the players. Describe what the scout found.</p>
+            <p class="travel-scouting-gm-advisory">{{localize 'IONRIFT.RESPITE.TRAVEL.ScoutingBlind'}}</p>
 
             {{!-- Scout roster --}}
             <div class="travel-scout-roster {{#if scoutingDebrief.multipleScouts}}multi{{/if}}">
@@ -564,7 +564,7 @@
                 <div class="travel-scout-entry {{#if isBest}}best{{/if}}">
                     <span class="scout-name">{{actorName}}</span>
                     <span class="scout-total">{{total}}</span>
-                    {{#if isBest}}<span class="scout-best-badge">★ Best</span>{{/if}}
+                    {{#if isBest}}<span class="scout-best-badge">{{localize 'IONRIFT.RESPITE.TRAVEL.Best'}}</span>{{/if}}
                     {{#if narrative}}
                     <div class="scout-narrative"><em>"{{narrative}}"</em></div>
                     {{/if}}
@@ -579,7 +579,7 @@
             {{/if}}
             {{#if scoutingDebrief.isNat1}}
             <div class="travel-scouting-gm-hint danger">
-                <i class="fas fa-skull-crossbones"></i> A hidden complication will trigger during the event phase. The players believe this is a good campsite.
+                <i class="fas fa-skull-crossbones"></i> {{localize 'IONRIFT.RESPITE.TRAVEL.HiddenComplication'}}
             </div>
             {{/if}}
         </div>
@@ -590,7 +590,7 @@
         {{#if travelContext.isMultiDay}}
         <div class="respite-action-bar travel-global-actions">
             <button type="button" class="btn-primary" data-action="skipTravelPhase">
-                <i class="fas fa-arrow-right"></i> Continue to Activities
+                <i class="fas fa-arrow-right"></i> {{localize 'IONRIFT.RESPITE.TRAVEL.ContinueToActivities'}}
             </button>
         </div>
         {{/if}}
@@ -604,7 +604,7 @@
             {{#if travelDebrief}}
             <div class="travel-player-info">
                 <i class="fas fa-scroll"></i>
-                <span>Travel results are in.</span>
+                <span>{{localize 'IONRIFT.RESPITE.TRAVEL.ResultsIn'}}</span>
             </div>
             <div class="travel-debrief-section">
                 {{#each travelDebrief}}
@@ -613,7 +613,7 @@
                         {{#if result.nat20}}<i class="fas fa-star"></i>{{else if result.nat1}}<i class="fas fa-skull"></i>{{else if result.success}}<i class="fas fa-check"></i>{{else}}<i class="fas fa-times"></i>{{/if}}
                         <strong>{{result.actorName}}</strong>
                         <span class="debrief-activity">
-                            {{#if (eq activity 'forage')}}🌿 Foraged{{else if (eq activity 'hunt')}}🎯 Hunted{{else}}Rolled{{/if}}
+                            {{#if (eq activity 'forage')}}{{localize 'IONRIFT.RESPITE.TRAVEL.Foraged'}}{{else if (eq activity 'hunt')}}{{localize 'IONRIFT.RESPITE.TRAVEL.Hunted'}}{{else}}{{localize 'IONRIFT.RESPITE.UI.Rolled'}}{{/if}}
                         </span>
                         <span class="debrief-total">({{result.total}})</span>
                     </div>
@@ -632,7 +632,7 @@
                     {{#unless result.success}}
                     {{#unless result.items.length}}
                     <div class="travel-debrief-nothing">
-                        <span>Nothing found.</span>
+                        <span>{{localize 'IONRIFT.RESPITE.TRAVEL.NothingFound'}}</span>
                     </div>
                     {{/unless}}
                     {{/unless}}
@@ -640,7 +640,7 @@
                     {{#if (eq activity 'forage')}}
                     {{#unless result.items.length}}
                     <div class="travel-debrief-nothing">
-                        <span>Nothing found.</span>
+                        <span>{{localize 'IONRIFT.RESPITE.TRAVEL.NothingFound'}}</span>
                     </div>
                     {{/unless}}
                     {{/if}}
@@ -652,7 +652,7 @@
             {{#if travelScoutingDone}}
             <div class="travel-player-scout-summary">
                 <i class="fas fa-binoculars"></i>
-                <span>Your scouts have surveyed the area. The GM will describe the campsite before the party settles in.</span>
+                <span>{{localize 'IONRIFT.RESPITE.TRAVEL.ScoutsSurveyed'}}</span>
             </div>
             {{/if}}
 
@@ -660,11 +660,11 @@
             {{#if travelFullyResolved}}
             <div class="travel-player-info travel-waiting-gm">
                 <i class="fas fa-hourglass-half"></i>
-                <span>Waiting for the GM to continue...</span>
+                <span>{{localize 'IONRIFT.RESPITE.UI.WaitingGmContinue'}}</span>
             </div>
             {{else}}
             <div class="respite-action-bar">
-                <span class="phase-waiting-label"><i class="fas fa-hourglass-half"></i> Waiting for the GM to proceed...</span>
+                <span class="phase-waiting-label"><i class="fas fa-hourglass-half"></i> {{localize 'IONRIFT.RESPITE.UI.WaitingGmProceed'}}</span>
             </div>
             {{/if}}
 
@@ -672,7 +672,7 @@
             {{else if pendingTravelRoll.activities.length}}
             <div class="travel-player-info">
                 <i class="fas fa-dice-d20"></i>
-                <span>The GM has called for travel rolls.</span>
+                <span>{{localize 'IONRIFT.RESPITE.TRAVEL.GmCalledRolls'}}</span>
             </div>
             <div class="travel-roll-section">
                 {{#each pendingTravelRoll.activities}}
@@ -687,14 +687,14 @@
 
             <div class="travel-player-info">
                 <i class="fas fa-hiking"></i>
-                <span>{{travelContext.terrainLabel}}: {{#if travelContext.isMultiDay}}{{travelContext.totalDays}} days of travel{{else}}What did you do while travelling?{{/if}}</span>
+                <span>{{travelContext.terrainLabel}}: {{#if travelContext.isMultiDay}}{{localize 'IONRIFT.RESPITE.TRAVEL.DaysOfTravel' days=travelContext.totalDays}}{{else}}{{localize 'IONRIFT.RESPITE.TRAVEL.WhatDidYouDo'}}{{/if}}</span>
             </div>
 
             {{#each travelContext.days}}
             {{#if isActive}}
             <div class="travel-day-section" data-day="{{day}}">
                 {{#if ../travelContext.isMultiDay}}
-                <div class="travel-day-label">Day {{day}}{{#if isFinalDay}}, Arrival{{/if}}</div>
+                <div class="travel-day-label">{{localize 'IONRIFT.RESPITE.TRAVEL.DayLabel' day=day}}{{#if isFinalDay}}{{localize 'IONRIFT.RESPITE.TRAVEL.ArrivalSuffix'}}{{/if}}</div>
                 {{/if}}
 
                 {{!-- Owned characters: hero cards --}}
@@ -705,7 +705,7 @@
                     <div class="travel-hero-info">
                         <span class="travel-hero-name">{{name}}</span>
                         <span class="travel-hero-meta">
-                            <span class="travel-hero-mod">{{survivalMod}} Survival</span>{{#if showLastHint}}<span class="travel-last-hint">Last: {{lastActivity}}</span>{{/if}}
+                            <span class="travel-hero-mod">{{localize 'IONRIFT.RESPITE.TRAVEL.SurvivalSuffix' mod=survivalMod}}</span>{{#if showLastHint}}<span class="travel-last-hint">{{localize 'IONRIFT.RESPITE.TRAVEL.LastActivity' activity=lastActivity}}</span>{{/if}}
                         </span>
                         {{#unless rolled}}{{#unless confirmed}}
                         <span class="travel-activity-desc">{{activityFlavor}}</span>
@@ -713,12 +713,12 @@
                     </div>
                     {{#if awaitingLoot}}
                     <button type="button" class="travel-self-roll-btn btn-primary travel-loot-roll-btn" data-action="rollTravelLoot" data-actor-id="{{id}}" data-day="{{../day}}" data-activity="{{declaration}}" data-draws="{{lootDraws}}">
-                        <i class="fas fa-dice-d20"></i> Roll loot{{#if (gte lootDraws 2)}} ({{lootDraws}}x d100){{/if}}
+                        <i class="fas fa-dice-d20"></i> {{localize 'IONRIFT.RESPITE.TRAVEL.RollLoot'}}{{#if (gte lootDraws 2)}} ({{lootDraws}}x d100){{/if}}
                     </button>
                     {{else if rolled}}
                     <span class="travel-rolled-badge">
                         <i class="fas fa-dice-d20"></i>
-                        {{#if (eq declaration 'forage')}}Foraging{{else if (eq declaration 'hunt')}}Hunting{{else if (eq declaration 'scout')}}Scouting{{else}}Other{{/if}}
+                        {{#if (eq declaration 'forage')}}{{localize 'IONRIFT.RESPITE.TRAVEL.Foraging'}}{{else if (eq declaration 'hunt')}}{{localize 'IONRIFT.RESPITE.TRAVEL.Hunting'}}{{else if (eq declaration 'scout')}}{{localize 'IONRIFT.RESPITE.TRAVEL.Scouting'}}{{else}}{{localize 'IONRIFT.RESPITE.TRAVEL.Other'}}{{/if}}
                     </span>
                     {{else if confirmed}}
                     <span class="travel-confirmed-label">
@@ -730,18 +730,18 @@
                     </span>
                     {{else}}
                     <select class="travel-player-select" data-actor-id="{{id}}" data-day="{{../day}}">
-                        <option value="nothing" {{#if (eq declaration 'nothing')}}selected{{/if}}>🏕️ Other</option>
-                        {{#if ../../travelContext.canForage}}<option value="forage" {{#if ../../travelContext.forageDisabled}}disabled title="{{../../travelContext.forageDisabledTooltip}}" class="travel-option-disabled"{{/if}} {{#if (eq declaration 'forage')}}selected{{/if}}>🌿 Forage</option>{{/if}}
-                        {{#if ../../travelContext.canHunt}}<option value="hunt" {{#if ../../travelContext.huntDisabled}}disabled title="{{../../travelContext.huntDisabledTooltip}}" class="travel-option-disabled"{{/if}} {{#if (eq declaration 'hunt')}}selected{{/if}}>🎯 Hunt</option>{{/if}}
-                        {{#if ../canScout}}<option value="scout" {{#if (eq declaration 'scout')}}selected{{/if}}>🔭 Scout</option>{{/if}}
+                        <option value="nothing" {{#if (eq declaration 'nothing')}}selected{{/if}}>{{localize 'IONRIFT.RESPITE.TRAVEL.OptionOther'}}</option>
+                        {{#if ../../travelContext.canForage}}<option value="forage" {{#if ../../travelContext.forageDisabled}}disabled title="{{../../travelContext.forageDisabledTooltip}}" class="travel-option-disabled"{{/if}} {{#if (eq declaration 'forage')}}selected{{/if}}>{{localize 'IONRIFT.RESPITE.TRAVEL.OptionForage'}}</option>{{/if}}
+                        {{#if ../../travelContext.canHunt}}<option value="hunt" {{#if ../../travelContext.huntDisabled}}disabled title="{{../../travelContext.huntDisabledTooltip}}" class="travel-option-disabled"{{/if}} {{#if (eq declaration 'hunt')}}selected{{/if}}>{{localize 'IONRIFT.RESPITE.TRAVEL.OptionHunt'}}</option>{{/if}}
+                        {{#if ../canScout}}<option value="scout" {{#if (eq declaration 'scout')}}selected{{/if}}>{{localize 'IONRIFT.RESPITE.TRAVEL.OptionScout'}}</option>{{/if}}
                     </select>
                     {{#if (eq declaration 'nothing')}}
-                    <button type="button" class="travel-confirm-btn" data-actor-id="{{id}}" data-day="{{../day}}" data-tooltip="Lock in choice">
+                    <button type="button" class="travel-confirm-btn" data-actor-id="{{id}}" data-day="{{../day}}" data-tooltip="{{localize 'IONRIFT.RESPITE.TRAVEL.LockInChoice'}}">
                         <i class="fas fa-check"></i>
                     </button>
                     {{else}}
                     <button type="button" class="travel-self-roll-btn btn-primary" data-action="selfRollTravelCheck" data-actor-id="{{id}}" data-day="{{../day}}" data-activity="{{declaration}}" data-dc="{{#if (eq declaration 'hunt')}}{{../../travelContext.huntDC}}{{else if (eq declaration 'scout')}}0{{else}}{{../../travelContext.forageDC}}{{/if}}">
-                        <i class="fas fa-dice-d20"></i> Roll
+                        <i class="fas fa-dice-d20"></i> {{localize 'IONRIFT.RESPITE.UI.Roll'}}
                     </button>
                     {{/if}}
                     {{/if}}
@@ -752,7 +752,7 @@
 
             {{#if playerDone}}
             <div class="respite-action-bar">
-                <span class="phase-waiting-label"><i class="fas fa-hourglass-half"></i> Waiting for the GM to proceed...</span>
+                <span class="phase-waiting-label"><i class="fas fa-hourglass-half"></i> {{localize 'IONRIFT.RESPITE.UI.WaitingGmProceed'}}</span>
             </div>
             {{/if}}
             </div>
@@ -762,7 +762,7 @@
             {{else}}
             <div class="travel-player-info">
                 <i class="fas fa-hiking"></i>
-                <span>Waiting for the GM...</span>
+                <span>{{localize 'IONRIFT.RESPITE.UI.WaitingForGm'}}</span>
             </div>
             {{/if}}
         </div>
@@ -793,7 +793,7 @@
         {{#if isGM}}
         <div class="respite-action-bar">
             <button type="button" class="btn-primary" data-action="skipTravelPhase">
-                <i class="fas fa-arrow-right"></i> Continue to Activities
+                <i class="fas fa-arrow-right"></i> {{localize 'IONRIFT.RESPITE.TRAVEL.ContinueToActivities'}}
             </button>
         </div>
         {{/if}}
@@ -824,12 +824,12 @@
 
             {{#if campPersonalSelected}}
             {{!-- ── Compact gear grid (2×2 icon tiles) ─────────────────── --}}
-            <div class="totm-camp-factors-heading">Your Gear</div>
+            <div class="totm-camp-factors-heading">{{localize 'IONRIFT.RESPITE.CAMPFIRE.YourGear'}}</div>
             <div class="totm-camp-factors-grid">
                 <div class="totm-factor-tile {{#if campPersonalSelected.hasBedroll}}present{{else}}missing{{/if}}"
-                     data-tooltip="{{#if campPersonalSelected.hasBedroll}}+1 personal comfort{{else}}Comfort stays at camp level{{/if}}">
+                     data-tooltip="{{#if campPersonalSelected.hasBedroll}}{{localize 'IONRIFT.RESPITE.CAMPFIRE.BedrollBonus'}}{{else}}{{localize 'IONRIFT.RESPITE.CAMPFIRE.BedrollNone'}}{{/if}}">
                     <i class="fas fa-bed totm-factor-tile-icon" aria-hidden="true"></i>
-                    <span class="totm-factor-tile-label">Bedroll</span>
+                    <span class="totm-factor-tile-label">{{localize 'IONRIFT.RESPITE.CAMPFIRE.Bedroll'}}</span>
                     {{#if campPersonalSelected.hasBedroll}}
                     <span class="totm-factor-tile-status present"><i class="fas fa-check" aria-hidden="true"></i></span>
                     {{else}}
@@ -837,9 +837,9 @@
                     {{/if}}
                 </div>
                 <div class="totm-factor-tile {{#if campPersonalSelected.hasTent}}present{{else}}missing{{/if}}"
-                     data-tooltip="{{#if campPersonalSelected.hasTent}}Weather shield active{{else}}No weather shield{{/if}}">
+                     data-tooltip="{{#if campPersonalSelected.hasTent}}{{localize 'IONRIFT.RESPITE.CAMPFIRE.TentActive'}}{{else}}{{localize 'IONRIFT.RESPITE.CAMPFIRE.TentNone'}}{{/if}}">
                     <i class="fas fa-campground totm-factor-tile-icon" aria-hidden="true"></i>
-                    <span class="totm-factor-tile-label">Tent</span>
+                    <span class="totm-factor-tile-label">{{localize 'IONRIFT.RESPITE.CAMPFIRE.Tent'}}</span>
                     {{#if campPersonalSelected.hasTent}}
                     <span class="totm-factor-tile-status present"><i class="fas fa-check" aria-hidden="true"></i></span>
                     {{else}}
@@ -847,9 +847,9 @@
                     {{/if}}
                 </div>
                 <div class="totm-factor-tile {{#if campPersonalSelected.hasMessKit}}present{{else}}missing{{/if}}"
-                     data-tooltip="{{#if campPersonalSelected.hasMessKit}}Advantage on the exhaustion save (fire must be lit){{else}}No exhaustion-save advantage{{/if}}">
+                     data-tooltip="{{#if campPersonalSelected.hasMessKit}}{{localize 'IONRIFT.RESPITE.CAMPFIRE.MessKitActive'}}{{else}}{{localize 'IONRIFT.RESPITE.CAMPFIRE.MessKitNone'}}{{/if}}">
                     <i class="fas fa-utensils totm-factor-tile-icon" aria-hidden="true"></i>
-                    <span class="totm-factor-tile-label">Mess Kit</span>
+                    <span class="totm-factor-tile-label">{{localize 'IONRIFT.RESPITE.CAMPFIRE.MessKit'}}</span>
                     {{#if campPersonalSelected.hasMessKit}}
                     <span class="totm-factor-tile-status present"><i class="fas fa-check" aria-hidden="true"></i></span>
                     {{else}}
@@ -857,7 +857,7 @@
                     {{/if}}
                 </div>
                 <div class="totm-factor-tile fire {{#if campColdCampDecided}}cold{{else if campFireIsLit}}present{{else}}missing{{/if}}"
-                     data-tooltip="{{#if campColdCampDecided}}Cold camp: no fire, −1 comfort, harder for enemies to spot.{{else if campFireIsLit}}{{#each campFirePickerLevels}}{{#if selected}}{{label}}: {{fireTierPlain id}}{{/if}}{{/each}}{{else}}No fire lit yet{{/if}}">
+                     data-tooltip="{{#if campColdCampDecided}}{{localize 'IONRIFT.RESPITE.CAMPFIRE.ColdCampFactorTooltip'}}{{else if campFireIsLit}}{{#each campFirePickerLevels}}{{#if selected}}{{label}}: {{fireTierPlain id}}{{/if}}{{/each}}{{else}}{{localize 'IONRIFT.RESPITE.CAMPFIRE.NoFireLitYet'}}{{/if}}">
                     <i class="fas fa-fire totm-factor-tile-icon" aria-hidden="true"></i>
                     <span class="totm-factor-tile-label">Fire</span>
                     {{#if campFireIsLit}}
@@ -874,7 +874,7 @@
             <div class="totm-rest-card comfort-{{campPersonalSelected.personalComfort}}">
                 <div class="totm-rest-card-header comfort-{{campPersonalSelected.personalComfort}}" data-tooltip="{{comfortHint campPersonalSelected.personalComfort}}" data-tooltip-direction="UP">
                     <span class="totm-rest-card-title">{{campPersonalSelected.personalComfortLabel}}</span>
-                    <span class="totm-rest-card-subtitle">Your Rest</span>
+                    <span class="totm-rest-card-subtitle">{{localize 'IONRIFT.RESPITE.CAMPFIRE.YourRest'}}</span>
                 </div>
                 <div class="totm-rest-card-body">
                     {{!-- HP chip --}}
@@ -896,7 +896,7 @@
                     {{else}}
                     <span class="totm-rest-chip success">
                         <i class="fas fa-shield-alt" aria-hidden="true"></i>
-                        No exhaustion risk
+                        {{localize 'IONRIFT.RESPITE.CAMPFIRE.NoExhaustionRisk'}}
                     </span>
                     {{/if}}
                 </div>
@@ -905,7 +905,7 @@
             {{else}}
             {{!-- ── No character selected: show party camp comfort ──────── --}}
             <div class="totm-camp-comfort-hero">
-                <span class="totm-camp-comfort-label">Camp Comfort</span>
+                <span class="totm-camp-comfort-label">{{localize 'IONRIFT.RESPITE.CAMPFIRE.CampComfort'}}</span>
                 <span class="totm-camp-comfort-tier-big comfort-{{campScanData.campComfort}}" data-tooltip="{{comfortHint campScanData.campComfort}}" data-tooltip-direction="UP">
                     {{campScanData.campComfortLabel}}
                 </span>
@@ -913,33 +913,33 @@
             {{#if mapComfortLine}}
             <p class="totm-camp-comfort-reason">{{mapComfortLine}}</p>
             {{/if}}
-            <p class="totm-camp-no-selection">Select a character portrait above to see their personal comfort breakdown.</p>
+            <p class="totm-camp-no-selection">{{localize 'IONRIFT.RESPITE.CAMPFIRE.SelectPortraitComfort'}}</p>
             {{/if}}
 
         </div>
         {{else}}
         <div class="totm-camp-comfort-panel totm-safe-rest-note">
-            <p class="totm-safe-rest-hint"><i class="fas fa-shield-alt" aria-hidden="true"></i> Safe rest spot: no comfort tiers or encounter pressure. Fire counts as lit for cooking.</p>
+            <p class="totm-safe-rest-hint"><i class="fas fa-shield-alt" aria-hidden="true"></i> {{localize 'IONRIFT.RESPITE.CAMPFIRE.SafeRestFireNote'}}</p>
         </div>
         {{/unless}}
 
         {{!-- RIGHT: Campfire ceremony --}}
         <div class="totm-camp-fire-panel {{#if campFireIsLit}}fire-lit{{/if}} {{#if campColdCampDecided}}cold-camp{{/if}}">
             <div class="totm-camp-fire-header">
-                <span class="totm-camp-fire-title"><i class="fas fa-fire" aria-hidden="true"></i> Campfire</span>
+                <span class="totm-camp-fire-title"><i class="fas fa-fire" aria-hidden="true"></i> {{localize 'IONRIFT.RESPITE.CAMPFIRE.Campfire'}}</span>
                 {{#if campFireIsLit}}
                 <span class="totm-camp-fire-status lit"><i class="fas fa-circle" aria-hidden="true"></i> {{campFireLabel}}</span>
                 {{else if campColdCampDecided}}
                 <span class="totm-camp-fire-status cold"><i class="fas fa-moon" aria-hidden="true"></i> Cold camp</span>
                 {{else}}
-                <span class="totm-camp-fire-status unlit"><i class="fas fa-circle" aria-hidden="true"></i> Unlit</span>
+                <span class="totm-camp-fire-status unlit"><i class="fas fa-circle" aria-hidden="true"></i> {{localize 'IONRIFT.RESPITE.CAMPFIRE.Unlit'}}</span>
                 {{/if}}
             </div>
 
             {{#unless safeRestSpot}}
             {{!-- Fire tier segmented control: synced tier picks; cold camp always available --}}
             <div class="totm-fire-segment-wrap">
-                <div class="totm-fire-segments" role="radiogroup" aria-label="Fire intensity tiers">
+                <div class="totm-fire-segments" role="radiogroup" aria-label="{{localize 'IONRIFT.RESPITE.CAMPFIRE.FireIntensityTiers'}}">
                     <button type="button"
                             class="totm-fire-segment cold-camp {{#if campColdCampDecided}}selected{{else if campPreviewIsColdCamp}}selected{{/if}}"
                             data-tier="cold_camp"
@@ -949,8 +949,8 @@
                             data-action="selectCampColdCamp"
                             {{/unless}}>
                         <i class="fas fa-moon" aria-hidden="true"></i>
-                        <span class="totm-fire-segment-label">Cold Camp</span>
-                        <span class="totm-fire-segment-cost">No fire</span>
+                        <span class="totm-fire-segment-label">{{localize 'IONRIFT.RESPITE.UI.ColdCamp'}}</span>
+                        <span class="totm-fire-segment-cost">{{localize 'IONRIFT.RESPITE.UI.NoFire'}}</span>
                     </button>
                     {{#each campFirePickerLevels}}
                     <button type="button"
@@ -968,9 +968,9 @@
                     {{/each}}
                 </div>
                 {{#if campColdCampDecided}}
-                <p class="totm-fire-segment-desc">No fire tonight. <span class="fire-penalty">−1 comfort.</span> <span class="fire-benefit">Harder for enemies to spot (lower encounter chance).</span> No cooking.</p>
+                <p class="totm-fire-segment-desc">{{{localize 'IONRIFT.RESPITE.UI.ColdCampBody'}}}</p>
                 {{else if campPreviewIsColdCamp}}
-                <p class="totm-fire-segment-desc">No fire tonight. <span class="fire-penalty">−1 comfort.</span> <span class="fire-benefit">Harder for enemies to spot (lower encounter chance).</span> No cooking.</p>
+                <p class="totm-fire-segment-desc">{{{localize 'IONRIFT.RESPITE.UI.ColdCampBody'}}}</p>
                 {{else}}
                 {{#each campFirePickerLevels}}
                 {{#if selected}}
@@ -981,7 +981,7 @@
 
                 {{#if showCampCeremonyMinigame}}
                 {{#if campPitBlocksFireLighting}}
-                <p class="totm-fire-bill-hint">{{#if isGM}}Place the campfire on the map (Place fire) before anyone can light it.{{else}}The GM must place the campfire on the map before you can light the fire.{{/if}} Wood staging is still allowed.</p>
+                <p class="totm-fire-bill-hint">{{#if isGM}}{{localize 'IONRIFT.RESPITE.CAMPFIRE.PlaceBeforeLightGm'}}{{else}}{{localize 'IONRIFT.RESPITE.CAMPFIRE.PlaceBeforeLightPlayer'}}{{/if}} {{localize 'IONRIFT.RESPITE.CAMPFIRE.WoodStagingAllowed'}}</p>
                 {{/if}}
                 <div class="totm-camp-minigame-host"></div>
                 {{else}}
@@ -995,24 +995,24 @@
                         {{else}}
                         <i class="fas fa-times" aria-hidden="true"></i>
                         {{/if}}
-                        <span>{{campSelectedFirewoodCost}} firewood needed</span>
-                        <span class="totm-fire-bill-detail">(party has {{campPartyFirewood}})</span>
+                        <span>{{localize 'IONRIFT.RESPITE.CAMPFIRE.FirewoodNeeded' count=campSelectedFirewoodCost}}</span>
+                        <span class="totm-fire-bill-detail">{{localize 'IONRIFT.RESPITE.CAMPFIRE.PartyHasFirewood' count=campPartyFirewood}}</span>
                     </div>
                     <div class="totm-fire-bill-line {{#if campCanLight}}met{{else}}unmet{{/if}}">
                         {{#if campCanLight}}
                         <i class="fas fa-check" aria-hidden="true"></i>
                         <span class="totm-fire-bill-lighter" data-tooltip="{{campFireLighterNames}}">
-                            {{campFireLighters.length}} can light it
+                            {{localize 'IONRIFT.RESPITE.CAMPFIRE.CanLightCount' count=campFireLighters.length}}
                         </span>
                         {{else}}
                         <i class="fas fa-times" aria-hidden="true"></i>
-                        <span>No tinderbox or fire cantrip</span>
+                        <span>{{localize 'IONRIFT.RESPITE.CAMPFIRE.NoTinderboxCantrip'}}</span>
                         {{/if}}
                     </div>
                     {{#if campPitBlocksFireLighting}}
                     <div class="totm-fire-bill-line unmet">
                         <i class="fas fa-times" aria-hidden="true"></i>
-                        <span>Campfire not on map yet</span>
+                        <span>{{localize 'IONRIFT.RESPITE.CAMPFIRE.NotOnMapYet'}}</span>
                     </div>
                     {{/if}}
 
@@ -1021,8 +1021,8 @@
                             data-action="campLightFire"
                             data-actor-id="__gm__"
                             data-method="Tinderbox"
-                            {{#if campPitBlocksFireLighting}}disabled data-tooltip="Place the campfire on the map first."{{else}}data-tooltip="Optional. Players with gear see their own Light button. Use this as a GM override."{{/if}}>
-                        <i class="fas fa-fire" aria-hidden="true"></i> Light it for them
+                            {{#if campPitBlocksFireLighting}}disabled data-tooltip="{{localize 'IONRIFT.RESPITE.CAMPFIRE.PlaceOnMapFirst'}}"{{else}}data-tooltip="{{localize 'IONRIFT.RESPITE.CAMPFIRE.GmLightOptional'}}"{{/if}}>
+                        <i class="fas fa-fire" aria-hidden="true"></i> {{localize 'IONRIFT.RESPITE.CAMPFIRE.LightItForThem'}}
                     </button>
                     {{else if campViewerCanLight}}
                     {{#each campFireLighters}}{{#if this.isViewerActor}}
@@ -1036,9 +1036,9 @@
                     {{else}}
                     <p class="totm-fire-bill-hint">
                         {{#if campFireLighters.length}}
-                        Pick a fire tier above, or wait for {{campFireLighterNames}} or the GM.
+                        {{localize 'IONRIFT.RESPITE.CAMPFIRE.PickTierOrWait' names=campFireLighterNames}}
                         {{else}}
-                        Pick a fire tier above, choose cold camp, or ask the GM.
+                        {{localize 'IONRIFT.RESPITE.CAMPFIRE.PickTierOrAskGm'}}
                         {{/if}}
                     </p>
                     {{/if}}
@@ -1053,7 +1053,7 @@
             {{#if campFireIsLit}}
             {{#if campFirewoodPledgeList.length}}
             <div class="totm-fire-pledges">
-                <span class="totm-fire-pledges-label">Firewood pledged:</span>
+                <span class="totm-fire-pledges-label">{{localize 'IONRIFT.RESPITE.UI.FirewoodPledged'}}</span>
                 {{#each campFirewoodPledgeList}}
                 <span class="totm-fire-pledge-entry">{{actorName}} ({{count}})</span>
                 {{/each}}
@@ -1061,7 +1061,7 @@
             {{/if}}
             {{/if}}
             {{else}}
-            <p class="totm-fire-safe-note"><i class="fas fa-fire" aria-hidden="true"></i> Campfire counts as lit for cooking. No firewood spend and no encounter modifier.</p>
+            <p class="totm-fire-safe-note"><i class="fas fa-fire" aria-hidden="true"></i> {{localize 'IONRIFT.RESPITE.CAMPFIRE.CountsAsLitCooking'}}</p>
             {{/unless}}
 
             {{#if campFireIsLit}}
@@ -1069,7 +1069,7 @@
             {{#if (or (eq campCurrentFireLevel "campfire") (eq campCurrentFireLevel "bonfire"))}}
             <p class="totm-fire-cooking-note">
                 <i class="fas fa-utensils" aria-hidden="true"></i>
-                Cooking available in the activity phase.
+                {{localize 'IONRIFT.RESPITE.CAMPFIRE.CookingInActivity'}}
             </p>
             {{/if}}
             {{/if}}
@@ -1085,7 +1085,7 @@
             {{#if canProceedFromMakeCamp}}
             <button type="button" class="btn-primary totm-camp-proceed"
                     data-action="proceedFromMakeCamp">
-                <i class="fas fa-arrow-right" aria-hidden="true"></i> Proceed to Activities
+                <i class="fas fa-arrow-right" aria-hidden="true"></i> {{localize 'IONRIFT.RESPITE.CAMPFIRE.ProceedToActivities'}}
             </button>
             {{else}}
             <button type="button" class="btn-primary totm-camp-proceed disabled" disabled>
@@ -1096,9 +1096,9 @@
             <span class="totm-camp-player-wait">
                 <i class="fas fa-campground" aria-hidden="true"></i>
                 {{#if canProceedFromMakeCamp}}
-                Camp is set. Waiting for the GM to proceed.
+                {{localize 'IONRIFT.RESPITE.CAMPFIRE.CampSetWaiting'}}
                 {{else}}
-                Setting up camp...
+                {{localize 'IONRIFT.RESPITE.CAMPFIRE.SettingUpCamp'}}
                 {{/if}}
             </span>
             {{/if}}
@@ -1111,7 +1111,7 @@
             <button type="button"
                     class="camp-drag-handle camp-drag-handle-compact camp-drag-handle-placed camp-drag-handle-reclaim"
                     data-action="reclaimCampfire"
-                    aria-label="Pick up campfire to place elsewhere"
+                    aria-label="{{localize 'IONRIFT.RESPITE.CAMPFIRE.PickUpCampfire'}}"
                     data-tooltip="{{campfireDragCard.tooltip}}" data-tooltip-direction="UP">
                 <div class="camp-drag-icon"><i class="fas fa-fire" aria-hidden="true"></i></div>
                 <div class="camp-drag-label">
@@ -1120,7 +1120,7 @@
             </button>
             {{else}}
             <div class="camp-drag-handle camp-drag-handle-compact camp-drag-handle-placed"
-                 aria-label="Campfire placed"
+                 aria-label="{{localize 'IONRIFT.RESPITE.CAMPFIRE.CampfirePlaced'}}"
                  data-tooltip="{{campfireDragCard.tooltip}}" data-tooltip-direction="UP">
                 <div class="camp-drag-icon"><i class="fas fa-check" aria-hidden="true"></i></div>
                 <div class="camp-drag-label">
@@ -1132,7 +1132,7 @@
             <div class="camp-drag-handle camp-drag-handle-compact {{#if campfireDragCard.required}}camp-drag-handle-required{{/if}}"
                  draggable="true"
                  {{#if campfireDragCard.placementClick}}data-camp-placement-click="1"{{/if}}
-                 aria-label="{{#if campfireDragCard.placementClick}}Place campfire on the map (click or drag){{else}}Drag campfire to the map{{/if}}"
+                 aria-label="{{#if campfireDragCard.placementClick}}{{localize 'IONRIFT.RESPITE.CAMPFIRE.PlaceClickOrDrag'}}{{else}}{{localize 'IONRIFT.RESPITE.CAMPFIRE.DragToMap'}}{{/if}}"
                  data-tooltip="{{campfireDragCard.tooltip}}" data-tooltip-direction="UP">
                 <div class="camp-drag-icon"><i class="fas fa-fire" aria-hidden="true"></i></div>
                 <div class="camp-drag-label">
@@ -1161,27 +1161,27 @@
     <div class="camp-minimal-shell camp-phase-shell">
     {{#if campfirePlaced}}
     {{#if simpleStationsMode}}
-    <p class="camp-minimal-lead glass-ui">Setting up camp...</p>
+    <p class="camp-minimal-lead glass-ui">{{localize 'IONRIFT.RESPITE.CAMPFIRE.SettingUpCamp'}}</p>
     {{else if comfortEnabled}}
-    <p class="camp-minimal-lead glass-ui">Use the <strong>campfire</strong> on the map: light the fire, cold camp, or add fuel. Supply tokens show where stations appear after the fire is going.</p>
+    <p class="camp-minimal-lead glass-ui">{{{localize 'IONRIFT.RESPITE.CAMPFIRE.UseCampfireOnMap'}}}</p>
     {{else}}
-    <p class="camp-minimal-lead glass-ui">Campfire and station markers are on the map.</p>
+    <p class="camp-minimal-lead glass-ui">{{localize 'IONRIFT.RESPITE.CAMPFIRE.MarkersOnMap'}}</p>
     {{/if}}
     {{else}}
     <p class="camp-minimal-lead glass-ui">
-        {{#if isGM}}{{#if simpleStationsMode}}Click the map to drop the pit. The fire lights itself and the workbench and bedrolls appear beside it.{{else if comfortEnabled}}A preview follows the pointer. Click the map to drop the pit, or right-click / <kbd>Esc</kbd> to cancel.{{else}}Click the map to place the campfire and station markers.{{/if}}{{else}}The GM is placing the campfire.{{/if}}
+        {{#if isGM}}{{#if simpleStationsMode}}{{localize 'IONRIFT.RESPITE.CAMPFIRE.ClickDropPitSimple'}}{{else if comfortEnabled}}{{{localize 'IONRIFT.RESPITE.CAMPFIRE.PreviewFollowsPointer'}}}{{else}}{{localize 'IONRIFT.RESPITE.CAMPFIRE.ClickPlaceMarkers'}}{{/if}}{{else}}{{localize 'IONRIFT.RESPITE.CAMPFIRE.GmPlacing'}}{{/if}}
     </p>
     {{/if}}
     {{#if isGM}}
     {{#if campPitPlacementCancelled}}
     <div class="camp-pit-retry glass-ui">
-        <p>Placement was cancelled. Place the pit when ready.</p>
-        <button type="button" class="btn-primary" data-action="retryCampPitPlacement"><i class="fas fa-map-pin"></i> Place campfire pit</button>
+        <p>{{localize 'IONRIFT.RESPITE.CAMPFIRE.PlacementCancelled'}}</p>
+        <button type="button" class="btn-primary" data-action="retryCampPitPlacement"><i class="fas fa-map-pin"></i> {{localize 'IONRIFT.RESPITE.CAMPFIRE.PlaceCampfirePit'}}</button>
     </div>
     {{/if}}
     {{#if campfireCanMove}}
     <button type="button" class="btn-secondary camp-minimal-move-fire" data-action="reclaimCampfire">
-        <i class="fas fa-arrows-alt" aria-hidden="true"></i> Move campfire
+        <i class="fas fa-arrows-alt" aria-hidden="true"></i> {{localize 'IONRIFT.RESPITE.CAMPFIRE.MoveCampfire'}}
     </button>
     {{/if}}
     {{/if}}
@@ -1189,14 +1189,14 @@
     {{#if isGM}}
     <div class="respite-action-bar camp-minimal-action">
         {{#if campfirePlaced}}
-        <span class="phase-waiting-label"><i class="fas fa-campground" aria-hidden="true"></i> Camp on map</span>
+        <span class="phase-waiting-label"><i class="fas fa-campground" aria-hidden="true"></i> {{localize 'IONRIFT.RESPITE.CAMPFIRE.CampOnMap'}}</span>
         {{else}}
-        <span class="phase-waiting-label"><i class="fas fa-compass" aria-hidden="true"></i> Map first</span>
+        <span class="phase-waiting-label"><i class="fas fa-compass" aria-hidden="true"></i> {{localize 'IONRIFT.RESPITE.CAMPFIRE.MapFirst'}}</span>
         {{/if}}
     </div>
     {{else}}
     <div class="respite-action-bar camp-minimal-action">
-        <span class="phase-waiting-label"><i class="fas fa-campground" aria-hidden="true"></i> Check the map</span>
+        <span class="phase-waiting-label"><i class="fas fa-campground" aria-hidden="true"></i> {{localize 'IONRIFT.RESPITE.CAMPFIRE.CheckTheMap'}}</span>
     </div>
     {{/if}}
     {{/if}}{{!-- /showFullMakeCampPanel --}}
@@ -1215,10 +1215,10 @@
     <div class="station-choice-review-bar">
         <span class="station-choice-review-text">
             <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
-            Activity saved from the map. Review here or return to the canvas.
+            {{localize 'IONRIFT.RESPITE.REST.ActivitySavedMap'}}
         </span>
         <button type="button" class="btn-secondary" data-action="exitStationChoiceReview">
-            <i class="fas fa-arrow-left" aria-hidden="true"></i> Back to map
+            <i class="fas fa-arrow-left" aria-hidden="true"></i> {{localize 'IONRIFT.RESPITE.REST.BackToMap'}}
         </button>
     </div>
     {{/if}}
@@ -1238,7 +1238,7 @@
             {{#unless totmDetailPanel.isTrainingRolling}}
             <button type="button" class="totm-detail-back"
                     data-action="{{#if totmDetailPanel.isCrafting}}craftClose{{else}}cancelTotmFollowUp{{/if}}"
-                    aria-label="Back to activities">
+                    aria-label="{{localize 'IONRIFT.RESPITE.REST.BackToActivities'}}">
                 <i class="fas fa-arrow-left" aria-hidden="true"></i>
             </button>
             {{/unless}}
@@ -1259,7 +1259,7 @@
             {{#if rollPending}}
             <div class="crafting-roll-blocking-overlay" role="status" aria-live="polite">
                 <i class="fas fa-spinner fa-spin" aria-hidden="true"></i>
-                <span>Waiting for the roll to finish...</span>
+                <span>{{localize 'IONRIFT.RESPITE.CRAFT.WaitingRoll'}}</span>
             </div>
             {{/if}}
             {{!-- ═══════════ AFTER CRAFTING ═══════════ --}}
@@ -1275,10 +1275,10 @@
                     </div>
                     {{#if craftingResult.success}}
                     <div class="craft-result-item-name">{{craftingResult.output.name}}{{#if craftingResult.output.quantity}} <span class="craft-result-qty">(×{{craftingResult.output.quantity}})</span>{{/if}}</div>
-                    <div class="craft-result-badge badge-success"><i class="fas fa-check"></i> Crafted Successfully</div>
+                    <div class="craft-result-badge badge-success"><i class="fas fa-check"></i> {{localize 'IONRIFT.RESPITE.CRAFT.CraftedSuccessfully'}}</div>
                     {{else}}
                     <div class="craft-result-item-name">{{craftingResult.recipeName}}</div>
-                    <div class="craft-result-badge badge-failure"><i class="fas fa-times"></i> Crafting Failed</div>
+                    <div class="craft-result-badge badge-failure"><i class="fas fa-times"></i> {{localize 'IONRIFT.RESPITE.CRAFT.CraftingFailed'}}</div>
                     {{/if}}
                 </div>
                 <div class="craft-result-divider"></div>
@@ -1286,7 +1286,7 @@
                     {{#unless craftingResult.noSkillCheck}}
                     <div class="craft-result-detail-row">
                         <i class="fas fa-dice-d20"></i>
-                        <span>Rolled <strong>{{craftingResult.roll}}</strong> vs DC <strong>{{craftingResult.dc}}</strong></span>
+                        <span>{{{localize 'IONRIFT.RESPITE.CRAFT.RolledVsDC' roll=craftingResult.roll dc=craftingResult.dc}}}</span>
                         <span class="risk-tag risk-{{craftingResult.riskTier}}">{{craftingResult.riskTier}}</span>
                     </div>
                     {{/unless}}
@@ -1297,12 +1297,12 @@
                     {{#if craftingResult.ingredientsConsumed}}
                     <div class="craft-result-detail-row consumed">
                         <i class="fas fa-fire"></i>
-                        <span>Ingredients consumed</span>
+                        <span>{{localize 'IONRIFT.RESPITE.CRAFT.IngredientsConsumed'}}</span>
                     </div>
                     {{else}}
                     <div class="craft-result-detail-row preserved">
                         <i class="fas fa-shield-alt"></i>
-                        <span>Ingredients preserved</span>
+                        <span>{{localize 'IONRIFT.RESPITE.CRAFT.IngredientsPreserved'}}</span>
                     </div>
                     {{/if}}
                 </div>
@@ -1313,7 +1313,7 @@
                     <div class="feast-roster-portraits">
                         {{#each craftingResult.partyRoster}}
                         <div class="feast-portrait {{#if alreadyWellFed}}already-fed{{else}}will-eat{{/if}}"
-                             data-tooltip="{{name}}{{#if alreadyWellFed}}: already Well Fed, goes to inventory{{else}}: will eat now{{/if}}">
+                             data-tooltip="{{name}}{{#if alreadyWellFed}}{{localize 'IONRIFT.RESPITE.CRAFT.AlreadyWellFed'}}{{else}}{{localize 'IONRIFT.RESPITE.CRAFT.WillEatNow'}}{{/if}}">
                             <img src="{{img}}" alt="{{name}}" class="feast-portrait-img">
                             <span class="feast-portrait-badge">
                                 {{#if alreadyWellFed}}
@@ -1325,7 +1325,7 @@
                         </div>
                         {{/each}}
                     </div>
-                    <span class="feast-roster-label">Feeds {{craftingResult.partyRoster.length}} party members</span>
+                    <span class="feast-roster-label">{{localize 'IONRIFT.RESPITE.CRAFT.FeedsPartyMembers' count=craftingResult.partyRoster.length}}</span>
                 </div>
                 {{/if}}
                 {{/if}}
@@ -1336,25 +1336,25 @@
             {{#unless craftingResult.partyMealDispositionDone}}
             <div class="feast-footer-actions">
                 <button type="button" class="btn-secondary feast-keep-btn" data-action="craftClose">
-                    <i class="fas fa-box"></i> Keep in inventory
+                    <i class="fas fa-box"></i> {{localize 'IONRIFT.RESPITE.CRAFT.KeepInInventory'}}
                 </button>
                 <button type="button" class="btn-feast-serve" data-action="feastServeNow">
-                    <i class="fas fa-utensils"></i> Serve Now
+                    <i class="fas fa-utensils"></i> {{localize 'IONRIFT.RESPITE.CRAFT.ServeNow'}}
                 </button>
             </div>
             {{else}}
             <div class="crafting-done-message">
-                <i class="fas fa-utensils"></i> Serving complete. The shared dish is gone from the cook's inventory.
+                <i class="fas fa-utensils"></i> {{localize 'IONRIFT.RESPITE.CRAFT.ServingComplete'}}
             </div>
             {{/unless}}
             {{else}}
             <div class="crafting-done-message">
-                <i class="fas fa-moon"></i> Crafting complete for this rest.
+                <i class="fas fa-moon"></i> {{localize 'IONRIFT.RESPITE.CRAFT.CompleteForRest'}}
             </div>
             {{/if}}
             {{else}}
             <div class="crafting-done-message">
-                <i class="fas fa-moon"></i> Crafting complete for this rest.
+                <i class="fas fa-moon"></i> {{localize 'IONRIFT.RESPITE.CRAFT.CompleteForRest'}}
             </div>
             {{/if}}
 
@@ -1365,7 +1365,7 @@
                 {{!-- ── LEFT PANEL: Recipe List ── --}}
                 <div class="crafting-list-panel">
                     <div class="crafting-list-heading">
-                        <i class="fas fa-scroll"></i> Recipes
+                        <i class="fas fa-scroll"></i> {{localize 'IONRIFT.RESPITE.CRAFT.Recipes'}}
                     </div>
                     {{#if available.length}}
                     <div class="recipe-list recipe-list-compact">
@@ -1385,14 +1385,14 @@
                         {{/each}}
                     </div>
                     {{else}}
-                    <div class="crafting-empty">No recipes available with current ingredients.</div>
+                    <div class="crafting-empty">{{localize 'IONRIFT.RESPITE.CRAFT.NoRecipesAvailable'}}</div>
                     {{/if}}
 
                     {{!-- Missing Recipes (partial matches + fully unmet / locked) --}}
                     {{#if missing.length}}
                     <div class="missing-toggle" data-action="craftToggleMissing">
                         <i class="fas fa-caret-{{#if showMissing}}down{{else}}right{{/if}}"></i>
-                        Missing ({{missing.length}})
+                        {{localize 'IONRIFT.RESPITE.CRAFT.MissingCount' count=missing.length}}
                     </div>
                     {{#if showMissing}}
                     <div class="missing-recipes">
@@ -1438,7 +1438,7 @@
                                 </div>
                                 {{/unless}}
                                 {{#if selectedRecipe.isPartyMeal}}
-                                <span class="recipe-hero-badge badge-party-meal"><i class="fas fa-users"></i> Feeds the Party</span>
+                                <span class="recipe-hero-badge badge-party-meal"><i class="fas fa-users"></i> {{localize 'IONRIFT.RESPITE.CRAFT.FeedsTheParty'}}</span>
                                 {{/if}}
                             </div>
                         </div>
@@ -1469,7 +1469,7 @@
                             </span>
                             <span class="hero-buff-duration">{{selectedRecipe.buffPreview.duration}}</span>
                             {{#if (eq selectedRecipe.buffPreview.target "party")}}
-                            <span class="hero-buff-target"><i class="fas fa-users"></i> Party</span>
+                            <span class="hero-buff-target"><i class="fas fa-users"></i> {{localize 'IONRIFT.RESPITE.UI.Party'}}</span>
                             {{/if}}
                         </div>
                         {{/if}}
@@ -1480,7 +1480,7 @@
                             {{#each selectedRecipe.satiates}}
                             <span class="hero-satiate-badge satiate-{{this}}">
                                 {{#if (eq this "food")}}<i class="fas fa-drumstick-bite"></i> Food{{/if}}
-                                {{#if (eq this "water")}}<i class="fas fa-tint"></i> Water{{/if}}
+                                {{#if (eq this "water")}}<i class="fas fa-tint"></i> {{localize 'IONRIFT.RESPITE.MEAL.Water'}}{{/if}}
                             </span>
                             {{/each}}
                             {{#if selectedRecipe.isWellFed}}
@@ -1495,10 +1495,10 @@
                         <div class="recipe-hero-placeholder">
                             {{#if noAvailableRecipes}}
                             <i class="fas fa-box-open"></i>
-                            <span>No ingredients for any recipe. Forage or check inventory.</span>
+                            <span>{{localize 'IONRIFT.RESPITE.CRAFT.NoIngredientsForage'}}</span>
                             {{else}}
                             <i class="fas fa-utensils"></i>
-                            <span>Select a recipe to see details</span>
+                            <span>{{localize 'IONRIFT.RESPITE.CRAFT.SelectRecipeDetails'}}</span>
                             {{/if}}
                         </div>
                     </div>
@@ -1507,7 +1507,7 @@
                     {{!-- Step 2: Choose Approach --}}
                     {{#unless hideRiskTiers}}
                     <div class="crafting-step crafting-step-approach">
-                        <div class="step-label"><span class="step-num">2</span> Choose Your Approach</div>
+                        <div class="step-label"><span class="step-num">2</span> {{localize 'IONRIFT.RESPITE.CRAFT.ChooseApproach'}}</div>
                         <div class="risk-selector">
                             {{#each riskTiers}}
                             <button type="button" class="btn-risk {{#if selected}}selected{{/if}}" data-action="craftSelectRisk"
@@ -1565,7 +1565,7 @@
         {{else}}
         <div class="totm-detail-check totm-detail-nocheck">
             <i class="fas fa-check-circle" aria-hidden="true"></i>
-            No check required
+            {{localize 'IONRIFT.RESPITE.STATION.NoCheckRequired'}}
         </div>
         {{/if}}
         {{#if totmDetailPanel.followUpData}}
@@ -1601,7 +1601,7 @@
             {{else if (eq totmDetailPanel.followUpData.type "actorItem")}}
             {{#if totmDetailPanel.followUpData.slotInfo}}
             <div class="attunement-slots">
-                <i class="fas fa-gem" aria-hidden="true"></i> Attunement slots: {{totmDetailPanel.followUpData.slotInfo}}
+                <i class="fas fa-gem" aria-hidden="true"></i> {{localize 'IONRIFT.RESPITE.STATION.AttunementSlots'}} {{totmDetailPanel.followUpData.slotInfo}}
             </div>
             {{/if}}
             <select class="followup-select totm-followup-select">
@@ -1640,7 +1640,7 @@
         {{else}}
         <div class="totm-detail-actions">
             <button type="button" class="totm-detail-confirm-btn" data-action="confirmTotmFollowUp">
-                <i class="fas fa-check" aria-hidden="true"></i> Confirm Activity
+                <i class="fas fa-check" aria-hidden="true"></i> {{localize 'IONRIFT.RESPITE.STATION.ConfirmActivity'}}
             </button>
         </div>
         {{/if}}
@@ -1651,12 +1651,12 @@
     <div class="totm-tab-bar">
         <button type="button" class="totm-tab {{#if (eq totmActiveTab 'activities')}}active{{/if}}"
                 data-action="switchTotmTab" data-totm-tab="activities">
-            <i class="fas fa-running" aria-hidden="true"></i> Activities
+            <i class="fas fa-running" aria-hidden="true"></i> {{localize 'IONRIFT.RESPITE.REST.Activities'}}
         </button>
         {{#if workbenchIdentifyUiEnabled}}
         <button type="button" class="totm-tab {{#if (eq totmActiveTab 'identify')}}active{{/if}}"
                 data-action="switchTotmTab" data-totm-tab="identify">
-            <i class="fas fa-search" aria-hidden="true"></i> Identify
+            <i class="fas fa-search" aria-hidden="true"></i> {{localize 'IONRIFT.RESPITE.WORKBENCH.Identify'}}
         </button>
         {{/if}}
         {{#if totmFireTabVisible}}
@@ -1672,7 +1672,7 @@
     {{#if totmCharacterLocked}}
     <div class="station-choice-locked">
         <i class="fas fa-check-circle" aria-hidden="true"></i>
-        <span>This character is already set to <strong>{{totmCharacterLocked}}</strong> this rest.</span>
+        <span>{{{localize 'IONRIFT.RESPITE.STATION.CharAlreadySet' activity=totmCharacterLocked}}}</span>
     </div>
     {{/if}}
     {{#if totmStationCards.length}}
@@ -1749,17 +1749,17 @@
             {{#if campFireIsLit}}
             <div class="totm-fire-current-level">
                 <i class="fas fa-fire" aria-hidden="true"></i>
-                <span>Current fire: <strong>{{campFireLabel}}</strong></span>
+                <span>{{{localize 'IONRIFT.RESPITE.CAMPFIRE.CurrentFire' label=campFireLabel}}}</span>
             </div>
             {{else if campColdCampDecided}}
             <div class="totm-fire-current-level cold-camp">
                 <i class="fas fa-snowflake" aria-hidden="true"></i>
-                <span>Cold camp, no fire</span>
+                <span>{{localize 'IONRIFT.RESPITE.CAMPFIRE.ColdCampNoFire'}}</span>
             </div>
             {{else}}
             <div class="totm-fire-current-level unlit">
                 <i class="fas fa-moon" aria-hidden="true"></i>
-                <span>Fire not yet lit</span>
+                <span>{{localize 'IONRIFT.RESPITE.CAMPFIRE.FireNotYetLit'}}</span>
             </div>
             {{/if}}
         </div>
@@ -1772,10 +1772,10 @@
 
     </div>{{!-- /totm-activity-main --}}
     {{#if showTotmCampfirePanel}}
-    <aside class="totm-campfire-side-panel" aria-label="Campfire minigame">
+    <aside class="totm-campfire-side-panel" aria-label="{{localize 'IONRIFT.RESPITE.CAMPFIRE.MinigameAria'}}">
         <div class="totm-campfire-side-header">
             <i class="fas fa-fire" aria-hidden="true"></i>
-            <span>Campfire</span>
+            <span>{{localize 'IONRIFT.RESPITE.CAMPFIRE.Campfire'}}</span>
         </div>
         <div class="totm-campfire-minigame-host"></div>
     </aside>
@@ -1791,11 +1791,11 @@
         <span class="totm-footer-stat">
             <i class="fas fa-users" aria-hidden="true"></i>
             {{#if activityPhasePlayerOverview.viewerHasSubmitted}}
-            {{activityPhasePlayerOverview.resolvedCount}} / {{activityPhasePlayerOverview.totalCharacters}} completed
+            {{localize 'IONRIFT.RESPITE.REST.CompletedCount' resolved=activityPhasePlayerOverview.resolvedCount total=activityPhasePlayerOverview.totalCharacters}}
             {{else if isGM}}
-            {{activityPhasePlayerOverview.resolvedCount}} / {{activityPhasePlayerOverview.totalCharacters}} activities assigned
+            {{localize 'IONRIFT.RESPITE.REST.AssignedCount' resolved=activityPhasePlayerOverview.resolvedCount total=activityPhasePlayerOverview.totalCharacters}}
             {{else}}
-            Choose one activity
+            {{localize 'IONRIFT.RESPITE.REST.ChooseOneActivity'}}
             {{/if}}
         </span>
         {{#if activityPhasePlayerOverview.allResolved}}
@@ -1804,15 +1804,15 @@
             <i class="{{activityProceed.icon}}"></i> {{activityProceed.label}}
         </button>
         {{else}}
-        <span class="totm-footer-waiting"><i class="fas fa-hourglass-half" aria-hidden="true"></i> Waiting on GM</span>
+        <span class="totm-footer-waiting"><i class="fas fa-hourglass-half" aria-hidden="true"></i> {{localize 'IONRIFT.RESPITE.REST.WaitingOnGm'}}</span>
         {{/if}}
         {{else if isGM}}
         <button type="button" class="btn-primary totm-footer-proceed disabled" disabled
-                data-tooltip="{{activityPhasePlayerOverview.resolvedCount}} / {{activityPhasePlayerOverview.totalCharacters}} activities assigned. All must be assigned to proceed.">
+                data-tooltip="{{localize 'IONRIFT.RESPITE.REST.AllMustAssign' resolved=activityPhasePlayerOverview.resolvedCount total=activityPhasePlayerOverview.totalCharacters}}">
             <i class="fas fa-lock" aria-hidden="true"></i> {{activityProceed.label}}
         </button>
         {{else if activityPhasePlayerOverview.viewerHasSubmitted}}
-        <span class="totm-footer-waiting"><i class="fas fa-hourglass-half" aria-hidden="true"></i> Waiting for others</span>
+        <span class="totm-footer-waiting"><i class="fas fa-hourglass-half" aria-hidden="true"></i> {{localize 'IONRIFT.RESPITE.REST.WaitingForOthers'}}</span>
         {{/if}}
     </div>
     {{else}}
@@ -1820,11 +1820,11 @@
         <div class="respite-activities activity-phase-player-overview-wrap">
             <div class="player-overview-heading">
                 <i class="fas fa-users" aria-hidden="true"></i>
-                <span>Party progress</span>
+                <span>{{localize 'IONRIFT.RESPITE.REST.PartyProgress'}}</span>
             </div>
-            <p class="player-overview-lead">{{#if activityPhasePlayerOverview.simpleStations}}Wander the camp. Everyone is on Other tonight.{{else}}Use camp map stations to choose activities{{#if activityPhasePlayerOverview.trackFood}} and meal rations{{/if}}.{{/if}}</p>
+            <p class="player-overview-lead">{{#if activityPhasePlayerOverview.simpleStations}}{{localize 'IONRIFT.RESPITE.REST.WanderCampOther'}}{{else}}{{#if activityPhasePlayerOverview.trackFood}}{{localize 'IONRIFT.RESPITE.REST.UseStationsWithMeals'}}{{else}}{{localize 'IONRIFT.RESPITE.REST.UseStations'}}{{/if}}{{/if}}</p>
             <div class="player-overview-stat">
-                <span class="player-overview-label">Party members with an activity</span>
+                <span class="player-overview-label">{{localize 'IONRIFT.RESPITE.REST.MembersWithActivity'}}</span>
                 <span class="player-overview-value">{{activityPhasePlayerOverview.resolvedCount}} / {{activityPhasePlayerOverview.totalCharacters}}</span>
             </div>
             <div class="player-overview-progress-track" role="progressbar"
@@ -1835,7 +1835,7 @@
             </div>
             {{#if activityPhasePlayerOverview.trackFood}}
             <div class="player-overview-stat">
-                <span class="player-overview-label">Party members with rations</span>
+                <span class="player-overview-label">{{localize 'IONRIFT.RESPITE.REST.MembersWithRations'}}</span>
                 <span class="player-overview-value">{{activityPhasePlayerOverview.mealRationsSubmitted}} / {{activityPhasePlayerOverview.totalCharacters}}</span>
             </div>
             <div class="player-overview-progress-track player-overview-progress-track--meal" role="progressbar"
@@ -1853,12 +1853,12 @@
                 </button>
             </div>
             {{else}}
-            <p class="player-overview-note"><i class="fas fa-hourglass-half" aria-hidden="true"></i> Everyone has an activity. Waiting on the GM to advance.</p>
+            <p class="player-overview-note"><i class="fas fa-hourglass-half" aria-hidden="true"></i> {{localize 'IONRIFT.RESPITE.REST.EveryoneWaitingGm'}}</p>
             {{/if}}
             {{else if isGM}}
             <div class="respite-action-bar">
                 <button type="button" class="btn-primary disabled" disabled
-                        data-tooltip="{{activityPhasePlayerOverview.resolvedCount}} / {{activityPhasePlayerOverview.totalCharacters}} activities assigned. All must be assigned to proceed.">
+                        data-tooltip="{{localize 'IONRIFT.RESPITE.REST.AllMustAssign' resolved=activityPhasePlayerOverview.resolvedCount total=activityPhasePlayerOverview.totalCharacters}}">
                     <i class="fas fa-lock"></i> {{activityProceed.label}}
                 </button>
             </div>
@@ -1878,7 +1878,7 @@
     <div class="activity-phase-layout">
     <div class="respite-meal-phase">
         <div class="meal-phase-header">
-            <h3><i class="fas fa-utensils"></i> Rations</h3>
+            <h3><i class="fas fa-utensils"></i> {{localize 'IONRIFT.RESPITE.MEAL.Rations'}}</h3>
         </div>
 
         {{#with (lookup mealCards 0)}}
@@ -1892,7 +1892,7 @@
 
         {{#if isGM}}
         <div class="meal-days-info">
-            <span class="meal-days-label"><i class="fas fa-calendar-day"></i> {{daysSinceLastRest}} day{{#unless (eq daysSinceLastRest 1)}}s{{/unless}} since last rest</span>
+            <span class="meal-days-label"><i class="fas fa-calendar-day"></i> {{localize 'IONRIFT.RESPITE.MEAL.DaysSinceRest' days=daysSinceLastRest}}</span>
         </div>
         {{/if}}
 
@@ -1900,7 +1900,7 @@
         {{#with (lookup mealCards 0)}}
         {{#if isMultiDay}}
         <div class="sustenance-progress-container">
-            <span class="sustenance-progress-label">Sustenance Progress</span>
+            <span class="sustenance-progress-label">{{localize 'IONRIFT.RESPITE.MEAL.SustenanceProgress'}}</span>
             <div class="sustenance-progress">
                 {{#each daySegments}}
                 <div class="sustenance-segment {{status}}">
@@ -1916,7 +1916,7 @@
         {{#if (and (not isGM) mealSubmitted)}}
         {{!-- Post-submission: replace meal cards with summary --}}
         <div class="meal-submitted-summary">
-            <h4><i class="fas fa-scroll"></i> Meal Summary</h4>
+            <h4><i class="fas fa-scroll"></i> {{localize 'IONRIFT.RESPITE.MEAL.MealSummary'}}</h4>
             {{#each mealCards}}
             <div class="meal-summary-card">
                 <div class="meal-summary-header">
@@ -1929,11 +1929,11 @@
                 <div class="meal-summary-status">
                     <span class="meal-summary-stat {{#if foodSufficient}}stat-ok{{else}}stat-warn{{/if}}">
                         <i class="fas {{#if foodSufficient}}fa-check-circle{{else}}fa-drumstick-bite{{/if}}"></i>
-                        {{#if foodSufficient}}Fed{{else}}Hungry{{/if}} ({{foodFilledCount}}/{{foodRequired}})
+                        {{#if foodSufficient}}{{localize 'IONRIFT.RESPITE.MEAL.Fed'}}{{else}}{{localize 'IONRIFT.RESPITE.MEAL.Hungry'}}{{/if}} ({{foodFilledCount}}/{{foodRequired}})
                     </span>
                     <span class="meal-summary-stat {{#if waterSufficient}}stat-ok{{else}}stat-warn{{/if}}">
                         <i class="fas {{#if waterSufficient}}fa-check-circle{{else}}fa-tint-slash{{/if}}"></i>
-                        {{#if waterSufficient}}Hydrated{{else}}Thirsty{{/if}} ({{waterFilledCount}}/{{waterRequired}})
+                        {{#if waterSufficient}}{{localize 'IONRIFT.RESPITE.MEAL.Hydrated'}}{{else}}{{localize 'IONRIFT.RESPITE.MEAL.Thirsty'}}{{/if}} ({{waterFilledCount}}/{{waterRequired}})
                     </span>
                 </div>
                 {{#each advisories}}
@@ -1945,7 +1945,7 @@
             {{/each}}
             {{#if dehydrationResults.length}}
             <div class="meal-results-panel">
-                <h4><i class="fas fa-utensils"></i> Rations Outcome</h4>
+                <h4><i class="fas fa-utensils"></i> {{localize 'IONRIFT.RESPITE.MEAL.RationsOutcome'}}</h4>
                 {{#each dehydrationResults}}
                 {{#if pending}}
                 <div class="meal-result-row result-pending">
@@ -1972,7 +1972,7 @@
             </div>
             {{/if}}
             <div class="respite-action-bar">
-                <span class="phase-waiting-label"><i class="fas fa-hourglass-half"></i> Waiting for GM to proceed...</span>
+                <span class="phase-waiting-label"><i class="fas fa-hourglass-half"></i> {{localize 'IONRIFT.RESPITE.UI.WaitingGmProceed'}}</span>
             </div>
         </div>
         {{else}}
@@ -1986,26 +1986,26 @@
                 </div>
                 {{/unless}}
 
-                {{!-- Feast advisory: shown when a TotM Serve Now feast pre-covered this character --}}
+                {{!-- Feast advisory: shown when a TotM {{localize 'IONRIFT.RESPITE.CRAFT.ServeNow'}} feast pre-covered this character --}}
                 {{#if feastAdvisory}}
                 <div class="meal-advisory ok">
-                    <i class="fas fa-utensils"></i> A feast was served. Food and water are covered for the party.
+                    <i class="fas fa-utensils"></i> {{localize 'IONRIFT.RESPITE.MEAL.FeastServed'}}
                 </div>
                 {{/if}}
 
                 {{#if (or allDaysConsumed playerSubmitted)}}
                 <div class="station-meal-rations-done-lead" role="status">
                     <i class="fas fa-check-circle" aria-hidden="true"></i>
-                    <p>Food and water for this rest are already submitted. The status below is read-only.</p>
+                    <p>{{localize 'IONRIFT.RESPITE.MEAL.AlreadySubmitted'}}</p>
                 </div>
                 <div class="meal-summary-status">
                     <span class="meal-summary-stat {{#if foodSufficient}}stat-ok{{else}}stat-warn{{/if}}">
                         <i class="fas {{#if foodSufficient}}fa-check-circle{{else}}fa-drumstick-bite{{/if}}"></i>
-                        {{#if foodSufficient}}Fed{{else}}Hungry{{/if}}
+                        {{#if foodSufficient}}{{localize 'IONRIFT.RESPITE.MEAL.Fed'}}{{else}}{{localize 'IONRIFT.RESPITE.MEAL.Hungry'}}{{/if}}
                     </span>
                     <span class="meal-summary-stat {{#if waterSufficient}}stat-ok{{else}}stat-warn{{/if}}">
                         <i class="fas {{#if waterSufficient}}fa-check-circle{{else}}fa-tint-slash{{/if}}"></i>
-                        {{#if waterSufficient}}Hydrated{{else}}Thirsty{{/if}}
+                        {{#if waterSufficient}}{{localize 'IONRIFT.RESPITE.MEAL.Hydrated'}}{{else}}{{localize 'IONRIFT.RESPITE.MEAL.Thirsty'}}{{/if}}
                     </span>
                 </div>
                 {{else}}
@@ -2013,8 +2013,8 @@
                 <div class="meal-drop-columns">
                     <div class="meal-panel food-panel {{#unless hasFood}}panel-empty{{/unless}}">
                         <div class="meal-panel-heading meal-panel-heading--food">
-                            <span class="meal-panel-heading-title"><i class="fas fa-drumstick-bite" aria-hidden="true"></i> Food</span>
-                            <span class="meal-panel-req-note">{{foodRequired}} ration{{#unless (eq foodRequired 1)}}s{{/unless}} needed</span>
+                            <span class="meal-panel-heading-title"><i class="fas fa-drumstick-bite" aria-hidden="true"></i> {{localize 'IONRIFT.RESPITE.MEAL.Food'}}</span>
+                            <span class="meal-panel-req-note">{{localize 'IONRIFT.RESPITE.MEAL.RationsNeeded' count=foodRequired}}</span>
                         </div>
                         {{#if hasFood}}
                         {{#each foodSlots}}
@@ -2042,7 +2042,7 @@
                                 {{/if}}
                                 {{/each}}
                                 {{else}}
-                                <span class="meal-drop-hint-text">drag from below</span>
+                                <span class="meal-drop-hint-text">{{localize 'IONRIFT.RESPITE.MEAL.DragFromBelow'}}</span>
                                 {{/if}}
                             </div>
                         </div>
@@ -2067,14 +2067,14 @@
                         {{else}}
                         <div class="panel-no-inventory">
                             <i class="fas fa-drumstick-bite"></i>
-                            <span>No rations in inventory</span>
+                            <span>{{localize 'IONRIFT.RESPITE.MEAL.NoRations'}}</span>
                         </div>
                         {{/if}}
                     </div>
                     <div class="meal-panel water-panel {{#unless hasWater}}panel-empty{{/unless}}">
                         <div class="meal-panel-heading meal-panel-heading--water">
-                            <span class="meal-panel-heading-title"><i class="fas fa-tint" aria-hidden="true"></i> Water</span>
-                            <span class="meal-panel-req-note">{{waterRequired}} pints needed</span>
+                            <span class="meal-panel-heading-title"><i class="fas fa-tint" aria-hidden="true"></i> {{localize 'IONRIFT.RESPITE.MEAL.Water'}}</span>
+                            <span class="meal-panel-req-note">{{localize 'IONRIFT.RESPITE.MEAL.PintsNeeded' count=waterRequired}}</span>
                         </div>
                         {{#if hasWater}}
                         <div class="water-pool-target meal-drop-zone water-drop-zone{{#if waterSufficient}} water-pool-target--complete{{/if}}"
@@ -2086,7 +2086,7 @@
                                 <i class="fas fa-tint drop-zone-goblet"></i>
                                 {{/if}}
                             </div>
-                            <span class="meal-drop-hint-text">{{#if waterSufficient}}Water needs met{{else}}drop water here{{/if}}</span>
+                            <span class="meal-drop-hint-text">{{#if waterSufficient}}{{localize 'IONRIFT.RESPITE.MEAL.WaterNeedsMet'}}{{else}}{{localize 'IONRIFT.RESPITE.MEAL.DropWaterHere'}}{{/if}}</span>
                         </div>
                         <div class="water-pool-bar" data-target="{{waterRequired}}" data-filled="{{waterFilledCount}}">
                             {{#each waterPoolSegments}}
@@ -2095,17 +2095,17 @@
                         </div>
                         <div class="water-pool-status">
                             {{#if waterSufficient}}
-                            <span class="pool-status-ok"><i class="fas fa-check"></i> {{waterFilledCount}}/{{waterRequired}} pints. Hydrated</span>
+                            <span class="pool-status-ok"><i class="fas fa-check"></i> {{localize 'IONRIFT.RESPITE.MEAL.PintsHydrated' filled=waterFilledCount required=waterRequired}}</span>
                             {{else if waterFilledCount}}
-                            <span class="pool-status-partial">{{waterFilledCount}} of {{waterRequired}} pints</span>
+                            <span class="pool-status-partial">{{localize 'IONRIFT.RESPITE.MEAL.PintsOf' filled=waterFilledCount required=waterRequired}}</span>
                             {{else}}
-                            <span class="pool-status-empty">0 of {{waterRequired}} pints</span>
+                            <span class="pool-status-empty">{{localize 'IONRIFT.RESPITE.MEAL.PintsZero' required=waterRequired}}</span>
                             {{/if}}
                         </div>
                         {{#if waterPoolSources.length}}
                         <div class="water-pool-sources">
                             {{#each waterPoolSources}}
-                            <span class="pool-source-pill{{#if isMealCredit}} pool-source-pill--meal{{/if}}">{{#if isMealCredit}}<i class="fas fa-utensils" aria-hidden="true"></i> {{/if}}{{name}}{{#unless isMealCredit}}: {{pintsUsed}} pints used{{/unless}}</span>
+                            <span class="pool-source-pill{{#if isMealCredit}} pool-source-pill--meal{{/if}}">{{#if isMealCredit}}<i class="fas fa-utensils" aria-hidden="true"></i> {{/if}}{{name}}{{#unless isMealCredit}}{{localize 'IONRIFT.RESPITE.MEAL.PintsUsed' pints=pintsUsed}}{{/unless}}</span>
                             {{/each}}
                         </div>
                         {{/if}}
@@ -2133,7 +2133,7 @@
                         {{else}}
                         <div class="panel-no-inventory">
                             <i class="fas fa-tint"></i>
-                            <span>No water in inventory</span>
+                            <span>{{localize 'IONRIFT.RESPITE.MEAL.NoWater'}}</span>
                         </div>
                         {{/if}}
                     </div>
@@ -2141,7 +2141,7 @@
                 </div>
                 {{#unless ../isTheaterMode}}
                 <div class="station-meal-submit-row">
-                    <button type="button" class="station-meal-submit-btn" data-action="submitMealChoices">Submit rations</button>
+                    <button type="button" class="station-meal-submit-btn" data-action="submitMealChoices">{{localize 'IONRIFT.RESPITE.MEAL.SubmitRations'}}</button>
                 </div>
                 {{/unless}}
                 {{/if}}
@@ -2152,7 +2152,7 @@
         {{!-- Dehydration save results panel (visible to all) --}}
         {{#if dehydrationResults.length}}
         <div class="meal-results-panel">
-            <h4><i class="fas fa-utensils"></i> Rations Outcome</h4>
+            <h4><i class="fas fa-utensils"></i> {{localize 'IONRIFT.RESPITE.MEAL.RationsOutcome'}}</h4>
             {{#each dehydrationResults}}
             {{#if pending}}
             <div class="meal-result-row result-pending">
@@ -2186,33 +2186,33 @@
                 {{#if pendingDehydrationSaves}}
                     {{#if allDehydrationResolved}}
                     <button type="button" class="btn-primary" data-action="proceedFromMeal">
-                        <i class="fas fa-moon"></i> Proceed to Events
+                        <i class="fas fa-moon"></i> {{localize 'IONRIFT.RESPITE.MEAL.ProceedToEvents'}}
                     </button>
                     {{else}}
                     <button type="button" class="btn-primary" disabled>
                         <i class="fas fa-hourglass-half"></i> Waiting for {{pendingDehydrationSaves}} CON save(s)...
                     </button>
                     {{#if hasUnresolvedSaves}}
-                    <button type="button" class="btn-secondary" data-action="skipPendingSaves" data-tooltip="Auto-fail all pending saves and apply exhaustion">
-                        <i class="fas fa-forward"></i> Skip Pending Saves
+                    <button type="button" class="btn-secondary" data-action="skipPendingSaves" data-tooltip="{{localize 'IONRIFT.RESPITE.MEAL.SkipSavesTooltip'}}">
+                        <i class="fas fa-forward"></i> {{localize 'IONRIFT.RESPITE.MEAL.SkipPendingSaves'}}
                     </button>
                     {{/if}}
                     {{/if}}
                 {{else}}
                 <button type="button" class="btn-primary" data-action="proceedFromMeal">
-                    <i class="fas fa-moon"></i> Proceed to Events
+                    <i class="fas fa-moon"></i> {{localize 'IONRIFT.RESPITE.MEAL.ProceedToEvents'}}
                 </button>
                 {{/if}}
             {{else}}
             <button type="button" class="btn-primary" data-action="proceedFromMeal">
-                <i class="fas fa-dice-d20"></i> Process Rations & Checks
+                <i class="fas fa-dice-d20"></i> {{localize 'IONRIFT.RESPITE.MEAL.ProcessRations'}}
             </button>
             {{/if}}
             {{else}}
             {{#with (lookup mealCards 0)}}
             {{#if (and isMultiDay (not allDaysConsumed))}}
             <button type="button" class="btn-primary btn-consume-day" data-action="consumeMealDay">
-                <i class="fas fa-utensils"></i> Consume Day {{currentDay}}
+                <i class="fas fa-utensils"></i> {{localize 'IONRIFT.RESPITE.MEAL.ConsumeDay'}} {{currentDay}}
             </button>
             {{else if allDaysConsumed}}
             <button type="button" class="btn-primary" disabled>
@@ -2225,16 +2225,16 @@
         {{else}}
         <div class="respite-action-bar">
                 {{#if mealSubmitted}}
-                <span class="phase-waiting-label"><i class="fas fa-hourglass-half"></i> Waiting for GM to proceed...</span>
+                <span class="phase-waiting-label"><i class="fas fa-hourglass-half"></i> {{localize 'IONRIFT.RESPITE.UI.WaitingGmProceed'}}</span>
                 {{else}}
                 {{#with (lookup mealCards 0)}}
                 {{#if (and isMultiDay (not allDaysConsumed))}}
                 <button type="button" class="btn-primary btn-consume-day" data-action="consumeMealDay">
-                    <i class="fas fa-utensils"></i> Consume Day {{currentDay}}
+                    <i class="fas fa-utensils"></i> {{localize 'IONRIFT.RESPITE.MEAL.ConsumeDay'}} {{currentDay}}
                 </button>
                 {{else}}
                 <button type="button" class="btn-primary" data-action="submitMealChoices">
-                    <i class="fas fa-utensils"></i> Submit Meals
+                    <i class="fas fa-utensils"></i> {{localize 'IONRIFT.RESPITE.MEAL.SubmitMeals'}}
                 </button>
                 {{/if}}
                 {{/with}}
@@ -2274,7 +2274,7 @@
         {{!-- Disaster Choice: nat 1 GM pick --}}
         {{#if disasterChoice}}
         <div class="respite-event-card encounter disaster-choice-card">
-            <div class="event-name"><i class="fas fa-skull"></i> Natural 1: disaster pool</div>
+            <div class="event-name"><i class="fas fa-skull"></i> {{localize 'IONRIFT.RESPITE.EVENT.Nat1DisasterPool'}}</div>
             <div class="event-description">
                 A terrible omen. Choose how the night unfolds.
             </div>
@@ -2285,7 +2285,7 @@
                 <div class="disaster-option-card tree">
                     <span class="disaster-option-label">Option {{disasterChoice.treeNum}}</span>
                     <i class="fas fa-skull disaster-option-icon"></i>
-                    <strong class="disaster-option-title">Disaster Event</strong>
+                    <strong class="disaster-option-title">{{localize 'IONRIFT.RESPITE.EVENT.DisasterEvent'}}</strong>
                     <span class="disaster-option-preview">{{disasterChoice.tree.name}}</span>
                     <button type="button" class="disaster-option-select" data-action="disasterChoice" data-pick="tree" data-tooltip="Run a branching disaster scene: a sequence of skill checks with consequences.">Select</button>
                 </div>
@@ -2294,7 +2294,7 @@
                 <div class="disaster-option-card encounter">
                     <span class="disaster-option-label">Option {{disasterChoice.encounterNum}}</span>
                     <i class="fas fa-swords disaster-option-icon"></i>
-                    <strong class="disaster-option-title">Combat Encounter</strong>
+                    <strong class="disaster-option-title">{{localize 'IONRIFT.RESPITE.EVENT.CombatEncounter'}}</strong>
                     <span class="disaster-option-preview">{{disasterChoice.encounter.name}}</span>
                     <button type="button" class="disaster-option-select" data-action="disasterChoice" data-pick="encounter" data-tooltip="Drop a combat encounter into the camp.">Select</button>
                 </div>
@@ -2312,11 +2312,11 @@
                 {{/if}}
             </div>
             <div class="disaster-dismiss">
-                <button type="button" class="btn-override-link" data-action="disasterChoice" data-pick="dismiss" data-tooltip="Skip the disaster: the night passes with no event.">Dismiss and continue</button>
+                <button type="button" class="btn-override-link" data-action="disasterChoice" data-pick="dismiss" data-tooltip="Skip the disaster: the night passes with no event.">{{localize 'IONRIFT.RESPITE.EVENT.DismissContinue'}}</button>
             </div>
             {{else}}
             <div class="event-check-waiting">
-                <i class="fas fa-skull"></i> Something terrible stirs. The GM is deciding...
+                <i class="fas fa-skull"></i> {{localize 'IONRIFT.RESPITE.EVENT.TerribleStirs'}}
             </div>
             {{/if}}
         </div>
@@ -2357,7 +2357,7 @@
                     {{#if activeTreeState.readAloud}}
                     <span>{{activeTreeState.readAloud}}</span>
                     {{else}}
-                    <em>Set the scene, then present the options below.</em>
+                    <em>{{localize 'IONRIFT.RESPITE.EVENT.SetTheScene'}}</em>
                     {{/if}}
                 </div>
                 {{#if activeTreeState.showDecisionPrompt}}
@@ -2445,7 +2445,7 @@
                             {{#if rollModeForceFail}}<span class="check-avatar-mode force-fail"><i class="fas fa-times"></i></span>{{/if}}
                         </button>
                         {{#if @root.activeTreeState.rollRequestSent}}
-                        <button type="button" class="btn-roll-for-player tree-roll-for-player" data-action="rollTreeForPlayer" data-character-id="{{id}}" data-tooltip="Roll on their behalf">
+                        <button type="button" class="btn-roll-for-player tree-roll-for-player" data-action="rollTreeForPlayer" data-character-id="{{id}}" data-tooltip="{{localize 'IONRIFT.RESPITE.UI.RollOnBehalf'}}">
                             <i class="fas fa-dice"></i>
                         </button>
                         {{/if}}
@@ -2460,7 +2460,7 @@
                     </button>
                     {{else}}
                     <button type="button" class="btn-send-roll-request" data-action="sendTreeRollRequest" data-tooltip="Dispatch roll request to all players with current modifiers">
-                        <i class="fas fa-paper-plane"></i> Send Roll Request
+                        <i class="fas fa-paper-plane"></i> {{localize 'IONRIFT.RESPITE.EVENT.SendRollRequest'}}
                     </button>
                     {{/if}}
                 </div>
@@ -2471,11 +2471,11 @@
             {{> rollRequest rollRequest=@root.pendingTreeRoll.rollRequest}}
             {{else if @root.pendingTreeRoll}}
             <div class="tree-waiting">
-                <i class="fas fa-dice-d20"></i> Waiting for roll request...
+                <i class="fas fa-dice-d20"></i> {{localize 'IONRIFT.RESPITE.EVENT.WaitingRollRequest'}}
             </div>
             {{else}}
             <div class="tree-waiting">
-                <i class="fas fa-dice-d20"></i> Waiting for a decision...
+                <i class="fas fa-dice-d20"></i> {{localize 'IONRIFT.RESPITE.EVENT.WaitingDecision'}}
             </div>
             {{/if}}
             {{/if}}
@@ -2537,7 +2537,7 @@
             <div class="tree-stall-area">
                 <button type="button" class="btn-stall-penalty" data-action="applyStallPenalty"
                     data-tooltip="Apply when players stall or bargain for a third option. DCs +{{activeTreeState.stallPenalty.dcBump}}, supplies lost to the delay. Can be applied multiple times.">
-                    <i class="fas fa-hourglass-half"></i> Players Stalling
+                    <i class="fas fa-hourglass-half"></i> {{localize 'IONRIFT.RESPITE.EVENT.PlayersStalling'}}
                 </button>
                 <span class="stall-hint-text">Third option bid &middot; negotiating between choices &middot; repeating answered questions</span>
                 {{#if activeTreeState.stallCount}}
@@ -2552,7 +2552,7 @@
             {{else}}
             {{!-- Player: Waiting for GM to pick a choice --}}
             <div class="tree-waiting">
-                <i class="fas fa-dice-d20"></i> The GM is making a decision...
+                <i class="fas fa-dice-d20"></i> {{localize 'IONRIFT.RESPITE.EVENT.GmDeciding'}}
             </div>
             {{/if}}
             {{/if}}
@@ -2584,16 +2584,16 @@
                             </span>
                             {{#if (eq type "damage")}}
                             {{#if _locked}}<button type="button" class="effect-reroll" data-action="lockEventConsequence" data-event-index="{{@root.activeTreeState.eventIndex}}" data-effect-index="{{@index}}" data-tooltip="Re-roll target and damage"><i class="fas fa-rotate"></i></button>
-                            {{else}}<button type="button" class="btn-lock-consequence" data-action="lockEventConsequence" data-event-index="{{@root.activeTreeState.eventIndex}}" data-effect-index="{{@index}}" data-tooltip="Roll the target and damage now and lock it in. The hit lands after the rest, so the night's recovery can't heal it away."><i class="fas fa-dice-d20"></i> Roll &amp; lock</button>{{/if}}
+                            {{else}}<button type="button" class="btn-lock-consequence" data-action="lockEventConsequence" data-event-index="{{@root.activeTreeState.eventIndex}}" data-effect-index="{{@index}}" data-tooltip="Roll the target and damage now and lock it in. The hit lands after the rest, so the night's recovery can't heal it away."><i class="fas fa-dice-d20"></i> {{localize 'IONRIFT.RESPITE.UI.Roll'}} &amp; lock</button>{{/if}}
                             {{else if (eq type "supply_loss")}}
                             {{#if _locked}}<button type="button" class="effect-reroll" data-action="lockEventConsequence" data-event-index="{{@root.activeTreeState.eventIndex}}" data-effect-index="{{@index}}" data-tooltip="Re-roll how much is swept away"><i class="fas fa-rotate"></i></button>
-                            {{else}}<button type="button" class="btn-lock-consequence" data-action="lockEventConsequence" data-event-index="{{@root.activeTreeState.eventIndex}}" data-effect-index="{{@index}}" data-tooltip="Roll how much is swept away now and lock it in. It leaves the packs when the rest resolves."><i class="fas fa-dice-d20"></i> Roll &amp; lock</button>{{/if}}
+                            {{else}}<button type="button" class="btn-lock-consequence" data-action="lockEventConsequence" data-event-index="{{@root.activeTreeState.eventIndex}}" data-effect-index="{{@index}}" data-tooltip="Roll how much is swept away now and lock it in. It leaves the packs when the rest resolves."><i class="fas fa-dice-d20"></i> {{localize 'IONRIFT.RESPITE.UI.Roll'}} &amp; lock</button>{{/if}}
                             {{else if (eq type "item_at_risk")}}
                             {{#if _locked}}<button type="button" class="effect-reroll" data-action="lockEventConsequence" data-event-index="{{@root.activeTreeState.eventIndex}}" data-effect-index="{{@index}}" data-tooltip="Re-roll which gear is lost"><i class="fas fa-rotate"></i></button>
-                            {{else}}<button type="button" class="btn-lock-consequence" data-action="lockEventConsequence" data-event-index="{{@root.activeTreeState.eventIndex}}" data-effect-index="{{@index}}" data-tooltip="Roll which gear is lost now and lock it in. It leaves the packs when the rest resolves."><i class="fas fa-dice-d20"></i> Roll &amp; lock</button>{{/if}}
+                            {{else}}<button type="button" class="btn-lock-consequence" data-action="lockEventConsequence" data-event-index="{{@root.activeTreeState.eventIndex}}" data-effect-index="{{@index}}" data-tooltip="Roll which gear is lost now and lock it in. It leaves the packs when the rest resolves."><i class="fas fa-dice-d20"></i> {{localize 'IONRIFT.RESPITE.UI.Roll'}} &amp; lock</button>{{/if}}
                             {{else if (eq type "consume_gold")}}
                             {{#if _locked}}<button type="button" class="effect-reroll" data-action="lockEventConsequence" data-event-index="{{@root.activeTreeState.eventIndex}}" data-effect-index="{{@index}}" data-tooltip="Re-roll the coin lost"><i class="fas fa-rotate"></i></button>
-                            {{else}}<button type="button" class="btn-lock-consequence" data-action="lockEventConsequence" data-event-index="{{@root.activeTreeState.eventIndex}}" data-effect-index="{{@index}}" data-tooltip="Roll how much coin is lost now and lock it in. It leaves the purses when the rest resolves."><i class="fas fa-dice-d20"></i> Roll &amp; lock</button>{{/if}}
+                            {{else}}<button type="button" class="btn-lock-consequence" data-action="lockEventConsequence" data-event-index="{{@root.activeTreeState.eventIndex}}" data-effect-index="{{@index}}" data-tooltip="Roll how much coin is lost now and lock it in. It leaves the purses when the rest resolves."><i class="fas fa-dice-d20"></i> {{localize 'IONRIFT.RESPITE.UI.Roll'}} &amp; lock</button>{{/if}}
                             {{/if}}
                         </div>
                         {{#if _locked}}
@@ -2613,14 +2613,14 @@
                 {{else}}
                 {{!-- Players: kept generic; the committed losses surface in the rest conclusion --}}
                 <div class="tree-effects-player-note">
-                    <i class="fas fa-water"></i> The camp took losses in the chaos. The full reckoning comes once the night settles.
+                    <i class="fas fa-water"></i> {{localize 'IONRIFT.RESPITE.EVENT.CampTookLosses'}}
                 </div>
                 {{/if}}
                 {{/if}}
                 {{#if isGM}}
                 <div class="tree-narration-hint">
                     <i class="fas fa-theater-masks"></i>
-                    <span>Roll and lock each consequence, then describe the outcome to your players before proceeding.</span>
+                    <span>{{localize 'IONRIFT.RESPITE.EVENT.RollLockDescribe'}}</span>
                 </div>
                 {{/if}}
             </div>
@@ -2639,15 +2639,15 @@
                     {{else if (eq category "discovery")}}<i class="fas fa-search"></i>
                     {{else}}<i class="fas fa-moon"></i>
                     {{/if}}
-                    {{#if name}}{{name}}{{else}}{{#if (eq category "encounter")}}Something stirs...{{else if (eq category "complication")}}A complication arises...{{else if (eq category "discovery")}}Something catches your eye...{{else}}The night passes...{{/if}}{{/if}}
+                    {{#if name}}{{name}}{{else}}{{#if (eq category "encounter")}}Something stirs...{{else if (eq category "complication")}}A complication arises...{{else if (eq category "discovery")}}Something catches your eye...{{else}}{{localize 'IONRIFT.RESPITE.EVENT.TheNightPasses'}}...{{/if}}{{/if}}
                 </div>
                 {{#if resolvedOutcome}}
                 <span class="event-verdict-inline {{#if (eq resolvedOutcome "triumph")}}pass{{else if (eq resolvedOutcome "success")}}pass{{else if (eq resolvedOutcome "mixed")}}partial{{else}}fail{{/if}}">
-                    {{#if (eq resolvedOutcome "triumph")}}<i class="fas fa-check"></i> Passed{{else if (eq resolvedOutcome "success")}}<i class="fas fa-check"></i> Passed{{else if (eq resolvedOutcome "mixed")}}<i class="fas fa-exclamation-triangle"></i> Partial{{else}}<i class="fas fa-times"></i> Failed{{/if}}
+                    {{#if (eq resolvedOutcome "triumph")}}<i class="fas fa-check"></i> Passed{{else if (eq resolvedOutcome "success")}}<i class="fas fa-check"></i> Passed{{else if (eq resolvedOutcome "mixed")}}<i class="fas fa-exclamation-triangle"></i> Partial{{else}}<i class="fas fa-times"></i> {{localize 'IONRIFT.RESPITE.UI.Failed'}}{{/if}}
                 </span>
                 {{/if}}
-                {{#if (eq result "scouting_hazard")}}<span class="event-badge hazard">Scouting Hazard</span>{{/if}}
-                {{#if (eq result "scouting_bonus")}}<span class="event-badge bonus">Scouting Bonus</span>{{/if}}
+                {{#if (eq result "scouting_hazard")}}<span class="event-badge hazard">{{localize 'IONRIFT.RESPITE.EVENT.ScoutingHazard'}}</span>{{/if}}
+                {{#if (eq result "scouting_bonus")}}<span class="event-badge bonus">{{localize 'IONRIFT.RESPITE.EVENT.ScoutingBonus'}}</span>{{/if}}
             </div>
             {{#if @root.isGM}}{{#if resolvedOutcome}}<div class="event-description">{{narrative}}</div>{{/if}}{{/if}}
 
@@ -2702,18 +2702,18 @@
                 {{!-- Consolidated resolution block: verdict, narrative, and GM-only consequences in one card --}}
                 {{#if (eq resolvedOutcome "triumph")}}
                 <div class="event-resolution pass">
-                    <div class="event-resolution-verdict"><i class="fas fa-shield-alt"></i> Check Passed</div>
-                    <div class="event-resolution-narrative">{{#if @root.isGM}}{{mechanical.onTriumph.narrative}}{{else}}The party rises to the occasion.{{/if}}</div>
+                    <div class="event-resolution-verdict"><i class="fas fa-shield-alt"></i> {{localize 'IONRIFT.RESPITE.EVENT.CheckPassed'}}</div>
+                    <div class="event-resolution-narrative">{{#if @root.isGM}}{{mechanical.onTriumph.narrative}}{{else}}{{localize 'IONRIFT.RESPITE.EVENT.PartyRises'}}{{/if}}</div>
                 </div>
                 {{else if (eq resolvedOutcome "success")}}
                 <div class="event-resolution pass">
-                    <div class="event-resolution-verdict"><i class="fas fa-shield-alt"></i> Check Passed</div>
-                    <div class="event-resolution-narrative">{{#if @root.isGM}}{{mechanical.onSuccess.narrative}}{{else}}The party weathers the challenge.{{/if}}</div>
+                    <div class="event-resolution-verdict"><i class="fas fa-shield-alt"></i> {{localize 'IONRIFT.RESPITE.EVENT.CheckPassed'}}</div>
+                    <div class="event-resolution-narrative">{{#if @root.isGM}}{{mechanical.onSuccess.narrative}}{{else}}{{localize 'IONRIFT.RESPITE.EVENT.PartyWeathers'}}{{/if}}</div>
                 </div>
                 {{else if (eq resolvedOutcome "mixed")}}
                 <div class="event-resolution partial">
-                    <div class="event-resolution-verdict"><i class="fas fa-exclamation-triangle"></i> Partial Success</div>
-                    <div class="event-resolution-narrative">{{#if @root.isGM}}{{mechanical.onMixed.narrative}}{{else}}Things could have gone better.{{/if}}</div>
+                    <div class="event-resolution-verdict"><i class="fas fa-exclamation-triangle"></i> {{localize 'IONRIFT.RESPITE.EVENT.PartialSuccess'}}</div>
+                    <div class="event-resolution-narrative">{{#if @root.isGM}}{{mechanical.onMixed.narrative}}{{else}}{{localize 'IONRIFT.RESPITE.EVENT.CouldHaveBeenBetter'}}{{/if}}</div>
                     {{#if @root.isGM}}{{#if mechanical.onMixed.effects.length}}
                     <div class="event-effects">
                         {{#each mechanical.onMixed.effects}}
@@ -2730,16 +2730,16 @@
                                 </span>
                                 {{#if (eq type "damage")}}
                                 {{#if _locked}}<button type="button" class="effect-reroll" data-action="lockEventConsequence" data-event-index="{{@../index}}" data-effect-index="{{@index}}" data-tooltip="Re-roll target and damage"><i class="fas fa-rotate"></i></button>
-                                {{else}}<button type="button" class="btn-lock-consequence" data-action="lockEventConsequence" data-event-index="{{@../index}}" data-effect-index="{{@index}}" data-tooltip="Roll the target and damage now and lock it in. The hit lands after the rest, so the night's recovery can't heal it away."><i class="fas fa-dice-d20"></i> Roll &amp; lock</button>{{/if}}
+                                {{else}}<button type="button" class="btn-lock-consequence" data-action="lockEventConsequence" data-event-index="{{@../index}}" data-effect-index="{{@index}}" data-tooltip="Roll the target and damage now and lock it in. The hit lands after the rest, so the night's recovery can't heal it away."><i class="fas fa-dice-d20"></i> {{localize 'IONRIFT.RESPITE.UI.Roll'}} &amp; lock</button>{{/if}}
                                 {{else if (eq type "consume_resource")}}
                                 {{#if _locked}}<button type="button" class="effect-reroll" data-action="lockEventConsequence" data-event-index="{{@../index}}" data-effect-index="{{@index}}" data-tooltip="Re-roll the amount lost"><i class="fas fa-rotate"></i></button>
-                                {{else}}<button type="button" class="btn-lock-consequence" data-action="lockEventConsequence" data-event-index="{{@../index}}" data-effect-index="{{@index}}" data-tooltip="Roll how much is lost now and lock it in. It's applied when the rest resolves, not before, so the GM sees exactly what goes."><i class="fas fa-dice-d20"></i> Roll &amp; lock</button>{{/if}}
+                                {{else}}<button type="button" class="btn-lock-consequence" data-action="lockEventConsequence" data-event-index="{{@../index}}" data-effect-index="{{@index}}" data-tooltip="Roll how much is lost now and lock it in. It's applied when the rest resolves, not before, so the GM sees exactly what goes."><i class="fas fa-dice-d20"></i> {{localize 'IONRIFT.RESPITE.UI.Roll'}} &amp; lock</button>{{/if}}
                                 {{else if (eq type "item_at_risk")}}
                                 {{#if _locked}}<button type="button" class="effect-reroll" data-action="lockEventConsequence" data-event-index="{{@../index}}" data-effect-index="{{@index}}" data-tooltip="Re-roll which items are taken"><i class="fas fa-rotate"></i></button>
-                                {{else}}<button type="button" class="btn-lock-consequence" data-action="lockEventConsequence" data-event-index="{{@../index}}" data-effect-index="{{@index}}" data-tooltip="Roll which items go missing now and lock it in. They leave the packs when the rest resolves, so the GM sees exactly what was taken."><i class="fas fa-dice-d20"></i> Roll &amp; lock</button>{{/if}}
+                                {{else}}<button type="button" class="btn-lock-consequence" data-action="lockEventConsequence" data-event-index="{{@../index}}" data-effect-index="{{@index}}" data-tooltip="Roll which items go missing now and lock it in. They leave the packs when the rest resolves, so the GM sees exactly what was taken."><i class="fas fa-dice-d20"></i> {{localize 'IONRIFT.RESPITE.UI.Roll'}} &amp; lock</button>{{/if}}
                                 {{else if (eq type "consume_gold")}}
                                 {{#if _locked}}<button type="button" class="effect-reroll" data-action="lockEventConsequence" data-event-index="{{@../index}}" data-effect-index="{{@index}}" data-tooltip="Re-roll the coin taken"><i class="fas fa-rotate"></i></button>
-                                {{else}}<button type="button" class="btn-lock-consequence" data-action="lockEventConsequence" data-event-index="{{@../index}}" data-effect-index="{{@index}}" data-tooltip="Roll how much coin is lifted now and lock it in. It leaves the purses when the rest resolves."><i class="fas fa-dice-d20"></i> Roll &amp; lock</button>{{/if}}
+                                {{else}}<button type="button" class="btn-lock-consequence" data-action="lockEventConsequence" data-event-index="{{@../index}}" data-effect-index="{{@index}}" data-tooltip="Roll how much coin is lifted now and lock it in. It leaves the purses when the rest resolves."><i class="fas fa-dice-d20"></i> {{localize 'IONRIFT.RESPITE.UI.Roll'}} &amp; lock</button>{{/if}}
                                 {{/if}}
                             </div>
                             {{#if _locked}}
@@ -2760,8 +2760,8 @@
                 </div>
                 {{else}}
                 <div class="event-resolution fail">
-                    <div class="event-resolution-verdict"><i class="fas fa-skull-crossbones"></i> Check Failed</div>
-                    <div class="event-resolution-narrative">{{#if @root.isGM}}{{mechanical.onFailure.narrative}}{{else}}The situation takes a turn for the worse.{{/if}}</div>
+                    <div class="event-resolution-verdict"><i class="fas fa-skull-crossbones"></i> {{localize 'IONRIFT.RESPITE.EVENT.CheckFailed'}}</div>
+                    <div class="event-resolution-narrative">{{#if @root.isGM}}{{mechanical.onFailure.narrative}}{{else}}{{localize 'IONRIFT.RESPITE.EVENT.TurnForWorse'}}{{/if}}</div>
                     {{#if @root.isGM}}{{#if mechanical.onFailure.effects.length}}
                     <div class="event-effects">
                         {{#each mechanical.onFailure.effects}}
@@ -2779,16 +2779,16 @@
                                 </span>
                                 {{#if (eq type "damage")}}
                                 {{#if _locked}}<button type="button" class="effect-reroll" data-action="lockEventConsequence" data-event-index="{{@../index}}" data-effect-index="{{@index}}" data-tooltip="Re-roll target and damage"><i class="fas fa-rotate"></i></button>
-                                {{else}}<button type="button" class="btn-lock-consequence" data-action="lockEventConsequence" data-event-index="{{@../index}}" data-effect-index="{{@index}}" data-tooltip="Roll the target and damage now and lock it in. The hit lands after the rest, so the night's recovery can't heal it away."><i class="fas fa-dice-d20"></i> Roll &amp; lock</button>{{/if}}
+                                {{else}}<button type="button" class="btn-lock-consequence" data-action="lockEventConsequence" data-event-index="{{@../index}}" data-effect-index="{{@index}}" data-tooltip="Roll the target and damage now and lock it in. The hit lands after the rest, so the night's recovery can't heal it away."><i class="fas fa-dice-d20"></i> {{localize 'IONRIFT.RESPITE.UI.Roll'}} &amp; lock</button>{{/if}}
                                 {{else if (eq type "consume_resource")}}
                                 {{#if _locked}}<button type="button" class="effect-reroll" data-action="lockEventConsequence" data-event-index="{{@../index}}" data-effect-index="{{@index}}" data-tooltip="Re-roll the amount lost"><i class="fas fa-rotate"></i></button>
-                                {{else}}<button type="button" class="btn-lock-consequence" data-action="lockEventConsequence" data-event-index="{{@../index}}" data-effect-index="{{@index}}" data-tooltip="Roll how much is lost now and lock it in. It's applied when the rest resolves, not before, so the GM sees exactly what goes."><i class="fas fa-dice-d20"></i> Roll &amp; lock</button>{{/if}}
+                                {{else}}<button type="button" class="btn-lock-consequence" data-action="lockEventConsequence" data-event-index="{{@../index}}" data-effect-index="{{@index}}" data-tooltip="Roll how much is lost now and lock it in. It's applied when the rest resolves, not before, so the GM sees exactly what goes."><i class="fas fa-dice-d20"></i> {{localize 'IONRIFT.RESPITE.UI.Roll'}} &amp; lock</button>{{/if}}
                                 {{else if (eq type "item_at_risk")}}
                                 {{#if _locked}}<button type="button" class="effect-reroll" data-action="lockEventConsequence" data-event-index="{{@../index}}" data-effect-index="{{@index}}" data-tooltip="Re-roll which items are taken"><i class="fas fa-rotate"></i></button>
-                                {{else}}<button type="button" class="btn-lock-consequence" data-action="lockEventConsequence" data-event-index="{{@../index}}" data-effect-index="{{@index}}" data-tooltip="Roll which items go missing now and lock it in. They leave the packs when the rest resolves, so the GM sees exactly what was taken."><i class="fas fa-dice-d20"></i> Roll &amp; lock</button>{{/if}}
+                                {{else}}<button type="button" class="btn-lock-consequence" data-action="lockEventConsequence" data-event-index="{{@../index}}" data-effect-index="{{@index}}" data-tooltip="Roll which items go missing now and lock it in. They leave the packs when the rest resolves, so the GM sees exactly what was taken."><i class="fas fa-dice-d20"></i> {{localize 'IONRIFT.RESPITE.UI.Roll'}} &amp; lock</button>{{/if}}
                                 {{else if (eq type "consume_gold")}}
                                 {{#if _locked}}<button type="button" class="effect-reroll" data-action="lockEventConsequence" data-event-index="{{@../index}}" data-effect-index="{{@index}}" data-tooltip="Re-roll the coin taken"><i class="fas fa-rotate"></i></button>
-                                {{else}}<button type="button" class="btn-lock-consequence" data-action="lockEventConsequence" data-event-index="{{@../index}}" data-effect-index="{{@index}}" data-tooltip="Roll how much coin is lifted now and lock it in. It leaves the purses when the rest resolves."><i class="fas fa-dice-d20"></i> Roll &amp; lock</button>{{/if}}
+                                {{else}}<button type="button" class="btn-lock-consequence" data-action="lockEventConsequence" data-event-index="{{@../index}}" data-effect-index="{{@index}}" data-tooltip="Roll how much coin is lifted now and lock it in. It leaves the purses when the rest resolves."><i class="fas fa-dice-d20"></i> {{localize 'IONRIFT.RESPITE.UI.Roll'}} &amp; lock</button>{{/if}}
                                 {{/if}}
                             </div>
                             {{#if _locked}}
@@ -2828,8 +2828,8 @@
                 {{> rollRequest rollRequest=gmRollRequest}}
                 {{/if}}
                 <div class="event-override-links">
-                    <button type="button" class="btn-override-link" data-action="resolveSkillCheck" data-event-index="{{@index}}" data-outcome="success" data-tooltip="Skip the roll and set this check as a success.">Force Pass</button>
-                    <button type="button" class="btn-override-link" data-action="resolveSkillCheck" data-event-index="{{@index}}" data-outcome="failure" data-tooltip="Skip the roll and set this check as a failure.">Force Fail</button>
+                    <button type="button" class="btn-override-link" data-action="resolveSkillCheck" data-event-index="{{@index}}" data-outcome="success" data-tooltip="Skip the roll and set this check as a success.">{{localize 'IONRIFT.RESPITE.EVENT.ForcePass'}}</button>
+                    <button type="button" class="btn-override-link" data-action="resolveSkillCheck" data-event-index="{{@index}}" data-outcome="failure" data-tooltip="Skip the roll and set this check as a failure.">{{localize 'IONRIFT.RESPITE.EVENT.ForceFail'}}</button>
                 </div>
 
                 {{else}}
@@ -2922,10 +2922,10 @@
                     <div class="event-override-links">
                         <button type="button" class="btn-override-link" data-action="resolveSkillCheck" data-event-index="{{@index}}" data-outcome="success"
                             data-tooltip="Skip the roll and set this check as a success."
-                            {{#if @root.anyEventAwaitingRolls}}{{#unless awaitingRolls}}disabled{{/unless}}{{/if}}>Force Pass</button>
+                            {{#if @root.anyEventAwaitingRolls}}{{#unless awaitingRolls}}disabled{{/unless}}{{/if}}>{{localize 'IONRIFT.RESPITE.EVENT.ForcePass'}}</button>
                         <button type="button" class="btn-override-link" data-action="resolveSkillCheck" data-event-index="{{@index}}" data-outcome="failure"
                             data-tooltip="Skip the roll and set this check as a failure."
-                            {{#if @root.anyEventAwaitingRolls}}{{#unless awaitingRolls}}disabled{{/unless}}{{/if}}>Force Fail</button>
+                            {{#if @root.anyEventAwaitingRolls}}{{#unless awaitingRolls}}disabled{{/unless}}{{/if}}>{{localize 'IONRIFT.RESPITE.EVENT.ForceFail'}}</button>
                     </div>
                 </div>
                 {{/if}}
@@ -3002,8 +3002,8 @@
         {{/each}}
         {{else}}
         <div class="respite-event-card ambient">
-            <div class="event-name">Quiet Rest</div>
-            <div class="event-description">The night passes without incident.</div>
+            <div class="event-name">{{localize 'IONRIFT.RESPITE.EVENT.QuietRest'}}</div>
+            <div class="event-description">{{localize 'IONRIFT.RESPITE.EVENT.NightWithoutIncident'}}</div>
         </div>
         {{/if}}
 
@@ -3018,13 +3018,13 @@
         {{/if}} {{!-- disasterChoice --}}
 
         {{else}}
-        {{!-- PRE-ROLL: Camp preparations then Night Watch --}}
+        {{!-- PRE-ROLL: Camp preparations then {{localize 'IONRIFT.RESPITE.EVENT.NightWatch'}} --}}
         {{#if isGM}}
 
-        {{!-- Camp Preparations: camp activity rolls (persists after resolve for GM narration) --}}
+        {{!-- {{localize 'IONRIFT.RESPITE.EVENT.CampPreparations'}}: camp activity rolls (persists after resolve for GM narration) --}}
         {{#if pendingCampRolls.length}}
         <div class="respite-event-card ambient camp-prep-card">
-            <div class="event-name"><i class="fas fa-shield-alt"></i> Camp Preparations</div>
+            <div class="event-name"><i class="fas fa-shield-alt"></i> {{localize 'IONRIFT.RESPITE.EVENT.CampPreparations'}}</div>
             <div class="event-description">
                 {{#if campPrepsResolved}}Describe the results to your players before the encounter check.{{else}}Waiting for camp activity rolls to resolve before the encounter check.{{/if}}
             </div>
@@ -3043,8 +3043,8 @@
                     {{else}}
                     {{#if requested}}
                     <span class="camp-prep-skill">{{skillName}} DC {{dc}}{{#unless (eq dc baseDC)}} <span class="camp-dc-base">(was {{baseDC}})</span>{{/unless}}</span>
-                    <span class="camp-prep-result pending"><i class="fas fa-paper-plane"></i> Sent</span>
-                    <button type="button" class="btn-roll-for-player camp-fallback" data-action="rollCampForPlayer" data-character-id="{{characterId}}" data-tooltip="Roll on their behalf">
+                    <span class="camp-prep-result pending"><i class="fas fa-paper-plane"></i> {{localize 'IONRIFT.RESPITE.UI.sent'}}</span>
+                    <button type="button" class="btn-roll-for-player camp-fallback" data-action="rollCampForPlayer" data-character-id="{{characterId}}" data-tooltip="{{localize 'IONRIFT.RESPITE.UI.RollOnBehalf'}}">
                         <i class="fas fa-dice"></i>
                     </button>
                     {{else}}
@@ -3076,7 +3076,7 @@
         </div>
         {{/if}}
 
-        {{!-- Night Watch: shown when camp preps resolved or no preps needed --}}
+        {{!-- {{localize 'IONRIFT.RESPITE.EVENT.NightWatch'}}: shown when camp preps resolved or no preps needed --}}
         {{#if campPrepsResolved}}
 
         {{#if showEventPoolNudge}}
@@ -3095,7 +3095,7 @@
         {{/if}}
 
         <div class="respite-event-card ambient event-roll-prompt nw-mode-{{eventsMode}}">
-            <div class="event-name">Night Watch</div>
+            <div class="event-name">{{localize 'IONRIFT.RESPITE.EVENT.NightWatch'}}</div>
 
             {{#if encountersEnabled}}
             <div class="nw-mode-selector" role="tablist" aria-label="How does the night unfold?">
@@ -3122,7 +3122,7 @@
                     data-tooltip="{{#if eventsModePickAvailable}}Choose a specific event from your curated pool. Bypasses the encounter threshold; the event runs as written.{{else}}No events in the curated pool for this terrain. Curate the pool first.{{/if}}"
                     {{#unless eventsModePickAvailable}}disabled{{/unless}}>
                     <i class="fas fa-book-open nw-mode-icon"></i>
-                    <span class="nw-mode-label">Pick from pool</span>
+                    <span class="nw-mode-label">{{localize 'IONRIFT.RESPITE.EVENT.PickFromPool'}}</span>
                 </button>
             </div>
 
@@ -3139,7 +3139,7 @@
             <details class="encounter-details">
                 <summary class="encounter-summary">
                     <span class="encounter-summary-badge">DC {{encounterBar.effectiveDC}}</span>
-                    <span class="encounter-summary-label">Encounter Threshold</span>
+                    <span class="encounter-summary-label">{{localize 'IONRIFT.RESPITE.EVENT.EncounterThreshold'}}</span>
                     <i class="fas fa-chevron-down encounter-chevron"></i>
                 </summary>
                 <div class="encounter-breakdown">
@@ -3150,7 +3150,7 @@
                         <i class="fas fa-exclamation-triangle"></i> Roll below {{encounterBar.effectiveDC}}: event triggers
                     </span>
                     <span class="event-outcome-advisory disaster">
-                        <i class="fas fa-skull"></i> Natural 1: disaster pool
+                        <i class="fas fa-skull"></i> {{localize 'IONRIFT.RESPITE.EVENT.Nat1DisasterPool'}}
                     </span>
                 </div>
             </details>
@@ -3179,7 +3179,7 @@
             <details class="encounter-details">
                 <summary class="encounter-summary">
                     <span class="encounter-summary-badge">DC {{encounterBar.effectiveDC}}</span>
-                    <span class="encounter-summary-label">Encounter Threshold</span>
+                    <span class="encounter-summary-label">{{localize 'IONRIFT.RESPITE.EVENT.EncounterThreshold'}}</span>
                     <i class="fas fa-chevron-down encounter-chevron"></i>
                 </summary>
                 <div class="encounter-breakdown">
@@ -3218,7 +3218,7 @@
             {{/if}}
             {{else}}
             <div class="event-description">
-                Encounters are off for this rest. The night passes without a check.
+                {{localize 'IONRIFT.RESPITE.EVENT.EncountersOff'}}
             </div>
             {{/if}}
         </div>
@@ -3229,7 +3229,7 @@
         <div class="respite-event-card ambient player-activity-card">
             <div class="event-name"><i class="fas fa-moon"></i> Resting...</div>
             <div class="event-description">
-                The party settles in for the night. The GM will determine what the darkness holds.
+                {{localize 'IONRIFT.RESPITE.EVENT.PartySettles'}}
             </div>
 
             {{!-- Camp roll buttons for owned characters --}}
@@ -3244,7 +3244,7 @@
                         <strong>{{activityName}}</strong>
                         <span class="camp-roll-skill">{{skillName}} DC {{dc}}</span>
                     </div>
-                    <span class="camp-roll-result pass" data-tooltip="Success! Rolled {{total}}">
+                    <span class="camp-roll-result pass" data-tooltip="Success! {{localize 'IONRIFT.RESPITE.TRAVEL.RolledTotal' total=total}}">
                         <i class="fas fa-check-circle"></i> {{total}} - Passed
                     </span>
                     {{#each effectDescriptions}}
@@ -3257,7 +3257,7 @@
                         <strong>{{activityName}}</strong>
                         <span class="camp-roll-skill">{{skillName}} DC {{dc}}</span>
                     </div>
-                    <span class="camp-roll-result fail" data-tooltip="Failed. Rolled {{total}}">
+                    <span class="camp-roll-result fail" data-tooltip="Failed. {{localize 'IONRIFT.RESPITE.TRAVEL.RolledTotal' total=total}}">
                         <i class="fas fa-times-circle"></i> {{total}} - Failed
                     </span>
                     {{#each effectDescriptions}}
@@ -3279,7 +3279,7 @@
             {{#if awaitingCombat}}
             {{!-- Combat in progress, GM decides when complete --}}
             <button type="button" class="btn-primary btn-combat-complete" data-action="completeEncounter">
-                <i class="fas fa-check-circle"></i> Combat Complete
+                <i class="fas fa-check-circle"></i> {{localize 'IONRIFT.RESPITE.EVENT.CombatComplete'}}
             </button>
             <button type="button" class="btn-secondary btn-hide-window" data-action="hideWindow">
                 <i class="fas fa-eye-slash"></i> Hide
@@ -3289,7 +3289,7 @@
             <div class="encounter-gate">
                 <div class="encounter-instructions">
                     <i class="fas fa-exclamation-triangle"></i>
-                    <span>An encounter has been triggered. Set up the combat before proceeding.</span>
+                    <span>{{localize 'IONRIFT.RESPITE.EVENT.EncounterTriggered'}}</span>
                 </div>
                 {{#if encounterAwareness}}
                 <div class="encounter-awareness-advisory">
@@ -3300,7 +3300,7 @@
                 {{#if combatBuffs}}
                 <div class="combat-readiness-report">
                     <div class="combat-readiness-header">
-                        <i class="fas fa-shield-alt"></i> Combat Readiness
+                        <i class="fas fa-shield-alt"></i> {{localize 'IONRIFT.RESPITE.EVENT.CombatReadiness'}}
                     </div>
                     {{#if combatBuffs.perCharacter.length}}
                     <div class="combat-readiness-list">
@@ -3326,7 +3326,7 @@
                 </div>
                 {{/if}}
                 <button type="button" class="btn-primary btn-acknowledge-encounter" data-action="acknowledgeEncounter">
-                    <i class="fas fa-swords"></i> Begin Combat
+                    <i class="fas fa-swords"></i> {{localize 'IONRIFT.RESPITE.EVENT.BeginCombat'}}
                 </button>
             </div>
             {{else}}
@@ -3339,7 +3339,7 @@
                 {{#if disasterChoice}}disabled data-tooltip="Choose a disaster outcome first"{{/if}}
                 {{#unless allEventChecksResolved}}disabled data-tooltip="Resolve all event skill checks first"{{/unless}}
                 {{#unless allConsequencesResolved}}disabled data-tooltip="Roll and lock every consequence first"{{/unless}}>
-                <i class="fas fa-arrow-right"></i> Proceed to Resolution
+                <i class="fas fa-arrow-right"></i> {{localize 'IONRIFT.RESPITE.EVENT.ProceedToResolution'}}
             </button>
             {{/unless}}
             {{/if}}
@@ -3360,7 +3360,7 @@
             {{else if eventsModeIsPick}}
             <i class="fas fa-book-open"></i> Choose event
             {{else}}
-            <i class="fas fa-dice-d20"></i> Roll for Events
+            <i class="fas fa-dice-d20"></i> {{localize 'IONRIFT.RESPITE.UI.Roll'}} for Events
             {{/if}}
         </button>
         {{else}}
@@ -3369,7 +3369,7 @@
             {{#if eventsCommitPending}}
             <i class="fas fa-circle-notch fa-spin"></i> Continuing...
             {{else}}
-            <i class="fas fa-moon"></i> The night passes
+            <i class="fas fa-moon"></i> {{localize 'IONRIFT.RESPITE.EVENT.TheNightPasses'}}
             {{/if}}
         </button>
         {{/if}}
@@ -3378,9 +3378,9 @@
     {{else}}
     <div class="respite-action-bar">
         {{#if eventsRolled}}
-        <span class="phase-waiting-label"><i class="fas fa-hourglass-half"></i> The GM is resolving events...</span>
+        <span class="phase-waiting-label"><i class="fas fa-hourglass-half"></i> {{localize 'IONRIFT.RESPITE.EVENT.GmResolving'}}</span>
         {{else}}
-        <span class="phase-waiting-label"><i class="fas fa-moon"></i> The party rests...</span>
+        <span class="phase-waiting-label"><i class="fas fa-moon"></i> {{localize 'IONRIFT.RESPITE.EVENT.PartyRests'}}</span>
         {{/if}}
     </div>
     {{/if}}
@@ -3534,7 +3534,7 @@
     </div>
     {{#if partyDiscoveries.length}}
     <div class="party-discoveries">
-        <div class="party-discoveries-header"><i class="fas fa-gem"></i> Party Discoveries</div>
+        <div class="party-discoveries-header"><i class="fas fa-gem"></i> {{localize 'IONRIFT.RESPITE.REST.PartyDiscoveries'}}</div>
         {{#each partyDiscoveries}}
         <div class="party-discovery-item">
             {{#if granted}}
@@ -3588,7 +3588,7 @@
         {{#each resolutionCards}}{{> resolutionCard}}{{/each}}
         {{#if partyDiscoveries.length}}
         <div class="party-discoveries">
-            <div class="party-discoveries-header"><i class="fas fa-gem"></i> Party Discoveries</div>
+            <div class="party-discoveries-header"><i class="fas fa-gem"></i> {{localize 'IONRIFT.RESPITE.REST.PartyDiscoveries'}}</div>
             {{#each partyDiscoveries}}
             <div class="party-discovery-item">
                 <i class="fas fa-plus-circle"></i>
@@ -3613,12 +3613,12 @@
         </div>
         {{/if}}
         <div class="respite-waiting-message resolution-complete">
-            <p class="whisper-hint">The GM will finalize and apply these results shortly.</p>
+            <p class="whisper-hint">{{localize 'IONRIFT.RESPITE.REST.GmFinalizeShortly'}}</p>
         </div>
         {{else}}
         <div class="respite-waiting-message resolution-complete">
             <i class="fas fa-sun"></i>
-            <p>Dawn breaks. The GM is finalizing rest outcomes.</p>
+            <p>{{localize 'IONRIFT.RESPITE.REST.DawnBreaks'}}</p>
         </div>
         {{/if}}
     </div>

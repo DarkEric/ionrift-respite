@@ -2,16 +2,16 @@
 <div class="totm-fire-tiers">
     <div class="totm-fire-tier-card cold-camp {{#if campColdCampDecided}}selected{{/if}}" data-tier="cold_camp">
         <div class="totm-fire-tier-top">
-            <span class="totm-fire-tier-name">Cold Camp</span>
-            <span class="totm-fire-tier-cost">No fire</span>
+            <span class="totm-fire-tier-name">{{localize 'IONRIFT.RESPITE.UI.ColdCamp'}}</span>
+            <span class="totm-fire-tier-cost">{{localize 'IONRIFT.RESPITE.UI.NoFire'}}</span>
         </div>
-        <p class="totm-fire-tier-body">No fire tonight. <span class="fire-penalty">−1 comfort.</span> <span class="fire-benefit">Harder for enemies to spot (lower encounter chance).</span> No cooking.</p>
+        <p class="totm-fire-tier-body">{{{localize 'IONRIFT.RESPITE.UI.ColdCampBody'}}}</p>
         {{#if campColdCampDecided}}
-        <span class="totm-fire-tier-current">CURRENT</span>
+        <span class="totm-fire-tier-current">{{localize 'IONRIFT.RESPITE.UI.CURRENT'}}</span>
         {{else}}
         <button type="button" class="totm-fire-tier-set-btn"
                 data-action="selectCampColdCamp">
-            Set
+            {{localize 'IONRIFT.RESPITE.UI.Set'}}
         </button>
         {{/if}}
     </div>
@@ -23,12 +23,12 @@
         </div>
         <p class="totm-fire-tier-body">{{> fireTierBody}}</p>
         {{#if selected}}
-        <span class="totm-fire-tier-current">CURRENT</span>
+        <span class="totm-fire-tier-current">{{localize 'IONRIFT.RESPITE.UI.CURRENT'}}</span>
         {{else if (not disabled)}}
         <button type="button" class="totm-fire-tier-set-btn"
                 data-action="selectCampFireLevel"
                 data-fire-level="{{id}}">
-            Set
+            {{localize 'IONRIFT.RESPITE.UI.Set'}}
         </button>
         {{/if}}
         {{#if disabledReason}}
@@ -42,7 +42,7 @@
 {{#if campFireIsLit}}
 {{#if campFirewoodPledgeList.length}}
 <div class="totm-fire-pledges">
-    <span class="totm-fire-pledges-label">Firewood pledged:</span>
+    <span class="totm-fire-pledges-label">{{localize 'IONRIFT.RESPITE.UI.FirewoodPledged'}}</span>
     {{#each campFirewoodPledgeList}}
     <span class="totm-fire-pledge-entry">{{actorName}} ({{count}})</span>
     {{/each}}

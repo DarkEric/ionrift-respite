@@ -1,4 +1,5 @@
 import { Logger as RespiteLog } from "./utils/Logger.js";
+import { localize, format } from "./utils/I18n.js";
 import { CalendarHandler } from "./services/rest/session/CalendarHandler.js";
 import { TerrainRegistry } from "./services/events/resolve/TerrainRegistry.js";
 import { RestSetupApp } from "./apps/rest/RestSetupApp.js";
@@ -194,7 +195,7 @@ function _maybeShowAmbientAfkPanelAtReady() {
 /** Guard active flow and Simple Calendar one-rest-per-day. @returns {boolean} */
 function _canStartRest() {
     if (respiteFlowActive) {
-        ui.notifications.warn("A rest is already in progress.");
+        ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.RestAlreadyInProgress"));
         return false;
     }
 
@@ -203,14 +204,14 @@ function _canStartRest() {
         const savedLong = game.settings.get(MODULE_ID, "activeRest");
         const savedShort = game.settings.get(MODULE_ID, "activeShortRest");
         if (savedLong?.engine || savedShort?.timestamp) {
-            ui.notifications.warn("A rest is already in progress. Clear it from module settings if stuck.");
+            ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.RestAlreadyInProgressStuck"));
             return false;
         }
     } catch { /* settings not registered yet */ }
 
     // Calendar: 1 long rest per in-game day
     if (CalendarHandler.hasRestedToday()) {
-        ui.notifications.warn("The party has already rested today. Advance the calendar to rest again.");
+        ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.AlreadyRestedToday"));
         return false;
     }
 
@@ -408,7 +409,7 @@ Hooks.on("getSceneControlButtons", (controls) => {
 
     const toolDef = {
         name: "respite",
-        title: "Begin Rest (Respite)",
+        title: localize("IONRIFT.RESPITE.APP.BeginRestMenu"),
         icon: "fas fa-campground",
         button: true
     };
@@ -698,9 +699,9 @@ Hooks.once("ready", async () => {
             if (!f?.isCampFurniture || f.isPlayerGear) return;
             const user = game.users.get(userId);
             if (user?.isGM) {
-                ui.notifications.warn("Use Move fire in the Respite window to relocate the campfire and stations.");
+                ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.UseMoveFire"));
             } else {
-                ui.notifications.warn("Camp layout tokens cannot be deleted during a rest.");
+                ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.CannotDeleteCampTokens"));
             }
             return false;
         } catch {
@@ -799,20 +800,10 @@ Hooks.once("ready", async () => {
             const shown = game.settings.get(MODULE_ID, "pf2eAdvisoryShown");
             if (!shown) {
                 const openDiscord = await game.ionrift.library.confirm({
-                    title: "Pathfinder 2e: Early Support",
-                    content: `
-                        <p>Respite's <strong>Pathfinder 2e support is early</strong>. The core rest flow (activities, campfire, terrain events, comfort tiers, and recovery) is functional.</p>
-                        <p>However, some PF2e-specific mechanics are <strong>not yet implemented</strong>:</p>
-                        <ul>
-                            <li>Treat Wounds (Medicine activity)</li>
-                            <li>Refocus (Focus Point recovery activity)</li>
-                            <li>Repair (Shield / equipment repair)</li>
-                            <li>Subsist (Earn income / forage equivalent)</li>
-                        </ul>
-                        <p>If you hit a bug or have a suggestion, please report it on Discord. Your feedback shapes what gets built next.</p>
-                    `,
-                    yesLabel: "Join Discord",
-                    noLabel: "Got It",
+                    title: localize("IONRIFT.RESPITE.APP.Pf2eEarlySupportTitle"),
+                    content: localize("IONRIFT.RESPITE.APP.Pf2eEarlySupportContent"),
+                    yesLabel: localize("IONRIFT.RESPITE.APP.JoinDiscord"),
+                    noLabel: localize("IONRIFT.RESPITE.COMMON.GotIt"),
                     yesIcon: "fab fa-discord",
                     noIcon: "fas fa-check",
                     defaultYes: false
@@ -848,10 +839,10 @@ Hooks.once("ready", async () => {
         let resume = false;
         try {
             resume = await game.ionrift.library.confirm({
-                title: "Interrupted Rest Found",
-                content: `<p>An interrupted rest was found (saved ${ageLabel}).</p><p><strong>Phase:</strong> ${savedRest.phase ?? "unknown"}</p><p><strong>Terrain:</strong> ${savedRest.engine.terrainTag ?? "unknown"}</p>${rewardWarning}`,
-                yesLabel: "Resume Rest",
-                noLabel: "Discard",
+                title: localize("IONRIFT.RESPITE.APP.InterruptedRestTitle"),
+                content: format("IONRIFT.RESPITE.APP.InterruptedRestContent", { age: ageLabel, phase: savedRest.phase ?? localize("IONRIFT.RESPITE.APP.Unknown"), terrain: savedRest.engine.terrainTag ?? localize("IONRIFT.RESPITE.APP.Unknown"), warning: rewardWarning }),
+                yesLabel: localize("IONRIFT.RESPITE.APP.ResumeRest"),
+                noLabel: localize("IONRIFT.RESPITE.COMMON.Discard"),
                 yesIcon: "fas fa-campground",
                 noIcon: "fas fa-trash",
                 defaultYes: true
@@ -905,7 +896,7 @@ Hooks.once("ready", async () => {
                     }
 
                     if (resumeUiOk) {
-                        ui.notifications.info("Interrupted rest resumed.");
+                        ui.notifications.info(localize("IONRIFT.RESPITE.NOTIFY.InterruptedRestResumed"));
                         Logger.log?.(MODULE_LABEL, "Restored interrupted rest from world flags.");
 
                         setTimeout(() => {
@@ -918,7 +909,7 @@ Hooks.once("ready", async () => {
                     }
                 } else {
                     respiteFlowActive = false;
-                    ui.notifications.warn("Could not restore rest state. Starting fresh.");
+                    ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.CouldNotRestoreRest"));
                     await game.settings.set(MODULE_ID, "activeRest", {});
                     clearCampTokens().catch(err => console.warn(`${MODULE_ID} | Camp cleanup on failed restore:`, err));
                     resetCampSession();
@@ -954,10 +945,10 @@ Hooks.once("ready", async () => {
         let resume = false;
         try {
             resume = await game.ionrift.library.confirm({
-                title: "Interrupted Short Rest Found",
+                title: localize("IONRIFT.RESPITE.APP.InterruptedShortRestTitle"),
                 content: `<p>An interrupted short rest was found (saved ${ageLabel}).</p><p><strong>Shelter:</strong> ${savedShortRest.activeShelter ?? "none"}</p>`,
-                yesLabel: "Resume Short Rest",
-                noLabel: "Discard",
+                yesLabel: localize("IONRIFT.RESPITE.APP.ResumeShortRest"),
+                noLabel: localize("IONRIFT.RESPITE.COMMON.Discard"),
                 yesIcon: "fas fa-mug-hot",
                 noIcon: "fas fa-trash",
                 defaultYes: true
@@ -975,11 +966,11 @@ Hooks.once("ready", async () => {
                 if (restored) {
                     registerActiveShortRestApp(app);
                     app.render({ force: true });
-                    ui.notifications.info("Interrupted short rest resumed.");
+                    ui.notifications.info(localize("IONRIFT.RESPITE.NOTIFY.InterruptedShortRestResumed"));
                     Logger.log?.(MODULE_LABEL, "Restored interrupted short rest from world settings.");
                 } else {
                     respiteFlowActive = false;
-                    ui.notifications.warn("Could not restore short rest state. Starting fresh.");
+                    ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.CouldNotRestoreShortRest"));
                     await game.settings.set(MODULE_ID, "activeShortRest", {});
                 }
             } catch (e) {
@@ -1003,7 +994,7 @@ Hooks.once("ready", async () => {
         activeRestSetupApp._combatAcknowledged = true;
         activeRestSetupApp._saveRestState();
         activeRestSetupApp.render({ force: true });
-        ui.notifications.info("Combat resolved. Rest may now proceed.");
+        ui.notifications.info(localize("IONRIFT.RESPITE.NOTIFY.CombatResolved"));
         Logger.log?.(MODULE_LABEL, "Combat ended, rest flow unblocked.");
     });
 
@@ -1211,14 +1202,14 @@ export function _removeGmShortRestIndicator() {
 function _resumeGmShortRest() {
     const saved = game.settings.get(MODULE_ID, "activeShortRest");
     if (!saved?.timestamp) {
-        ui.notifications.warn("No short rest state found.");
+        ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.NoShortRestState"));
         respiteFlowActive = false;
         return;
     }
     const app = new ShortRestApp({ initialShelter: saved.activeShelter ?? "none" });
     const restored = app._loadShortRestState();
     if (!restored) {
-        ui.notifications.warn("Could not restore short rest state.");
+        ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.CouldNotRestoreShortRestState"));
         return;
     }
     registerActiveShortRestApp(app);

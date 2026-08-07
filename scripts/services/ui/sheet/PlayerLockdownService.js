@@ -4,6 +4,7 @@
  * @returns {boolean}
  */
 import { MODULE_ID } from "../../../data/moduleId.js";
+import { localize, format } from "../../../utils/I18n.js";
 function isRestActive() {
     // Primary: module API getter (set on GM during long rest)
     if (game.ionrift?.respite?.isRestActive) return true;
@@ -84,7 +85,7 @@ export function registerLockdownHooks() {
                     const isDecrement = isConsumable && (newQty < oldQty);
 
                     if (!isDecrement) {
-                        ui.notifications.warn("Item quantities are managed by the GM.");
+                        ui.notifications.warn(localize("IONRIFT.RESPITE.SHEET.QuantityManagedByGm"));
                         return false;
                     }
                 }
@@ -95,7 +96,7 @@ export function registerLockdownHooks() {
             try {
                 if (game.settings.get(MODULE_ID, "lockAttuneOutsideRest")) {
                     if (!isRestActive()) {
-                        ui.notifications.warn("Attunement can only be changed during a rest.");
+                        ui.notifications.warn(localize("IONRIFT.RESPITE.SHEET.AttuneOnlyDuringRest"));
                         return false;
                     }
                 }

@@ -1,4 +1,5 @@
 import { Logger } from "../../utils/Logger.js";
+import { localize, format } from "../../utils/I18n.js";
 import { HitDieModifiers } from "../../services/rest/recovery/HitDieModifiers.js";
 import { SpellSlotRecovery } from "../../services/rest/recovery/SpellSlotRecovery.js";
 import { MODULE_ID } from "../../data/moduleId.js";
@@ -56,7 +57,7 @@ export class ShortRestApp extends HandlebarsApplicationMixin(ApplicationV2) {
         classes: ["ionrift-window", "short-rest-app"],
         tag: "div",
         window: {
-            title: "Short Rest",
+            title: localize("IONRIFT.RESPITE.APP.ShortRestTitle"),
             icon: "fas fa-mug-hot",
             resizable: true,
         },
@@ -939,7 +940,7 @@ export class ShortRestApp extends HandlebarsApplicationMixin(ApplicationV2) {
         const c = ShortRestApp.#escapeChat(chefName);
         const r = ShortRestApp.#escapeChat(recipientName);
         const f = ShortRestApp.#escapeChat(formula);
-        return `<div class="respite-chef-meal respite-chat-parchment"><div class="respite-song-title"><i class="fas fa-utensils"></i> Replenishing Meal</div><p><strong>${r}</strong> gains <strong>+${total} HP</strong> <span class="respite-song-meta">(${f})</span> from <em>${c}</em>'s short-rest cooking (with Hit Dice).</p></div>`;
+        return `<div class="respite-chef-meal respite-chat-parchment"><div class="respite-song-title"><i class="fas fa-utensils"></i> ${localize("IONRIFT.RESPITE.CHAT.ChefMealTitle")}</div><p>${format("IONRIFT.RESPITE.CHAT.ChefMealBody", { recipient: r, total, formula: f, chef: c })}</p></div>`;
     }
 
     /**
@@ -966,7 +967,7 @@ export class ShortRestApp extends HandlebarsApplicationMixin(ApplicationV2) {
         const b = ShortRestApp.#escapeChat(bardName);
         const r = ShortRestApp.#escapeChat(recipientName);
         const f = ShortRestApp.#escapeChat(formula);
-        return `<div class="respite-song-of-rest respite-song-of-rest-card respite-chat-parchment"><div class="respite-song-title"><i class="fas fa-music"></i> Song of Rest</div><p><strong>${r}</strong> gains <strong>+${total} HP</strong> <span class="respite-song-meta">(${f})</span> from <em>${b}</em>’s performance (applied with this character’s first Hit Die this rest).</p></div>`;
+        return `<div class="respite-song-of-rest respite-song-of-rest-card respite-chat-parchment"><div class="respite-song-title"><i class="fas fa-music"></i> ${localize("IONRIFT.RESPITE.CHAT.SongOfRestTitle")}</div><p>${format("IONRIFT.RESPITE.CHAT.SongImmediateBody", { recipient: r, total, formula: f, bard: b })}</p></div>`;
     }
 
     /**
@@ -987,18 +988,21 @@ export class ShortRestApp extends HandlebarsApplicationMixin(ApplicationV2) {
             ? `<p class="respite-song-meta">${ann}</p>`
             : "";
         return `<div class="respite-hit-die-correction respite-chat-parchment">` +
-            `<div class="respite-song-title"><i class="fas fa-heart-pulse"></i> Healing surge</div>` +
-            `<p><strong>${n}</strong> The system card showed <strong>+${rollTotal}</strong> HP from this Hit Die. ` +
-            `Respite aligned short rest healing to <strong>+${adjustedTotal}</strong> HP.</p>${meta}</div>`;
+            `<div class="respite-song-title"><i class="fas fa-heart-pulse"></i> ${localize("IONRIFT.RESPITE.CHAT.HitDieCorrectionTitle")}</div>` +
+            `<p>${format("IONRIFT.RESPITE.CHAT.HitDieCorrectionBody", { name: n, roll: rollTotal, adjusted: adjustedTotal })}</p>${meta}</div>`;
     }
 
     
     static #buildSongEndRestSummaryChat(bardName, entries) {
         const b = ShortRestApp.#escapeChat(bardName);
         const rows = entries.map(e =>
-            `<li><strong>${ShortRestApp.#escapeChat(e.name)}</strong>: ${ShortRestApp.#escapeChat(e.formula)}, <strong>+${e.total} HP</strong></li>`
+            format("IONRIFT.RESPITE.CHAT.SongSummaryRow", {
+                name: ShortRestApp.#escapeChat(e.name),
+                formula: ShortRestApp.#escapeChat(e.formula),
+                total: e.total
+            })
         ).join("");
-        return `<div class="respite-song-of-rest respite-song-of-rest-summary respite-chat-parchment"><div class="respite-song-title"><i class="fas fa-music"></i> Song of Rest: ${b}</div><p class="respite-song-lead">Each ally who spent at least one Hit Die during this short rest gains extra healing (one die each):</p><ul class="respite-song-list">${rows}</ul></div>`;
+        return `<div class="respite-song-of-rest respite-song-of-rest-summary respite-chat-parchment"><div class="respite-song-title"><i class="fas fa-music"></i> ${format("IONRIFT.RESPITE.CHAT.SongSummaryTitle", { bard: b })}</div><p class="respite-song-lead">${localize("IONRIFT.RESPITE.CHAT.SongSummaryLead")}</p><ul class="respite-song-list">${rows}</ul></div>`;
     }
 
     static #onSwitchTab(event, target) {
@@ -1110,7 +1114,7 @@ export class ShortRestApp extends HandlebarsApplicationMixin(ApplicationV2) {
 
         const hdData = this._getHitDiceInfo(actor);
         if (hdData.remaining <= 0) {
-            ui.notifications.warn(`${actor.name} has no Hit Dice remaining.`);
+            ui.notifications.warn(format("IONRIFT.RESPITE.NOTIFY.NoHitDice", { name: actor.name }));
             return;
         }
 
@@ -1130,7 +1134,7 @@ export class ShortRestApp extends HandlebarsApplicationMixin(ApplicationV2) {
                 roll = await actor.rollHitDie({ dialog: false });
             } catch (e2) {
                 console.error(`${MODULE_ID} | rollHitDie failed entirely:`, e2);
-                ui.notifications.error("Could not roll Hit Die. See console for details.");
+                ui.notifications.error(localize("IONRIFT.RESPITE.NOTIFY.HitDieRollFailed"));
                 return;
             }
         }
@@ -1315,9 +1319,9 @@ export class ShortRestApp extends HandlebarsApplicationMixin(ApplicationV2) {
             if (gmIsAfk) afkList.unshift("GM");
             const confirmFn = game.ionrift?.library?.confirm ?? Dialog.confirm.bind(Dialog);
             const proceed = await confirmFn({
-                title: "AFK Characters",
-                content: `<p>The following are currently marked AFK:</p><ul>${afkList.map(n => `<li><strong>${n}</strong></li>`).join("")}</ul><p>They may miss the rest benefits. Complete anyway?</p>`,
-                yesLabel: "Complete Anyway",
+                title: localize("IONRIFT.RESPITE.APP.AfkCharactersTitle"),
+                content: format("IONRIFT.RESPITE.APP.AfkCharactersContent", { list: afkList.map(n => `<li><strong>${n}</strong></li>`).join("") }),
+                yesLabel: localize("IONRIFT.RESPITE.COMMON.CompleteAnyway"),
                 noLabel: "Cancel",
                 yesIcon: "fas fa-forward",
                 noIcon: "fas fa-times",
@@ -1334,9 +1338,9 @@ export class ShortRestApp extends HandlebarsApplicationMixin(ApplicationV2) {
             const names = unfinishedPlayers.map(u => u.name);
             const confirmFn = game.ionrift?.library?.confirm ?? Dialog.confirm.bind(Dialog);
             const proceed = await confirmFn({
-                title: "Players Still Resting",
-                content: `<p>The following players haven't finished resting:</p><ul>${names.map(n => `<li><strong>${n}</strong></li>`).join("")}</ul><p>Complete the short rest anyway?</p>`,
-                yesLabel: "Complete Anyway",
+                title: localize("IONRIFT.RESPITE.APP.PlayersStillRestingTitle"),
+                content: format("IONRIFT.RESPITE.APP.PlayersStillRestingContent", { list: names.map(n => `<li><strong>${n}</strong></li>`).join("") }),
+                yesLabel: localize("IONRIFT.RESPITE.COMMON.CompleteAnyway"),
                 noLabel: "Wait",
                 yesIcon: "fas fa-forward",
                 noIcon: "fas fa-hourglass-half",
@@ -1357,9 +1361,9 @@ export class ShortRestApp extends HandlebarsApplicationMixin(ApplicationV2) {
         if (unconfirmed.length > 0) {
             const confirmFn = game.ionrift?.library?.confirm ?? Dialog.confirm.bind(Dialog);
             const proceed = await confirmFn({
-                title: "Unconfirmed Spell Recovery",
-                content: `<p>The following characters have spell recovery selections that haven't been confirmed:</p><ul>${unconfirmed.map(n => `<li><strong>${n}</strong></li>`).join("")}</ul><p>Their selections will still be applied. Continue?</p>`,
-                yesLabel: "Continue",
+                title: localize("IONRIFT.RESPITE.APP.UnconfirmedSpellRecoveryTitle"),
+                content: format("IONRIFT.RESPITE.APP.UnconfirmedSpellRecoveryContent", { list: unconfirmed.map(n => `<li><strong>${n}</strong></li>`).join("") }),
+                yesLabel: localize("IONRIFT.RESPITE.COMMON.Continue"),
                 noLabel: "Cancel",
                 yesIcon: "fas fa-check",
                 noIcon: "fas fa-times",
@@ -1425,7 +1429,7 @@ export class ShortRestApp extends HandlebarsApplicationMixin(ApplicationV2) {
                 const slotDesc = result.slotsRecovered.map(s => `${s.count}× Level ${s.level}`).join(", ");
                 try {
                     await ChatMessage.create({
-                        content: `<div class="respite-spell-recovery respite-chat-parchment"><i class="fas fa-hat-wizard"></i> <strong>${actor.name}</strong> uses <em>${featureLabel}</em>: recovered ${slotDesc} (${result.totalLevels}/${maxBudget} levels used).</div>`,
+                        content: format("IONRIFT.RESPITE.CHAT.SpellRecovery", { name: actor.name, feature: featureLabel, slots: slotDesc, used: result.totalLevels, budget: maxBudget }),
                         speaker: ChatMessage.getSpeaker({ actor }),
                         whisper: game.users.filter(u => u.isGM).map(u => u.id),
                     });
@@ -1446,13 +1450,13 @@ export class ShortRestApp extends HandlebarsApplicationMixin(ApplicationV2) {
             const chefMeal = this._chefMealBonusByActor.get(a.id)?.total ?? 0;
             const badges = getShortRestRechargeLabels(a);
             const parts = [];
-            if (healed) parts.push(`+${healed} HP from Hit Dice`);
-            if (song) parts.push(`+${song} HP from Song of Rest (tracked above)`);
-            if (chefMeal) parts.push(`+${chefMeal} HP from Replenishing Meal (tracked above)`);
-            if (badges.length) parts.push(`Typical recharges: ${badges.join(", ")}`);
+            if (healed) parts.push(format("IONRIFT.RESPITE.CHAT.ShortHdHealing", { n: healed }));
+            if (song) parts.push(format("IONRIFT.RESPITE.CHAT.ShortSongTracked", { n: song }));
+            if (chefMeal) parts.push(format("IONRIFT.RESPITE.CHAT.ShortChefTracked", { n: chefMeal }));
+            if (badges.length) parts.push(format("IONRIFT.RESPITE.CHAT.ShortTypicalRecharges", { list: badges.join(", ") }));
             const line = parts.length
                 ? parts.join(". ") + "."
-                : "No HD healing from this window.";
+                : localize("IONRIFT.RESPITE.CHAT.ShortNoHdHealing");
             summaryLines.push({ actorId: a.id, name: a.name, line });
         }
 
@@ -1501,7 +1505,7 @@ export class ShortRestApp extends HandlebarsApplicationMixin(ApplicationV2) {
 
             await this._clearShortRestState();
             emitShortRestComplete();
-            ui.notifications.info("Short rest complete. Class features recovered.");
+            ui.notifications.info(localize("IONRIFT.RESPITE.NOTIFY.ShortRestComplete"));
             this._completionPhase = false;
             this._completionSummaryLines = null;
             this._isTerminating = true;
@@ -1522,9 +1526,9 @@ export class ShortRestApp extends HandlebarsApplicationMixin(ApplicationV2) {
 
         const confirmFn = game.ionrift?.library?.confirm ?? Dialog.confirm.bind(Dialog);
         const proceed = await confirmFn({
-            title: "Abandon Short Rest",
-            content: `<p>Abandon this short rest? HP gained from Hit Dice already spent will remain, but class feature recovery will not be applied.</p>`,
-            yesLabel: "Abandon",
+            title: localize("IONRIFT.RESPITE.APP.AbandonShortRestTitle"),
+            content: localize("IONRIFT.RESPITE.APP.AbandonShortRestContent"),
+            yesLabel: localize("IONRIFT.RESPITE.COMMON.Abandon"),
             noLabel: "Cancel",
             yesIcon: "fas fa-times",
             noIcon: "fas fa-undo",
@@ -1537,7 +1541,7 @@ export class ShortRestApp extends HandlebarsApplicationMixin(ApplicationV2) {
 
         await this._clearShortRestState();
         game.socket.emit(`module.${MODULE_ID}`, { type: "shortRestAbandoned" });
-        ui.notifications.info("Short rest abandoned.");
+        ui.notifications.info(localize("IONRIFT.RESPITE.NOTIFY.ShortRestAbandoned"));
         this._isTerminating = true;
         // Clear Detect Magic glow state before closing so it doesn't persist
         // after an abandoned short rest.

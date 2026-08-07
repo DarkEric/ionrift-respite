@@ -1,4 +1,5 @@
 import { openEventPoolApp } from "../../services/events/catalog/EventPoolMigration.js";
+import { localize, format } from "../../utils/I18n.js";
 
 const CATEGORY_ICONS = {
     encounter: "fas fa-swords",
@@ -130,7 +131,7 @@ export async function pickPoolEvent(events, terrainLabel, terrainTag = null) {
 
         // lint-ignore: DialogV2. Branded picker for GM night-event selection.
         const dialog = new foundry.applications.api.DialogV2({
-            window: { title: "Pick event from pool", icon: "fas fa-book-open" },
+            window: { title: localize("IONRIFT.RESPITE.APP.PickEventTitle"), icon: "fas fa-book-open" },
             classes: ["ionrift-window", "dialog", "respite-adhoc-pick"],
             position: { width: 620, height: 640 },
             modal: true,

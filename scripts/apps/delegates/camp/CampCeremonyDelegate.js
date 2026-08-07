@@ -1,4 +1,5 @@
 import { Logger } from "../../../utils/Logger.js";
+import { localize, format } from "../../../utils/I18n.js";
 import {
     CampGearScanner,
     countActorFirewood,
@@ -17,7 +18,7 @@ import { buildCampCeremonyPhasePayload } from "../../../services/camp/gear/campC
 import { isCampfireMinigameEnabled, isSimpleStationsMode, requiresMapCampFire } from "../../../services/rest/flow/RestProfileSettings.js";
 import { TerrainRegistry } from "../../../services/events/resolve/TerrainRegistry.js";
 import { hasCampfirePlaced } from "../../../services/camp/props/CompoundCampPlacer.js";
-import { WEATHER_TABLE, SHELTER_SPELLS } from "../../../data/RestConstants.js";
+import { WEATHER_TABLE, SHELTER_SPELLS, resolveShelterSpell } from "../../../data/RestConstants.js";
 import { CampfireEmbed } from "../../camp/CampfireEmbed.js";
 import { getPartyActors } from "../../../services/party/partyActors.js";
 import { registerCampfireEmbed, clearCampfireEmbed } from "../../../module.js";
@@ -33,33 +34,33 @@ export class CampCeremonyDelegate {
 
     static formatFireLitToastMessage(fireLitBy, fireLevel) {
         if (!fireLitBy || fireLevel === "unlit") return null;
-        const name = fireLitBy.actorName ?? "Someone";
+        const name = fireLitBy.actorName ?? localize("IONRIFT.RESPITE.FIRE.Someone");
         const method = (fireLitBy.method ?? "Tinderbox").trim();
         const tierPhrase = fireLevel === "embers"
-            ? "embers"
+            ? localize("IONRIFT.RESPITE.FIRE.TierEmbers")
             : fireLevel === "campfire"
-                ? "a campfire"
+                ? localize("IONRIFT.RESPITE.FIRE.TierCampfire")
                 : fireLevel === "bonfire"
-                    ? "a bonfire"
-                    : "the fire";
+                    ? localize("IONRIFT.RESPITE.FIRE.TierBonfire")
+                    : localize("IONRIFT.RESPITE.FIRE.TierGeneric");
 
         let how;
         if (method === "Minigame") {
-            how = "during the fire ceremony";
+            how = localize("IONRIFT.RESPITE.FIRE.HowMinigame");
         } else if (method === "GM Override") {
-            how = "by GM override";
+            how = localize("IONRIFT.RESPITE.FIRE.HowGmOverride");
         } else if (method === "Campfire") {
-            how = "at the pit";
+            how = localize("IONRIFT.RESPITE.FIRE.HowPit");
         } else if (method === "Tinderbox" || /tinderbox|flint/i.test(method)) {
-            how = "with a tinderbox";
+            how = localize("IONRIFT.RESPITE.FIRE.HowTinderbox");
         } else {
-            how = `with ${method}`;
+            how = format("IONRIFT.RESPITE.FIRE.HowWithMethod", { method });
         }
 
         if (fireLevel === "embers") {
-            return `${name} lights embers ${how}.`;
+            return format("IONRIFT.RESPITE.FIRE.LitEmbers", { name, how });
         }
-        return `${name} lights ${tierPhrase} ${how}.`;
+        return format("IONRIFT.RESPITE.FIRE.LitTier", { name, tier: tierPhrase, how });
     }
 
     
@@ -125,12 +126,12 @@ export class CampCeremonyDelegate {
         if (!game.user.isGM) return;
         if (this.fireLitBy && (this.fireLevel ?? "unlit") !== "unlit") return;
         if (this._app._campPitBlocksFireLighting?.()) {
-            ui.notifications.warn("Place the campfire on the map before lighting.");
+            ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.PlaceCampfireFirst"));
             return;
         }
         const actor = game.actors.get(actorId);
         if (!actor) {
-            ui.notifications.warn("That character could not be found. Pick another party member or use the GM light override.");
+            ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.CharacterNotFoundLight"));
             return;
         }
         const wasUnlit = (this.fireLevel ?? "unlit") === "unlit";
@@ -155,12 +156,12 @@ export class CampCeremonyDelegate {
     async addFirewoodPledge(userId, actorId) {
         if (!game.user.isGM) return;
         if (!this.fireLitBy && this.fireLevel === "unlit") {
-            ui.notifications.warn("Light the fire first.");
+            ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.LightFireFirst"));
             return;
         }
         const total = this._totalPledged();
         if (total >= 2) {
-            ui.notifications.warn("The fire is already a bonfire.");
+            ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.FireAlreadyBonfire"));
             return;
         }
         const actor = game.actors.get(actorId);
@@ -173,7 +174,7 @@ export class CampCeremonyDelegate {
         const pledgedSoFar = existing?.count ?? 0;
         const available = firewoodItem?.system?.quantity ?? 0;
         if (available <= pledgedSoFar) {
-            ui.notifications.warn(`${actor.name} has no more firewood to add.`);
+            ui.notifications.warn(format("IONRIFT.RESPITE.NOTIFY.NoMoreFirewood", { name: actor.name }));
             return;
         }
         this.firewoodPledges.set(userId, { actorId, actorName: actor.name, count: pledgedSoFar + 1 });
@@ -183,12 +184,12 @@ export class CampCeremonyDelegate {
     async addGmFirewoodPledge() {
         if (!game.user.isGM) return;
         if (!this.fireLitBy && this.fireLevel === "unlit") {
-            ui.notifications.warn("Light the fire first.");
+            ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.LightFireFirst"));
             return;
         }
         const total = this._totalPledged();
         if (total >= 2) {
-            ui.notifications.warn("The fire is already a bonfire.");
+            ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.FireAlreadyBonfire"));
             return;
         }
         const existing = this.firewoodPledges.get(game.user.id);
@@ -324,10 +325,10 @@ export class CampCeremonyDelegate {
 
         const level = app._fireLevel ?? "unlit";
         const LEVEL_LABELS = {
-            unlit: "Unlit",
-            embers: "Embers",
-            campfire: "Campfire",
-            bonfire: "Bonfire"
+            unlit: localize("IONRIFT.RESPITE.FIRE.LEVEL.unlit"),
+            embers: localize("IONRIFT.RESPITE.FIRE.LEVEL.embers"),
+            campfire: localize("IONRIFT.RESPITE.FIRE.LEVEL.campfire"),
+            bonfire: localize("IONRIFT.RESPITE.FIRE.LEVEL.bonfire")
         };
         drawerContainer.innerHTML = `
             <div class="campfire-static-status">
@@ -335,7 +336,7 @@ export class CampCeremonyDelegate {
                     <i class="fas fa-fire" aria-hidden="true"></i>
                     <span class="campfire-static-title">${LEVEL_LABELS[level] ?? level}</span>
                 </div>
-                <p class="campfire-static-hint">Fire level was chosen during Make Camp.</p>
+                <p class="campfire-static-hint">${localize("IONRIFT.RESPITE.FIRE.HINT.ChosenDuringMakeCamp")}</p>
             </div>`;
         const drawer = app.element?.querySelector(".campfire-drawer");
         if (drawer) drawer.classList.add("open");
@@ -637,7 +638,7 @@ export class CampCeremonyDelegate {
                     filled: false,
                     kindlingImg,
                     insufficient: (i + 1) > party,
-                    tooltip: "Drag kindling here"
+                    tooltip: localize("IONRIFT.RESPITE.NOTIFY.DragKindlingHere")
                 });
             }
         }
@@ -668,7 +669,7 @@ export class CampCeremonyDelegate {
             if (app._campfireApp) void app._campfireApp.render();
             else app.render();
         } else if (!silent) {
-            ui.notifications.info("Tier changed: placed kindling returned to owners.");
+            ui.notifications.info(localize("IONRIFT.RESPITE.NOTIFY.KindlingReturned"));
         }
     
     }
@@ -679,14 +680,14 @@ export class CampCeremonyDelegate {
         const cost = this._campPreviewFirewoodCost();
         if (this._isCampColdCampPreview() || cost <= 0) return false;
         if ((app._makeCampStagedWood?.length ?? 0) >= cost) {
-            ui.notifications.warn("Enough kindling is placed for app tier.");
+            ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.EnoughKindlingPlaced"));
             return false;
         }
         const actor = game.actors.get(actorId);
         if (!actor) return false;
         const available = countActorFirewood(actor) - this._stagedWoodCountForActor(actorId);
         if (available <= 0) {
-            ui.notifications.warn(`${actor.name} has no kindling left to place.`);
+            ui.notifications.warn(format("IONRIFT.RESPITE.NOTIFY.NoKindlingLeft", { name: actor.name }));
             return false;
         }
         const slot = {
@@ -720,19 +721,19 @@ export class CampCeremonyDelegate {
         if (!game.user.isGM) return;
         const actor = app._selectedCharacterId ? game.actors.get(app._selectedCharacterId) : null;
         if (!actor) {
-            ui.notifications.warn("Select a character in the roster first.");
+            ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.SelectRosterCharacter"));
             return;
         }
         try {
             const result = await ItemOutcomeHandler.grantToActor(actor.id, "kindling", 1);
-            ui.notifications.info(`Gifted kindling to ${result.actorName}.`);
+            ui.notifications.info(format("IONRIFT.RESPITE.NOTIFY.GiftedKindling", { name: result.actorName }));
             this._emitCampCeremonyPhaseSync();
             this._syncCampCeremonyPreviewToEmbed();
             if (app._campfireApp) void app._campfireApp.render();
             else app.render();
         } catch (err) {
             console.error(`${MODULE_ID} | giftCeremonyWood:`, err);
-            ui.notifications.warn("Could not gift kindling to that character.");
+            ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.CouldNotGiftKindling"));
         }
     
     }
@@ -743,7 +744,7 @@ export class CampCeremonyDelegate {
         const slot = (app._makeCampStagedWood ?? []).find(s => s.id === slotId);
         if (!slot) return;
         if (!this._canReclaimCeremonyStagedSlot(slot)) {
-            ui.notifications.warn("Only the contributor or GM can reclaim that kindling.");
+            ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.OnlyContributorReclaimKindling"));
             return;
         }
         if (!game.user.isGM) {
@@ -769,11 +770,11 @@ export class CampCeremonyDelegate {
         if (cost <= 0) return { ok: true, spendNames };
         const staged = (app._makeCampStagedWood ?? []).slice(0, cost);
         if (staged.length < cost) {
-            return { ok: false, spendNames, error: "Not enough kindling placed for app fire tier." };
+            return { ok: false, spendNames, error: localize("IONRIFT.RESPITE.NOTIFY.NotEnoughKindlingPlaced") };
         }
         for (const slot of staged) {
             const actor = game.actors.get(slot.actorId);
-            if (!actor) return { ok: false, spendNames, error: "Placed kindling actor missing." };
+            if (!actor) return { ok: false, spendNames, error: localize("IONRIFT.RESPITE.NOTIFY.KindlingActorMissing") };
             const item = findConsumableFirewoodItem(actor);
             if (!item || (item.system?.quantity ?? 0) <= 0) {
                 return { ok: false, spendNames, error: `${slot.actorName} no longer has that kindling.` };
@@ -848,7 +849,7 @@ export class CampCeremonyDelegate {
         if (!this._campCeremonyMinigameEnabled()) return;
         if (this._isCampColdCampPreview()) return;
         if (app._campPitBlocksFireLighting()) {
-            ui.notifications.warn("Place the campfire on the map before lighting.");
+            ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.PlaceCampfireFirst"));
             return;
         }
 
@@ -861,7 +862,7 @@ export class CampCeremonyDelegate {
             ?? app._campfireApp?._ceremonyReadyToLight
             ?? staged >= cost;
         if (!readyToLight && staged < cost && this._partyFirewoodTotal() < cost) {
-            ui.notifications.warn(`Place ${cost} kindling for ${chosenLevel} before lighting.`);
+            ui.notifications.warn(format("IONRIFT.RESPITE.NOTIFY.PlaceKindlingBeforeLighting", { cost, level: chosenLevel }));
             return;
         }
 
@@ -938,14 +939,14 @@ export class CampCeremonyDelegate {
         const donors = CampCeremonyDelegate.formatCampFirewoodDonors(spend.spendNames);
 
         if (!spend.spendNames.length) {
-            ui.notifications.info(`Firewood for the ${label} is provided.`);
+            ui.notifications.info(format("IONRIFT.RESPITE.NOTIFY.FirewoodProvided", { label }));
         } else {
             const uniqueDonors = [...new Set(spend.spendNames.filter(Boolean))];
             const allFromLighter = lighterName && uniqueDonors.length === 1 && uniqueDonors[0] === lighterName;
             if (allFromLighter) {
-                ui.notifications.info(`${donors} provides firewood for the ${label}.`);
+                ui.notifications.info(format("IONRIFT.RESPITE.NOTIFY.FirewoodProvides", { donors, label }));
             } else {
-                ui.notifications.info(`Firewood for ${label} taken from ${donors}.`);
+                ui.notifications.info(format("IONRIFT.RESPITE.NOTIFY.FirewoodTakenFrom", { label, donors }));
             }
         }
     
@@ -970,7 +971,7 @@ export class CampCeremonyDelegate {
 
         if (level === "unlit") {
             if (!game.user.isGM) {
-                ui.notifications.warn("Only the GM can fully extinguish the fire.");
+                ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.OnlyGmExtinguish"));
                 this._syncTotmCampfireEmbedFromRest();
                 return;
             }
@@ -1171,8 +1172,9 @@ export class CampCeremonyDelegate {
         if (app._phase === "camp") {
             const terrainTagCamp = app._selectedTerrain ?? app._engine?.terrainTag ?? "forest";
             const terrainCamp = TerrainRegistry.get(terrainTagCamp);
-            const shelterSpellCamp = (app._engine?.activeShelters ?? []).find(s => s !== "tent" && s !== "none")
-                ? SHELTER_SPELLS[(app._engine?.activeShelters ?? []).find(s => s !== "tent" && s !== "none")]?.label ?? null
+            const shelterKey = (app._engine?.activeShelters ?? []).find(s => s !== "tent" && s !== "none");
+            const shelterSpellCamp = shelterKey
+                ? resolveShelterSpell(SHELTER_SPELLS.find(s => s.id === shelterKey))?.label ?? null
                 : null;
             const campfirePlacedGate = hasCampfirePlaced();
             const fireCommitted = (app._fireLevel ?? "unlit") !== "unlit" || !!app._coldCampDecided;
@@ -1184,15 +1186,15 @@ export class CampCeremonyDelegate {
                 : (app._campFirePreviewLevel ?? (app._fireLevel !== "unlit" ? app._fireLevel : "embers"));
             const encMod = CampGearScanner.FIRE_ENCOUNTER_MOD_BY_LEVEL[effectiveScanLevel] ?? 0;
             if (effectiveScanLevel === "cold_camp") {
-                campFireEncounterHint = "Cold camp: harder for enemies to spot (lower encounter chance).";
+                campFireEncounterHint = localize("IONRIFT.RESPITE.FIRE.HINT.ColdCamp");
             } else if (effectiveScanLevel === "unlit") {
-                campFireEncounterHint = "Choose a fire level or go cold camp.";
+                campFireEncounterHint = localize("IONRIFT.RESPITE.FIRE.HINT.ChooseLevel");
             } else if (effectiveScanLevel === "embers") {
-                campFireEncounterHint = "Embers: no change to encounter chance.";
+                campFireEncounterHint = localize("IONRIFT.RESPITE.FIRE.HINT.Embers");
             } else if (effectiveScanLevel === "campfire") {
-                campFireEncounterHint = "Campfire: light makes the camp easier for enemies to spot.";
+                campFireEncounterHint = localize("IONRIFT.RESPITE.FIRE.HINT.Campfire");
             } else if (effectiveScanLevel === "bonfire") {
-                campFireEncounterHint = "Bonfire: visible from far off; enemies spot the camp easily.";
+                campFireEncounterHint = localize("IONRIFT.RESPITE.FIRE.HINT.Bonfire");
             } else {
                 campFireEncounterHint = "";
             }
@@ -1215,7 +1217,7 @@ export class CampCeremonyDelegate {
             const hasTinder = campScanData?.canLightFire ?? false;
             const tierDisabledReason = (canPick, cost) => {
                 if (canPick) return "";
-                if (!hasTinder) return "Someone needs a tinderbox or flint and steel.";
+                if (!hasTinder) return localize("IONRIFT.RESPITE.FIRE.HINT.NeedsTinderbox");
                 return `Need at least ${cost} firewood in the party.`;
             };
             campFirePickerLevels = [
@@ -1312,9 +1314,9 @@ export class CampCeremonyDelegate {
             }
 
             const TIER_BODIES = {
-                embers: "No cooking. No comfort change.",
-                campfire: "Cooking and warmth. Easier for enemies to spot.",
-                bonfire: "+1 camp comfort. Visible from far off."
+                embers: localize("IONRIFT.RESPITE.FIRE.TIP.EmbersShort"),
+                campfire: localize("IONRIFT.RESPITE.FIRE.TIP.CampfireShort"),
+                bonfire: localize("IONRIFT.RESPITE.FIRE.TIP.BonfireShort")
             };
             const TIER_LABELS = Object.fromEntries(
                 COMFORT_TIERS.map(k => [k, CampGearScanner.getRules(k).label])
@@ -1333,11 +1335,11 @@ export class CampCeremonyDelegate {
                 const resultComfort = COMFORT_TIERS[resultIdx] ?? baseComfort;
                 const resultLabel = TIER_LABELS[resultComfort] ?? resultComfort;
                 const comfortHint = delta !== 0
-                    ? `${TIER_LABELS[baseComfort] ?? baseComfort} to ${resultLabel}`
+                    ? format("IONRIFT.RESPITE.CAMP.ComfortTransition", { from: TIER_LABELS[baseComfort] ?? baseComfort, to: resultLabel })
                     : resultLabel;
                 return {
                     id,
-                    label: id.charAt(0).toUpperCase() + id.slice(1),
+                    label: localize(`IONRIFT.RESPITE.FIRE.LEVEL.${id}`),
                     costLabel: CampGearScanner.firewoodCostLabel(id),
                     body: TIER_BODIES[id],
                     comfortHint,
@@ -1425,15 +1427,15 @@ export class CampCeremonyDelegate {
             const effectiveScanLevel = coldCamp ? "cold_camp" : curLevel;
             let campFireEncounterHint = "";
             if (effectiveScanLevel === "cold_camp") {
-                campFireEncounterHint = "Cold camp: harder for enemies to spot (lower encounter chance).";
+                campFireEncounterHint = localize("IONRIFT.RESPITE.FIRE.HINT.ColdCamp");
             } else if (effectiveScanLevel === "unlit") {
-                campFireEncounterHint = "Use the campfire to choose intensity or go cold.";
+                campFireEncounterHint = localize("IONRIFT.RESPITE.FIRE.HINT.UseCampfire");
             } else if (effectiveScanLevel === "embers") {
-                campFireEncounterHint = "Embers: no change to encounter chance.";
+                campFireEncounterHint = localize("IONRIFT.RESPITE.FIRE.HINT.Embers");
             } else if (effectiveScanLevel === "campfire") {
-                campFireEncounterHint = "Campfire: light makes the camp easier for enemies to spot.";
+                campFireEncounterHint = localize("IONRIFT.RESPITE.FIRE.HINT.Campfire");
             } else if (effectiveScanLevel === "bonfire") {
-                campFireEncounterHint = "Bonfire: visible from far off; enemies spot the camp easily.";
+                campFireEncounterHint = localize("IONRIFT.RESPITE.FIRE.HINT.Bonfire");
             }
             return {
                 useFireMinigame: true,
@@ -1454,15 +1456,15 @@ export class CampCeremonyDelegate {
 
         let campFireEncounterHint = "";
         if (effectiveScanLevel === "cold_camp") {
-            campFireEncounterHint = "Cold camp: harder for enemies to spot (lower encounter chance).";
+            campFireEncounterHint = localize("IONRIFT.RESPITE.FIRE.HINT.ColdCamp");
         } else if (effectiveScanLevel === "unlit") {
-            campFireEncounterHint = "No fire is lit. The tier row shows what each level would do.";
+            campFireEncounterHint = localize("IONRIFT.RESPITE.FIRE.HINT.NoFireLit");
         } else if (effectiveScanLevel === "embers") {
-            campFireEncounterHint = "Embers: no change to encounter chance.";
+            campFireEncounterHint = localize("IONRIFT.RESPITE.FIRE.HINT.Embers");
         } else if (effectiveScanLevel === "campfire") {
-            campFireEncounterHint = "Campfire: light makes the camp easier for enemies to spot.";
+            campFireEncounterHint = localize("IONRIFT.RESPITE.FIRE.HINT.Campfire");
         } else if (effectiveScanLevel === "bonfire") {
-            campFireEncounterHint = "Bonfire: visible from far off; enemies spot the camp easily.";
+            campFireEncounterHint = localize("IONRIFT.RESPITE.FIRE.HINT.Bonfire");
         }
         if (previewLevel) {
             campFireEncounterHint = `Previewing ${previewLevel}. ${campFireEncounterHint}`;
@@ -1503,10 +1505,10 @@ export class CampCeremonyDelegate {
                     const need = costNew - costCur;
                     if (costCur === 0 && !hasTinderbox) {
                         tierChangeBlocked = true;
-                        tierDisabledReason = "Someone needs a tinderbox or flint and steel.";
+                        tierDisabledReason = localize("IONRIFT.RESPITE.FIRE.HINT.NeedsTinderbox");
                     } else if (need > 0 && totalPartyFirewood < need) {
                         tierChangeBlocked = true;
-                        tierDisabledReason = `Need at least ${need} firewood in the party.`;
+                        tierDisabledReason = format("IONRIFT.RESPITE.NOTIFY.NeedAtLeastFirewood", { need });
                     } else {
                         tierChangeBlocked = false;
                     }
@@ -1514,7 +1516,7 @@ export class CampCeremonyDelegate {
             }
             return {
                 id,
-                label: id.charAt(0).toUpperCase() + id.slice(1),
+                label: localize(`IONRIFT.RESPITE.FIRE.LEVEL.${id}`),
                 costLabel: CampGearScanner.firewoodCostLabel(id),
                 comfortHint,
                 comfortChanged: delta !== 0,
@@ -1584,35 +1586,37 @@ export class CampCeremonyDelegate {
         const gearSlots = [
             slot({
                 gearType: "bedroll",
-                title: "Bedroll",
+                title: localize("IONRIFT.RESPITE.CAMP.TitleBedroll"),
                 icon: "fas fa-bed",
                 owned: g.hasBedroll,
                 deployed: g.bedrollDeployed,
                 canDrag: g.canDragBedroll,
-                benefitLine: "+1 personal comfort tier and +1 Hit Die recovery from inventory.",
-                missingLine: "No bedroll. Comfort stays at camp level."
+                benefitLine: localize("IONRIFT.RESPITE.CAMP.BedrollBenefit"),
+                missingLine: localize("IONRIFT.RESPITE.CAMP.BedrollMissing")
             }),
             slot({
                 gearType: "tent",
-                title: "Tent",
+                title: localize("IONRIFT.RESPITE.CAMP.TitleTent"),
                 icon: "fas fa-campground",
                 owned: g.hasTent,
                 deployed: g.tentDeployed,
                 canDrag: g.canDragTent,
-                benefitLine: "Weather and encounter modifiers while a tent is owned.",
-                missingLine: "No tent. No tent modifiers."
+                benefitLine: localize("IONRIFT.RESPITE.CAMP.TentBenefit"),
+                missingLine: localize("IONRIFT.RESPITE.CAMP.TentMissing")
             }),
             slot({
                 gearType: "messkit",
-                title: g.messKitSource === "utensils" ? "Cook's Utensils" : "Mess kit",
+                title: g.messKitSource === "utensils"
+                    ? localize("IONRIFT.RESPITE.CAMP.TitleCooksUtensils")
+                    : localize("IONRIFT.RESPITE.CAMP.TitleMessKit"),
                 icon: g.messKitSource === "utensils" ? "fas fa-mortar-pestle" : "fas fa-utensils",
                 owned: g.hasMessKit,
                 deployed: g.messKitDeployed,
                 canDrag: g.canDragMessKit,
                 benefitLine: g.messKitSource === "utensils"
-                    ? "Cook's utensils serve as a mess kit. Advantage on exhaustion saves when fire is lit."
-                    : "Advantage on exhaustion saves when the fire is lit.",
-                missingLine: "No mess kit or cook's utensils. No camp-gear advantage on exhaustion saves."
+                    ? localize("IONRIFT.RESPITE.CAMP.UtensilsAsMessKit")
+                    : localize("IONRIFT.RESPITE.CAMP.MessKitBenefit"),
+                missingLine: localize("IONRIFT.RESPITE.CAMP.MessKitMissing")
             })
         ];
 
@@ -1628,33 +1632,33 @@ export class CampCeremonyDelegate {
         const mitigationHints = [];
         if (hasSuboptimalLine) {
             if (!g.hasBedroll) {
-                mitigationHints.push("Carry a bedroll in inventory to raise personal comfort by one tier.");
+                mitigationHints.push(localize("IONRIFT.RESPITE.CAMP.HintCarryBedroll"));
             } else {
-                mitigationHints.push("Bedroll is in inventory: it already applies to this preview.");
+                mitigationHints.push(localize("IONRIFT.RESPITE.CAMP.HintBedrollApplies"));
             }
             if (!campScanData.fireIsLit) {
-                mitigationHints.push("Light a fire (embers or higher) to remove the no-fire comfort step.");
+                mitigationHints.push(localize("IONRIFT.RESPITE.CAMP.HintLightFire"));
             } else {
                 const fl = campScanData.fireLevel;
                 if (fl && fl !== "unlit" && fl !== "bonfire") {
-                    mitigationHints.push("A bonfire can add one camp comfort step (Fire tab).");
+                    mitigationHints.push(localize("IONRIFT.RESPITE.CAMP.HintBonfireComfort"));
                 }
             }
-            mitigationHints.push("Choose Rest Fully for +1 comfort tier.");
+            mitigationHints.push(localize("IONRIFT.RESPITE.CAMP.HintRestFully"));
         }
 
         const fireLevelRaw = campScanData.fireLevel ?? "embers";
         const fireTierLabels = {
-            unlit: "No fire",
-            embers: "Embers",
-            campfire: "Campfire",
-            bonfire: "Bonfire"
+            unlit: localize("IONRIFT.RESPITE.FIRE.LEVEL.no_fire"),
+            embers: localize("IONRIFT.RESPITE.FIRE.LEVEL.embers"),
+            campfire: localize("IONRIFT.RESPITE.FIRE.LEVEL.campfire"),
+            bonfire: localize("IONRIFT.RESPITE.FIRE.LEVEL.bonfire")
         };
         const fireStatusLines = {
-            unlit: "-1 camp comfort until a fire is lit",
-            embers: "No comfort change from fire size",
-            campfire: "Cooking and warmth",
-            bonfire: "+1 camp comfort"
+            unlit: localize("IONRIFT.RESPITE.FIRE.STATUS.unlit"),
+            embers: localize("IONRIFT.RESPITE.FIRE.TIP.EmbersNoComfort"),
+            campfire: localize("IONRIFT.RESPITE.FIRE.TIP.CampfireWarmth"),
+            bonfire: localize("IONRIFT.RESPITE.FIRE.STATUS.bonfire")
         };
         const fireFactorRow = {
             tierLabel: fireTierLabels[fireLevelRaw] ?? fireLevelRaw,
@@ -1718,7 +1722,7 @@ export class CampCeremonyDelegate {
                 label: wx?.label ?? "Weather",
                 tone: (wx?.encounterDC ?? 0) > 0 ? "risk" : "neutral",
                 icon: "fas fa-cloud-sun-rain",
-                tooltip: wx?.hint ?? "Weather shapes how exposed the camp feels tonight."
+                tooltip: wx?.hint ?? localize("IONRIFT.RESPITE.CAMP.WeatherTooltipFallback")
             });
         }
 
@@ -1727,63 +1731,65 @@ export class CampCeremonyDelegate {
                 label: "Shelter",
                 tone: "help",
                 icon: "fas fa-campground",
-                tooltip: "Cover or a shelter spell hides the camp from wandering threats."
+                tooltip: localize("IONRIFT.RESPITE.CAMP.ShelterTooltip")
             });
         }
 
         if (scouting !== 0) {
             const tier = scoutingResult ?? "?";
-            const tierLabel = tier === "none" ? "Scouting" : `Scout (${tier})`;
+            const tierLabel = tier === "none"
+                ? localize("IONRIFT.RESPITE.CAMP.ScoutingLabel")
+                : format("IONRIFT.RESPITE.CAMP.ScoutTierLabel", { tier });
             factors.push({
                 label: tierLabel,
                 tone: scouting > 0 ? "help" : (scouting < 0 ? "risk" : "neutral"),
                 icon: "fas fa-binoculars",
-                tooltip: "Travel scouting shifts how prepared the camp is for the night."
+                tooltip: localize("IONRIFT.RESPITE.CAMP.ScoutingTooltip")
             });
         }
 
         if (complication) {
             factors.push({
-                label: "Complication",
+                label: localize("IONRIFT.RESPITE.CAMP.ComplicationLabel"),
                 tone: "risk",
                 icon: "fas fa-exclamation-triangle",
-                tooltip: "Something from travel may surface during the night."
+                tooltip: localize("IONRIFT.RESPITE.CAMP.ComplicationTooltip")
             });
         }
 
         if (fire !== 0) {
             const fireLabels = {
-                embers: "Embers",
-                campfire: "Campfire",
-                bonfire: "Bonfire",
-                cold_camp: "Cold camp",
-                unlit: "Unlit"
+                embers: localize("IONRIFT.RESPITE.FIRE.LEVEL.embers"),
+                campfire: localize("IONRIFT.RESPITE.FIRE.LEVEL.campfire"),
+                bonfire: localize("IONRIFT.RESPITE.FIRE.LEVEL.bonfire"),
+                cold_camp: localize("IONRIFT.RESPITE.FIRE.LEVEL.cold_camp"),
+                unlit: localize("IONRIFT.RESPITE.FIRE.LEVEL.unlit")
             };
             factors.push({
-                label: fireLabels[fireLevel] ?? "Fire",
+                label: fireLabels[fireLevel] ?? localize("IONRIFT.RESPITE.FIRE.Label"),
                 tone: fire < 0 ? "risk" : "help",
                 icon: "fas fa-fire",
                 tooltip: fire < 0
-                    ? "Light makes the camp easier to spot."
-                    : "A dark camp is harder for threats to find."
+                    ? localize("IONRIFT.RESPITE.CAMP.LightEasierSpot")
+                    : localize("IONRIFT.RESPITE.CAMP.DarkHarderFind")
             });
         }
 
         if (totalDefenses !== 0) {
             factors.push({
-                label: "Defenses",
+                label: localize("IONRIFT.RESPITE.CAMP.LabelDefenses"),
                 tone: "help",
                 icon: "fas fa-shield-alt",
-                tooltip: "Camp defenses are in place and holding."
+                tooltip: localize("IONRIFT.RESPITE.CAMP.DefensesHolding")
             });
         } else if (defensesPending) {
             factors.push({
-                label: "Defenses",
+                label: localize("IONRIFT.RESPITE.CAMP.LabelDefenses"),
                 tone: defensesFailed ? "risk" : "pending",
                 icon: "fas fa-shield-alt",
                 tooltip: defensesFailed
-                    ? "Defenses were tried but did not hold."
-                    : "Defenders are assigned. Outcome still pending."
+                    ? localize("IONRIFT.RESPITE.CAMP.DefensesFailed")
+                    : localize("IONRIFT.RESPITE.CAMP.DefensesPending")
             });
         }
 

@@ -1,19 +1,21 @@
 
 /** Compendium page _id for the GM Training guide entry. */
 import { MODULE_ID } from "../../../data/moduleId.js";
+import { localize } from "../../../utils/I18n.js";
 export const TRAINING_GUIDE_PAGE_ID = "mN8kTrXpGmRef001";
 
 /**
  * Discrete training XP tiers. Index 0 is Off; indices 1-5 are reward rates per set.
+ * Labels are i18n keys resolved by {@link getTrainingTierLabel}.
  * @type {Array<{label: string, failXp: number, passXp: number}|null>}
  */
 export const TRAINING_XP_TIERS = [
     null,
-    { label: "3 / 10 XP per set", failXp: 3, passXp: 10 },
-    { label: "5 / 20 XP per set", failXp: 5, passXp: 20 },
-    { label: "7 / 30 XP per set", failXp: 7, passXp: 30 },
-    { label: "8 / 40 XP per set", failXp: 8, passXp: 40 },
-    { label: "10 / 50 XP per set", failXp: 10, passXp: 50 }
+    { label: "IONRIFT.RESPITE.SETTINGS.trainingXpTierChoices.tier1", failXp: 3, passXp: 10 },
+    { label: "IONRIFT.RESPITE.SETTINGS.trainingXpTierChoices.tier2", failXp: 5, passXp: 20 },
+    { label: "IONRIFT.RESPITE.SETTINGS.trainingXpTierChoices.tier3", failXp: 7, passXp: 30 },
+    { label: "IONRIFT.RESPITE.SETTINGS.trainingXpTierChoices.tier4", failXp: 8, passXp: 40 },
+    { label: "IONRIFT.RESPITE.SETTINGS.trainingXpTierChoices.tier5", failXp: 10, passXp: 50 }
 ];
 
 export const TRAINING_XP_TIER_MAX = TRAINING_XP_TIERS.length - 1;
@@ -68,8 +70,9 @@ export function isTrainingEnabled() {
  */
 export function getTrainingTierLabel(tier = getTrainingTier()) {
     const clamped = Math.max(0, Math.min(TRAINING_XP_TIER_MAX, Math.round(tier)));
-    if (clamped === 0) return "Off";
-    return TRAINING_XP_TIERS[clamped]?.label ?? "Off";
+    if (clamped === 0) return localize("IONRIFT.RESPITE.SETTINGS.TIERS.Off");
+    const key = TRAINING_XP_TIERS[clamped]?.label;
+    return key ? localize(key) : localize("IONRIFT.RESPITE.SETTINGS.TIERS.Off");
 }
 
 /**

@@ -1,3 +1,4 @@
+import { localize, format } from "../../utils/I18n.js";
 /**
  * MealBuffPickerDialog
  * Scrollable buff preset picker for the homebrew recipe editor.
@@ -21,7 +22,7 @@ export class MealBuffPickerDialog extends foundry.applications.api.ApplicationV2
     static DEFAULT_OPTIONS = {
         id: "respite-meal-buff-picker",
         window: {
-            title: "Choose buff",
+            title: localize("IONRIFT.RESPITE.APP.ChooseBuffTitle"),
             icon: "fas fa-star",
             resizable: true
         },

@@ -1,4 +1,5 @@
 import { ActivityResolver } from "../../services/rest/flow/ActivityResolver.js";
+import { localize, format } from "../../utils/I18n.js";
 import { CraftingEngine } from "../../services/crafting/engine/CraftingEngine.js";
 import { CraftingPickerApp } from "./CraftingPickerApp.js";
 import { MODULE_ID } from "../../data/moduleId.js";
@@ -16,7 +17,7 @@ export class ActivityPickerApp extends HandlebarsApplicationMixin(ApplicationV2)
         id: "ionrift-respite-picker",
         classes: ["ionrift-window", "glass-ui", "ionrift-respite-app"],
         window: {
-            title: "Rest: Choose Activity",
+            title: localize("IONRIFT.RESPITE.APP.ChooseActivityTitle"),
             resizable: false
         },
         position: {
@@ -239,7 +240,7 @@ export class ActivityPickerApp extends HandlebarsApplicationMixin(ApplicationV2)
         this._hasSubmitted = true;
         this.render();
 
-        ui.notifications.info("Choices submitted. Waiting for the GM to resolve the rest.");
+        ui.notifications.info(localize("IONRIFT.RESPITE.NOTIFY.ChoicesSubmitted"));
     }
 
     /**

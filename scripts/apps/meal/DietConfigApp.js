@@ -1,4 +1,5 @@
 import { ItemClassifier } from "../../services/party/ItemClassifier.js";
+import { localize, format } from "../../utils/I18n.js";
 import { MODULE_ID } from "../../data/moduleId.js";
 
 /**
@@ -21,7 +22,7 @@ export class DietConfigApp extends foundry.applications.api.ApplicationV2 {
     static DEFAULT_OPTIONS = {
         id: "respite-diet-config",
         window: {
-            title: "Food & Diet",
+            title: localize("IONRIFT.RESPITE.APP.FoodDietTitle"),
             icon: "fas fa-utensils",
             resizable: true
         },
@@ -520,9 +521,9 @@ export class DietConfigApp extends foundry.applications.api.ApplicationV2 {
         }
 
         if (saved > 0) {
-            ui.notifications.info(`Diet profiles saved for ${saved} character${saved !== 1 ? "s" : ""}.`);
+            ui.notifications.info(format("IONRIFT.RESPITE.NOTIFY.DietSaved", { count: saved }));
         } else {
-            ui.notifications.info("No changes to save.");
+            ui.notifications.info(localize("IONRIFT.RESPITE.NOTIFY.DietNoChanges"));
         }
 
         this.close();
@@ -549,7 +550,7 @@ export class DietConfigApp extends foundry.applications.api.ApplicationV2 {
     async _showBalanceWarning(names) {
         return new Promise(resolve => {
             const d = new Dialog({
-                title: "Sustenance Imbalance",
+                title: localize("IONRIFT.RESPITE.APP.SustenanceImbalanceTitle"),
                 content: `
                     <div class="diet-balance-warning">
                         <p><i class="fas fa-exclamation-triangle"></i>
@@ -586,7 +587,7 @@ export class DietConfigApp extends foundry.applications.api.ApplicationV2 {
         return new Promise(resolve => {
             const plural = names.length > 1;
             const d = new Dialog({
-                title: "Empty Diet",
+                title: localize("IONRIFT.RESPITE.APP.EmptyDietTitle"),
                 content: `
                     <div class="diet-balance-warning">
                         <p><i class="fas fa-exclamation-triangle"></i>

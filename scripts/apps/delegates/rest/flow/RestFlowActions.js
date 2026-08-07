@@ -1,4 +1,5 @@
 import { RestFlowEngine } from "../../../../services/rest/flow/RestFlowEngine.js";
+import { localize, format } from "../../../../utils/I18n.js";
 import { TerrainRegistry } from "../../../../services/events/resolve/TerrainRegistry.js";
 import { ResourceSink } from "../../../../services/rest/recovery/ResourceSink.js";
 import { ConditionAdvisory } from "../../../../services/rest/recovery/ConditionAdvisory.js";
@@ -252,7 +253,7 @@ export class RestFlowActions {
         });
         app._refreshLedgerApp();
 
-        ui.notifications.info("Rest phase started. Activity pickers sent to all players.");
+        ui.notifications.info(localize("IONRIFT.RESPITE.NOTIFY.RestPhaseStarted"));
 
         if (app._phase === "travel") {
             setTimeout(() => {
@@ -444,7 +445,7 @@ export class RestFlowActions {
             const ownerUser = actor ? game.users.find(u => !u.isGM && actor.testUserPermission(u, "OWNER")) : null;
             const playerAlreadySubmitted = ownerUser && app._playerSubmissions?.has(ownerUser.id);
             if (playerAlreadySubmitted && !app._gmOverrides.has(characterId)) {
-                ui.notifications.warn(`${actor.name}'s player already submitted. Overriding their choice.`);
+                ui.notifications.warn(format("IONRIFT.RESPITE.NOTIFY.OverridePlayerChoice", { name: actor.name }));
             }
             // GM: override + broadcast
             app._gmOverrides.set(characterId, activityId);
@@ -495,10 +496,10 @@ export class RestFlowActions {
                     narrative: `Level ${spellLevel} spell (${cost}gp, DC ${dc}). Awaiting transaction.`
                 });
 
-                if (actor) ui.notifications.info(`${actor.name}: Copy Spell Level ${spellLevel} submitted.`);
+                if (actor) ui.notifications.info(format("IONRIFT.RESPITE.NOTIFY.CopySpellSubmitted", { name: actor.name, level: spellLevel }));
             } else {
                 const actor = game.actors.get(characterId);
-                if (actor) ui.notifications.info(`${actor.name}'s activity submitted.`);
+                if (actor) ui.notifications.info(format("IONRIFT.RESPITE.NOTIFY.ActivitySubmitted", { name: actor.name }));
             }
 
             emitActivityChoice(
@@ -645,13 +646,13 @@ export class RestFlowActions {
                 await ChatMessage.create({
                     speaker: { alias: te.name ?? "Rest Event" },
                     whisper: game.users.filter(u => u.isGM).map(u => u.id),
-                    content: `<p><strong>Taken from the packs:</strong></p><p>${lines}</p><p><em>Applied after the rest.</em></p>`
+                    content: format("IONRIFT.RESPITE.CHAT.TakenFromPacks", { lines })
                 });
             } else {
                 await ChatMessage.create({
                     speaker: { alias: te.name ?? "Rest Event" },
                     whisper: game.users.filter(u => u.isGM).map(u => u.id),
-                    content: `<p><em>Nothing worth taking was within reach.</em></p>`
+                    content: localize("IONRIFT.RESPITE.CHAT.NothingWorthTaking")
                 });
             }
         } else if (effect.type === "consume_gold") {
@@ -668,13 +669,13 @@ export class RestFlowActions {
                 await ChatMessage.create({
                     speaker: { alias: te.name ?? "Rest Event" },
                     whisper: game.users.filter(u => u.isGM).map(u => u.id),
-                    content: `<p><strong>Coin lifted:</strong> ${proposal.totalLoss} gp</p><p>${lines}</p><p><em>Applied after the rest.</em></p>`
+                    content: format("IONRIFT.RESPITE.CHAT.CoinLifted", { total: proposal.totalLoss, lines })
                 });
             } else {
                 await ChatMessage.create({
                     speaker: { alias: te.name ?? "Rest Event" },
                     whisper: game.users.filter(u => u.isGM).map(u => u.id),
-                    content: `<p><em>No coin in the purses to lift.</em></p>`
+                    content: localize("IONRIFT.RESPITE.CHAT.NoCoinToLift")
                 });
             }
         } else if (effect.type === "supply_loss") {
@@ -692,13 +693,13 @@ export class RestFlowActions {
                 await ChatMessage.create({
                     speaker: { alias: te.name ?? "Rest Event" },
                     whisper: game.users.filter(u => u.isGM).map(u => u.id),
-                    content: `<p><strong>Lost to the disaster:</strong></p><p>${lines}</p><p><em>Applied after the rest.</em></p>`
+                    content: format("IONRIFT.RESPITE.CHAT.LostToDisaster", { lines })
                 });
             } else {
                 await ChatMessage.create({
                     speaker: { alias: te.name ?? "Rest Event" },
                     whisper: game.users.filter(u => u.isGM).map(u => u.id),
-                    content: `<p><em>No supplies on hand to lose.</em></p>`
+                    content: localize("IONRIFT.RESPITE.CHAT.NoSuppliesToLose")
                 });
             }
         } else {
@@ -732,7 +733,7 @@ export class RestFlowActions {
             (e, i) => i !== eventIndex && e.awaitingRolls
         );
         if (anotherAwaiting) {
-            ui.notifications.warn("Resolve the current event check before starting another.");
+            ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.ResolveEventFirst"));
             return;
         }
 
@@ -812,7 +813,7 @@ export class RestFlowActions {
         if (!actor) return;
 
         if (!actor.isOwner) {
-            ui.notifications.warn("You do not own this character.");
+            ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.DoNotOwnCharacter"));
             return;
         }
 
@@ -834,7 +835,7 @@ export class RestFlowActions {
                     characterName: actor.name,
                     total
                 });
-            ui.notifications.info(`${actor.name}: ${rollMode === "force-pass" ? "Auto-success" : "Auto-fail"} applied.`);
+            ui.notifications.info(format("IONRIFT.RESPITE.NOTIFY.AutoPassFail", { name: actor.name, mode: rollMode === "force-pass" ? localize("IONRIFT.RESPITE.NOTIFY.AutoSuccess") : localize("IONRIFT.RESPITE.NOTIFY.AutoFail") }));
             app.render();
             return;
         }
@@ -856,7 +857,7 @@ export class RestFlowActions {
                     total
                 });
 
-        ui.notifications.info(`${actor.name} rolled ${total} for ${pending.skillName}.`);
+        ui.notifications.info(format("IONRIFT.RESPITE.NOTIFY.RolledForSkill", { name: actor.name, total, skill: pending.skillName }));
         app.render();
     
     }

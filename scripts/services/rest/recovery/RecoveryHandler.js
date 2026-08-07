@@ -1,6 +1,7 @@
 import { Logger } from "../../../utils/Logger.js";
 import { mealExhaustionFloorFor } from "../../meal/phase/MealExhaustionGuard.js";
 import { MODULE_ID } from "../../../data/moduleId.js";
+import { localize, format } from "../../../utils/I18n.js";
 /**
  * RecoveryHandler
  * Applies comfort-modified HP, Hit Dice, and exhaustion recovery to actors.
@@ -545,45 +546,43 @@ export class RecoveryHandler {
      * @param {number} exhaustionDelta
      */
     static async _postRecoveryChat(actor, recovery, hpRestored, hdRecovered, exhaustionDelta = 0) {
-        const comfortLabels = {
-            safe: "Safe",
-            sheltered: "Sheltered",
-            rough: "Rough",
-            hostile: "Hostile"
-        };
-        const comfortLabel = comfortLabels[recovery.comfortLevel] ?? recovery.comfortLevel;
+        const comfortKey = `IONRIFT.RESPITE.COMFORT.LABEL.${recovery.comfortLevel}`;
+        const comfortLabel = localize(comfortKey) !== comfortKey
+            ? localize(comfortKey)
+            : (recovery.comfortLevel ?? "");
 
         const parts = [];
-        if (hpRestored > 0) parts.push(`${hpRestored} HP`);
-        if (hdRecovered > 0) parts.push(`${hdRecovered} Hit Dice`);
-        if (exhaustionDelta < 0) parts.push(`${Math.abs(exhaustionDelta)} exhaustion reduced`);
-        if (exhaustionDelta > 0) parts.push(`${exhaustionDelta} exhaustion gained`);
+        if (hpRestored > 0) parts.push(format("IONRIFT.RESPITE.CHAT.HpPart", { n: hpRestored }));
+        if (hdRecovered > 0) parts.push(format("IONRIFT.RESPITE.CHAT.HdPart", { n: hdRecovered }));
+        if (exhaustionDelta < 0) parts.push(format("IONRIFT.RESPITE.CHAT.ExhaustionReduced", { n: Math.abs(exhaustionDelta) }));
+        if (exhaustionDelta > 0) parts.push(format("IONRIFT.RESPITE.CHAT.ExhaustionGained", { n: exhaustionDelta }));
 
         // Advisory when exhaustion reduction is blocked
         let exhaustionNote = null;
         if (recovery.comfortLevel === "hostile" && recovery.restType === "long" && exhaustionDelta >= 0) {
-            exhaustionNote = "Hostile conditions prevent natural exhaustion recovery.";
+            exhaustionNote = localize("IONRIFT.RESPITE.CHAT.HostileBlocksExhaustion");
         } else if (recovery.armorSleepPenalty && recovery.restType === "long" && exhaustionDelta >= 0) {
-            exhaustionNote = "Sleeping in armor prevents exhaustion recovery.";
+            exhaustionNote = localize("IONRIFT.RESPITE.CHAT.ArmorBlocksExhaustion");
         } else if (recovery.noFoodOrWater && recovery.restType === "long" && exhaustionDelta >= 0) {
-            exhaustionNote = "Lack of food or water prevents exhaustion recovery.";
+            exhaustionNote = localize("IONRIFT.RESPITE.CHAT.FoodBlocksExhaustion");
         }
 
         // Skip chat if nothing was restored or changed and no advisory
         if (parts.length === 0 && !exhaustionNote) return;
 
-        const recoveredLine = parts.length > 0 ? `Recovered: ${parts.join(", ")}.` : "";
-        const noteLine = exhaustionNote ? `<br><em style="color:#e67e22;"><i class="fas fa-exclamation-circle"></i> ${exhaustionNote}</em>` : "";
+        const recoveredLine = parts.length > 0 ? format("IONRIFT.RESPITE.CHAT.RecoveredLine", { parts: parts.join(", ") }) : "";
+        const noteLine = exhaustionNote ? format("IONRIFT.RESPITE.CHAT.NoteLine", { text: exhaustionNote }) : "";
         const gearLine = recovery.gearDescriptors?.length
-            ? `<br><span style="font-size:0.85em;opacity:0.7;">${recovery.gearDescriptors.join(" · ")}</span>`
+            ? format("IONRIFT.RESPITE.CHAT.GearLine", { text: recovery.gearDescriptors.join(" · ") })
             : "";
 
-        const content = `
-            <div class="respite-recovery-chat">
-                <strong>${actor.name}</strong> rests in <em>${comfortLabel}</em> conditions.<br>
-                ${recoveredLine}${gearLine}${noteLine}
-            </div>
-        `;
+        const content = format("IONRIFT.RESPITE.CHAT.RecoveryRests", {
+            name: actor.name,
+            comfort: comfortLabel,
+            recovered: recoveredLine,
+            gear: gearLine,
+            note: noteLine
+        });
 
         await ChatMessage.create({
             speaker: ChatMessage.getSpeaker({ actor }),

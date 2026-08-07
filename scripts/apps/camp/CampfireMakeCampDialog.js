@@ -3,6 +3,7 @@
  */
 
 import { StationActivityDialog } from "./StationActivityDialog.js";
+import { localize, format } from "../../utils/I18n.js";
 import { MODULE_ID } from "../../data/moduleId.js";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
@@ -20,7 +21,7 @@ export class CampfireMakeCampDialog extends HandlebarsApplicationMixin(Applicati
         tag: "div",
         classes: ["ionrift-window", "glass-ui", "ionrift", "ionrift-campfire-map-dialog"],
         window: {
-            title: "Campfire",
+            title: localize("IONRIFT.RESPITE.APP.CampfireTitle"),
             resizable: false,
             minimizable: false
         },

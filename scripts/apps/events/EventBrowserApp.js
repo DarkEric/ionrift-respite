@@ -1,4 +1,5 @@
 import { TerrainRegistry } from "../../services/events/resolve/TerrainRegistry.js";
+import { localize, format } from "../../utils/I18n.js";
 import { getEventPoolSelection, loadAllCatalogEvents } from "../../services/events/catalog/EventCatalogLoader.js";
 import {
     buildEventPoolFilterGroups,
@@ -36,7 +37,7 @@ export class EventBrowserApp extends foundry.applications.api.ApplicationV2 {
     static DEFAULT_OPTIONS = {
         id: "respite-event-browser",
         window: {
-            title: "Event Pool",
+            title: localize("IONRIFT.RESPITE.APP.EventPoolTitle"),
             icon: "fas fa-book-open",
             resizable: true
         },
@@ -419,7 +420,7 @@ export class EventBrowserApp extends foundry.applications.api.ApplicationV2 {
     async #savePool() {
         await game.settings.set(MODULE_ID, "eventPoolSelection", { ...this.#pendingSelection });
         this.#dirty = false;
-        ui.notifications.info("Event pool saved.");
+        ui.notifications.info(localize("IONRIFT.RESPITE.NOTIFY.EventPoolSaved"));
 
         const instances = foundry.applications?.instances;
         if (instances) {

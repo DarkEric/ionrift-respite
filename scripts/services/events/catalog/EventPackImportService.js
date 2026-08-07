@@ -1,4 +1,5 @@
 import { TerrainRegistry } from "../resolve/TerrainRegistry.js";
+import { localize, format } from "../../../utils/I18n.js";
 import {
     detectLegacyTerrainBinding,
     LEGACY_SCHEMA_VERSION
@@ -132,12 +133,12 @@ function pickJsonFile() {
  */
 export async function importEventPackFromFile() {
     if (!game.user.isGM) {
-        ui.notifications.warn("Only the GM can import packs.");
+        ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.OnlyGmImportPacks"));
         return null;
     }
 
     if (!game.ionrift?.library?.importJsonPack) {
-        ui.notifications.error("Ionrift Library v1.6.0+ is required for event pack imports.");
+        ui.notifications.error(localize("IONRIFT.RESPITE.NOTIFY.LibraryRequiredImport"));
         return null;
     }
 

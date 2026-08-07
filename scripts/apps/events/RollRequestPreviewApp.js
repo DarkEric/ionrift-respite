@@ -4,6 +4,7 @@
  */
 
 import { executePlayerRoll } from "../../services/ui/rollRequest/RollRequestManager.js";
+import { localize, format } from "../../utils/I18n.js";
 import { getPartyActors } from "../../services/party/partyActors.js";
 import { findPreviewPlayerActor, centerRollRequestRoster } from "../../services/ui/rollRequest/RollRequestView.js";
 import { ensureDcPulseAnimation } from "../../services/ui/rollRequest/RollRequestDcPulse.js";
@@ -20,7 +21,7 @@ export class RollRequestPreviewApp extends HandlebarsApplicationMixin(Applicatio
         classes: ["ionrift-window", "glass-ui", "ionrift-roll-request-preview"],
         tag: "div",
         window: {
-            title: "Roll Request Preview",
+            title: localize("IONRIFT.RESPITE.APP.RollRequestPreviewTitle"),
             icon: "fas fa-dice-d20",
             resizable: true
         },
@@ -50,11 +51,11 @@ export class RollRequestPreviewApp extends HandlebarsApplicationMixin(Applicatio
 
     static open(options = {}) {
         if (!game.user.isGM) {
-            ui.notifications.warn("Roll request preview is GM-only.");
+            ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.RollPreviewGmOnly"));
             return null;
         }
         if (!Handlebars.partials.rollRequest) {
-            ui.notifications.warn("Roll request partial not loaded yet. Reload the world.");
+            ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.RollPreviewNotLoaded"));
             return null;
         }
         if (activePreview && !activePreview.rendered) activePreview = null;
@@ -68,7 +69,7 @@ export class RollRequestPreviewApp extends HandlebarsApplicationMixin(Applicatio
     async _prepareContext() {
         const api = game.ionrift?.respite?.rollRequest;
         const base = api?.buildMockContext?.(this._variant)
-            ?? { title: "Preview unavailable", skillName: "Survival", dc: 10, targets: [], flow: "preview", meta: {} };
+            ?? { title: localize("IONRIFT.RESPITE.APP.PreviewUnavailable"), skillName: "Survival", dc: 10, targets: [], flow: "preview", meta: {} };
 
         const rollRequest = foundry.utils.deepClone(base);
         if (this._gmViewForced) {
@@ -177,7 +178,7 @@ export class RollRequestPreviewApp extends HandlebarsApplicationMixin(Applicatio
 
         const actor = RollRequestPreviewApp.#resolvePreviewActor(characterId);
         if (!actor) {
-            ui.notifications.warn("No party actor available for preview roll.");
+            ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.NoPartyActorPreview"));
             return;
         }
 
@@ -193,7 +194,7 @@ export class RollRequestPreviewApp extends HandlebarsApplicationMixin(Applicatio
         await executePlayerRoll(actor, mock.skillKey, mock.dc, flavor, target, rollMode);
 
         this._stubRolled.add(characterId);
-        ui.notifications.info(`${actor.name} rolled for preview.`);
+        ui.notifications.info(format("IONRIFT.RESPITE.NOTIFY.RolledPreview", { name: actor.name }));
         this.render();
     }
 

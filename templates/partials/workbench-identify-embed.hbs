@@ -6,27 +6,27 @@
     <div class="identify-caster-advisory">
         <i class="fas fa-hat-wizard"></i>
         {{#each identifyCasters}}{{#unless @first}}, {{/unless}}{{name}}{{/each}}
-        can cast Identify (ritual, free)
+        {{localize 'IONRIFT.RESPITE.WORKBENCH.CanCastIdentifySuffix'}}
     </div>
     {{/if}}
-    <p class="wb-ident-hint">DMG p.136 (Identifying a Magic Item): focus on 1 item per rest, or taste a potion, to learn properties without Identify. Use Detect Magic to reveal auras.</p>
+    <p class="wb-ident-hint">{{localize 'IONRIFT.RESPITE.WORKBENCH.DmgHint'}}</p>
     {{!-- Drop zones: hero position --}}
     <div class="identify-scroll-area station-identify-scroll wb-ident-scroll">
     {{#if workbenchSubmitPending}}
     <p class="wb-ident-pending-status" role="status" aria-live="polite">
-        <i class="fas fa-spinner fa-spin" aria-hidden="true"></i> Identifying. Waiting on the table...
+        <i class="fas fa-spinner fa-spin" aria-hidden="true"></i> {{localize 'IONRIFT.RESPITE.WORKBENCH.IdentifyingWaiting'}}
     </p>
     {{/if}}
     <div class="meal-drop-columns wb-ident-drop-columns">
         <div class="meal-panel wb-ident-gear-panel{{#if workbenchFocusExhausted}} wb-ident-exhausted{{/if}}">
-            <span class="panel-label">Focus
-                {{#if workbenchFocusExhausted}}<span class="wb-ident-used-badge">Used</span>{{/if}}
+            <span class="panel-label">{{localize 'IONRIFT.RESPITE.WORKBENCH.Focus'}}
+                {{#if workbenchFocusExhausted}}<span class="wb-ident-used-badge">{{localize 'IONRIFT.RESPITE.WORKBENCH.Used'}}</span>{{/if}}
             </span>
             <div class="wb-ident-gear-slot-wrap">
                 <div class="meal-drop-zone wb-ident-drop-zone gear-focus-drop-zone {{#if workbenchGearChip}}filled{{/if}}
                     {{#if workbenchFocusExhausted}}wb-ident-zone-blocked{{/if}}"
                     data-wb-zone="gear"
-                    data-tooltip="{{#if workbenchFocusExhausted}}Focus identify already used this rest{{else}}Drop one non-potion item here. Click to clear.{{/if}}">
+                    data-tooltip="{{#if workbenchFocusExhausted}}{{localize 'IONRIFT.RESPITE.WORKBENCH.FocusUsed'}}{{else}}{{localize 'IONRIFT.RESPITE.WORKBENCH.DropGear'}}{{/if}}">
                     <div class="drop-zone-silhouette">
                         {{#if workbenchGearChip}}
                         <img src="{{workbenchGearChip.img}}" alt="" class="drop-zone-item-icon" onerror="this.onerror=null;this.src='icons/svg/mystery-man.svg'">
@@ -38,10 +38,10 @@
             </div>
         </div>
         <div class="meal-panel wb-ident-potion-panel">
-            <span class="panel-label">Potion</span>
+            <span class="panel-label">{{localize 'IONRIFT.RESPITE.WORKBENCH.Potion'}}</span>
             <div class="wb-ident-potion-slot-wrap">
                 <div class="meal-drop-zone wb-ident-drop-zone potion-taste-drop-zone {{#if workbenchPotionChip}}filled{{/if}}"
-                     data-wb-zone="potion" data-tooltip="Drop one potion here. Click to clear.">
+                     data-wb-zone="potion" data-tooltip="{{localize 'IONRIFT.RESPITE.WORKBENCH.DropPotion'}}">
                     <div class="drop-zone-silhouette">
                         {{#if workbenchPotionChip}}
                         <img src="{{workbenchPotionChip.img}}" alt="" class="drop-zone-item-icon" onerror="this.onerror=null;this.src='icons/svg/mystery-man.svg'">
@@ -59,44 +59,44 @@
             data-action="stationDetectMagicScan"
             {{#unless canTriggerDetectMagicScan}}disabled{{/unless}}
             {{#if workbenchSubmitPending}}disabled aria-disabled="true"{{/if}}
-            data-tooltip="{{#if workbenchSubmitPending}}Wait for identify to finish{{else}}{{#if magicScanActive}}Dismiss scan{{else}}{{#if canTriggerDetectMagicScan}}{{#if isGmUser}}Cast Detect Magic for the party{{else}}Cast Detect Magic{{/if}}{{else}}No Detect Magic caster in party{{/if}}{{/if}}{{/if}}">
+            data-tooltip="{{#if workbenchSubmitPending}}{{localize 'IONRIFT.RESPITE.WORKBENCH.WaitIdentify'}}{{else}}{{#if magicScanActive}}{{localize 'IONRIFT.RESPITE.WORKBENCH.DismissScan'}}{{else}}{{#if canTriggerDetectMagicScan}}{{#if isGmUser}}{{localize 'IONRIFT.RESPITE.WORKBENCH.CastDetectMagicParty'}}{{else}}{{localize 'IONRIFT.RESPITE.WORKBENCH.CastDetectMagic'}}{{/if}}{{else}}{{localize 'IONRIFT.RESPITE.WORKBENCH.NoDetectMagicCaster'}}{{/if}}{{/if}}{{/if}}">
             <i class="fas {{#if magicScanActive}}fa-eye-slash{{else}}fa-eye{{/if}}" aria-hidden="true"></i>
-            <span class="btn-detect-magic-text">{{#if magicScanActive}}Dismiss{{else}}Detect Magic{{/if}}</span>
+            <span class="btn-detect-magic-text">{{#if magicScanActive}}{{localize 'IONRIFT.RESPITE.UI.Dismiss'}}{{else}}{{localize 'IONRIFT.RESPITE.WORKBENCH.DetectMagic'}}{{/if}}</span>
         </button>
         <button type="button" class="station-meal-submit-btn{{#if workbenchSubmitPending}} wb-ident-submit-btn--pending{{/if}}" data-action="submitWorkbenchIdentify"
             data-workbench-actor-id="{{workbenchIdentifyActorId}}"
             {{#if workbenchSubmitLocked}}disabled{{/if}}
-            {{#if workbenchSubmitPending}}aria-busy="true" data-tooltip="Identify in progress"{{/if}}>
+            {{#if workbenchSubmitPending}}aria-busy="true" data-tooltip="{{localize 'IONRIFT.RESPITE.WORKBENCH.IdentifyInProgress'}}"{{/if}}>
             {{#if workbenchSubmitPending}}
-            <i class="fas fa-spinner fa-spin" aria-hidden="true"></i> Identifying...
+            <i class="fas fa-spinner fa-spin" aria-hidden="true"></i> {{localize 'IONRIFT.RESPITE.UI.Identifying'}}
             {{else}}
-            Submit identify
+            {{localize 'IONRIFT.RESPITE.WORKBENCH.SubmitIdentify'}}
             {{/if}}
         </button>
     </div>
     {{#unless magicScanActive}}
-    <p class="wb-detect-magic-attribution">{{#if isGmUser}}GM override - cast Detect Magic on behalf of the party.{{else}}{{detectMagicScanButtonTitle}}{{/if}}</p>
+    <p class="wb-detect-magic-attribution">{{#if isGmUser}}{{localize 'IONRIFT.RESPITE.WORKBENCH.GmOverrideDetect'}}{{else}}{{detectMagicScanButtonTitle}}{{/if}}</p>
     {{/unless}}
     </div>
 
     {{#if workbenchIdentifyAcknowledgement}}
     <div class="wb-ident-ack-overlay" role="dialog" aria-modal="true">
         <div class="wb-ident-ack-card wb-ident-ack-fx">
-            <div class="wb-ident-ack-title" id="wb-ident-ack-heading"><i class="fas fa-scroll"></i> Revelation</div>
-            <p class="wb-ident-ack-lead">Names and properties resolve for this rest.</p>
+            <div class="wb-ident-ack-title" id="wb-ident-ack-heading"><i class="fas fa-scroll"></i> {{localize 'IONRIFT.RESPITE.WORKBENCH.Revelation'}}</div>
+            <p class="wb-ident-ack-lead">{{localize 'IONRIFT.RESPITE.WORKBENCH.NamesResolve'}}</p>
             {{#each workbenchIdentifyAcknowledgement.items}}
             <div class="wb-ident-ack-row">
                 <img src="{{img}}" alt="" class="wb-ident-ack-img" onerror="this.onerror=null;this.src='icons/svg/mystery-man.svg'">
                 <div class="wb-ident-ack-meta">
                     <span class="wb-ident-ack-name">{{name}}</span>
-                    {{#if requiresAttunement}}<span class="magic-attune-hint">Requires attunement</span>{{/if}}
+                    {{#if requiresAttunement}}<span class="magic-attune-hint">{{localize 'IONRIFT.RESPITE.WORKBENCH.RequiresAttunement'}}</span>{{/if}}
                 </div>
             </div>
             {{/each}}
             <button type="button" class="station-meal-submit-btn wb-ident-ack-btn" data-action="dismissWorkbenchIdentifyAck"
                 data-workbench-actor-id="{{workbenchIdentifyActorId}}"
-                {{#unless workbenchAckRevealReady}} disabled data-tooltip="Brief pause before you continue"{{/unless}}>
-                {{#if workbenchAckRevealReady}}Continue{{else}}Wait...{{/if}}
+                {{#unless workbenchAckRevealReady}} disabled data-tooltip="{{localize 'IONRIFT.RESPITE.WORKBENCH.BriefPause'}}"{{/unless}}>
+                {{#if workbenchAckRevealReady}}{{localize 'IONRIFT.RESPITE.UI.Continue'}}{{else}}{{localize 'IONRIFT.RESPITE.WORKBENCH.Wait'}}{{/if}}
             </button>
         </div>
     </div>
