@@ -6,13 +6,45 @@
     "comfort": "hostile",
     "comfortReason": "Extreme heat, zero shade, no water. Survival without shelter is a gamble.",
     "scoutFlavor": {
-        "nat1":    ["A sheltered dune with good shade from a rock face.", "Rock overhang with shade. Looks like a solid spot.", "A small oasis with clear water and palm cover."],
-        "poor":    ["Open sand. No shade, no cover.", "A shallow depression. Better than nothing.", "Rocky ground. Hard, hot, exposed."],
-        "average": ["A rock formation provides shade.", "A dried riverbed with steep banks.", "Wind-carved alcove in a cliff face."],
-        "good":    ["A deep canyon slot, hidden from the wind.", "An abandoned waystation, walls still standing.", "A cave mouth facing away from the wind."],
-        "nat20":   ["A hidden spring in a sheltered grotto.", "An intact underground cistern, cool and defensible.", "A palm grove oasis, surrounded by natural barriers."]
+        "nat1": [
+            "IONRIFT.RESPITE.DATA.TERRAIN.desert.ScoutFlavor.nat1.0",
+            "IONRIFT.RESPITE.DATA.TERRAIN.desert.ScoutFlavor.nat1.1",
+            "IONRIFT.RESPITE.DATA.TERRAIN.desert.ScoutFlavor.nat1.2"
+        ],
+        "poor": [
+            "IONRIFT.RESPITE.DATA.TERRAIN.desert.ScoutFlavor.poor.0",
+            "IONRIFT.RESPITE.DATA.TERRAIN.desert.ScoutFlavor.poor.1",
+            "IONRIFT.RESPITE.DATA.TERRAIN.desert.ScoutFlavor.poor.2"
+        ],
+        "average": [
+            "IONRIFT.RESPITE.DATA.TERRAIN.desert.ScoutFlavor.average.0",
+            "IONRIFT.RESPITE.DATA.TERRAIN.desert.ScoutFlavor.average.1",
+            "IONRIFT.RESPITE.DATA.TERRAIN.desert.ScoutFlavor.average.2"
+        ],
+        "good": [
+            "IONRIFT.RESPITE.DATA.TERRAIN.desert.ScoutFlavor.good.0",
+            "IONRIFT.RESPITE.DATA.TERRAIN.desert.ScoutFlavor.good.1",
+            "IONRIFT.RESPITE.DATA.TERRAIN.desert.ScoutFlavor.good.2"
+        ],
+        "nat20": [
+            "IONRIFT.RESPITE.DATA.TERRAIN.desert.ScoutFlavor.nat20.0",
+            "IONRIFT.RESPITE.DATA.TERRAIN.desert.ScoutFlavor.nat20.1",
+            "IONRIFT.RESPITE.DATA.TERRAIN.desert.ScoutFlavor.nat20.2"
+        ]
     },
-    "mealRules": { "waterPerDay": 4, "foodPerDay": 1, "dehydrationDC": 15, "note": "Arid heat causes rapid dehydration. Double water requirement." },
-    "weather": ["clear", "overcast", "extreme_heat", "sandstorm"],
-    "eventsFile": "core/events/desert_events.json"
+    "mealRules": {
+        "waterPerDay": 4,
+        "foodPerDay": 1,
+        "dehydrationDC": 15,
+        "note": "Arid heat causes rapid dehydration. Double water requirement."
+    },
+    "weather": [
+        "clear",
+        "overcast",
+        "extreme_heat",
+        "sandstorm"
+    ],
+    "eventsFile": "core/events/desert_events.json",
+    "labelKey": "IONRIFT.LIBRARY.TERRAIN.Desert",
+    "comfortReasonKey": "IONRIFT.RESPITE.DATA.TERRAIN.desert.ComfortReason"
 }

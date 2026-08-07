@@ -1028,7 +1028,7 @@ export class EventsPhaseDelegate {
         }
 
         const terrain = TerrainRegistry.get(terrainTag);
-        const terrainLabel = terrain?.label ?? terrainTag;
+        const terrainLabel = TerrainRegistry.resolveLabel(terrainTag, terrain);
         const eventId = await pickPoolEvent(poolEvents, terrainLabel, terrainTag);
         if (!eventId) return;
 

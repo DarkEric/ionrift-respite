@@ -543,7 +543,7 @@ export class TravelResolutionDelegate {
 
         let disabledReason = null;
         if (!canForage && !canHunt) {
-            const label = terrain?.label ?? terrainTag;
+            const label = TerrainRegistry.resolveLabel(terrainTag, terrain);
             if (terrainTag === "tavern") {
                 disabledReason = `No need to forage or hunt at a ${label}. Supplies are available for purchase.`;
             } else if (terrainTag === "dungeon") {
@@ -659,7 +659,7 @@ export class TravelResolutionDelegate {
             travelSkipRecommended: !canForage && !canHunt,
             disabledReason,
             terrainTag,
-            terrainLabel: terrain?.label ?? terrainTag,
+            terrainLabel: TerrainRegistry.resolveLabel(terrainTag, terrain),
             fullyResolved: this.isFullyResolved(),
             scoutingAllowed: this.#scoutingAllowed,
             scoutingResult: this.#scoutingResult,
@@ -887,25 +887,23 @@ export class TravelResolutionDelegate {
         if (!this.#scoutingResult) return null;
 
         const terrain = TerrainRegistry.get(terrainTag);
+        const flavor = TerrainRegistry.resolveScoutFlavor(terrainTag, terrain);
         const effects = SCOUTING_EFFECTS[this.#scoutingResult] ?? SCOUTING_EFFECTS.none;
         const isNat1 = this.#scoutingResult === "nat1";
 
-        const TIER_LABELS = {
-            nat1: "Nat 1: Hidden Complication",
-            poor: "Poor", average: "Average", good: "Good",
-            nat20: "Nat 20: Perfect Campsite"
-        };
+        const tierKey = (tier) => `IONRIFT.RESPITE.DATA.SCOUT.Tier.${tier}`;
+        const resolveTierLabel = (tier) => localize(tierKey(tier));
 
         const scouts = (this.#scoutRolls ?? []).map(s => {
             const sTier = s.tier ?? this._totalToScoutTier(s.total, s.natD20 ?? null);
-            const pool = terrain?.scoutFlavor?.[sTier];
+            const pool = flavor?.[sTier];
             const narrative = pool ? pool[Math.floor(Math.random() * pool.length)] : null;
             return {
                 actorName: s.actorName,
                 actorId: s.actorId,
                 total: s.total,
                 tier: sTier,
-                tierLabel: TIER_LABELS[sTier] ?? sTier,
+                tierLabel: resolveTierLabel(sTier) || sTier,
                 isBest: !!s.isBest,
                 narrative
             };
@@ -916,7 +914,7 @@ export class TravelResolutionDelegate {
 
         return {
             tier: this.#scoutingResult,
-            tierLabel: TIER_LABELS[this.#scoutingResult] ?? "None",
+            tierLabel: resolveTierLabel(this.#scoutingResult) || localize("IONRIFT.RESPITE.DATA.SCOUT.Tier.none"),
             narrative: winningNarrative,
             scouts,
             bestName: bestScout?.actorName ?? null,

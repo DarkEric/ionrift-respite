@@ -1,5 +1,6 @@
 import { Logger } from "../../../utils/Logger.js";
 import { MODULE_ID } from "../../../data/moduleId.js";
+import { localizeConditionRecord, localizeDurationRecord } from "../../../utils/I18n.js";
 
 /**
  * ConditionAdvisory
@@ -32,8 +33,12 @@ export class ConditionAdvisory {
             const resp = await fetch(`modules/${MODULE_ID}/data/core/condition_registry.json`);
             const data = await resp.json();
             this._durationMap = data.durationMap ?? {};
+            for (const entry of Object.values(this._durationMap)) {
+                localizeDurationRecord(entry);
+            }
             this._registry = new Map();
             for (const entry of (data.conditions ?? [])) {
+                localizeConditionRecord(entry);
                 const key = this._buildRegistryKey(entry.condition, entry.checks);
                 this._registry.set(key, entry);
             }

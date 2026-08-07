@@ -994,8 +994,8 @@ export class RestPrepareContext {
                 baseTerrainComfort,
                 effectiveScanLevel,
                 shelterSpellCamp,
-                terrainCamp?.comfortReason ?? "",
-                terrainCamp?.label ?? terrainTagCamp,
+                terrainCamp ? TerrainRegistry.resolveComfortReason(terrainTagCamp, terrainCamp) : "",
+                terrainCamp ? TerrainRegistry.resolveLabel(terrainTagCamp, terrainCamp) : terrainTagCamp,
                 encMod,
                 !!app._engine?.safeRestSpot
             );
@@ -1395,7 +1395,7 @@ export class RestPrepareContext {
                 const hasTravelOptions = canForage || canHunt || canScout;
                 let disabledReason = null;
                 if (!canForage && !canHunt) {
-                    const label = terrain?.label ?? terrainTag;
+                    const label = TerrainRegistry.resolveLabel(terrainTag, terrain);
                     if (terrainTag === "tavern") {
                         disabledReason = `No need to forage or hunt at a ${label}. Supplies are available for purchase.`;
                     } else if (terrainTag === "dungeon") {
@@ -1525,7 +1525,7 @@ export class RestPrepareContext {
                     travelSkipRecommended: !canForage && !canHunt,
                     disabledReason,
                     terrainTag,
-                    terrainLabel: terrain?.label ?? terrainTag,
+                    terrainLabel: TerrainRegistry.resolveLabel(terrainTag, terrain),
                     hasOwnedCharacters: partyActors.some(a => a.isOwner),
                     forageDC: app._travelForageDC ?? 12,
                     huntDC: app._travelHuntDC ?? 14,
@@ -1627,7 +1627,7 @@ export class RestPrepareContext {
                 if (match) match.label += " (terrain default)";
                 return opts;
             })(),
-            comfortReason: TerrainRegistry.get(app._selectedTerrain ?? "forest")?.comfortReason ?? "",
+            comfortReason: TerrainRegistry.resolveComfortReason(app._selectedTerrain ?? "forest"),
             restModeOptions: (() => {
                 const current = app._isTotM ? "theater" : "stations";
                 return [
@@ -1994,7 +1994,7 @@ export class RestPrepareContext {
                 return {
                     eventPoolCount: poolCount,
                     showEventPoolNudge: encountersEnabled && app._shouldShowEventPoolNudge(terrainTag),
-                    eventPoolTerrainLabel: terrain?.label ?? terrainTag,
+                    eventPoolTerrainLabel: TerrainRegistry.resolveLabel(terrainTag, terrain),
                     eventsMode: effectiveMode,
                     eventsModePickAvailable: pickAvailable,
                     eventsModeIsRandom: effectiveMode === "random",
@@ -2079,7 +2079,9 @@ export class RestPrepareContext {
         Logger.log(`[Respite:UI] encounterBar: baseDC=${baseDC}, shelter=${shelter}, weather=${weather}, scouting=${scouting}, fire=${fire}, total=${total}, defenses=${defenses}, earlyDefenseBonus=${earlyDefenseBonus}, gmAdj=${gmAdj}, effectiveDC=${effectiveDC}`);
                 const fmt = (v) => v > 0 ? `+${v}` : `${v}`;
                 const terrainObj = TerrainRegistry.get(app._engine.terrainTag);
-                const terrainLabel = terrainObj?.label ?? app._engine.terrainTag ?? "Terrain";
+                const terrainLabel = TerrainRegistry.resolveLabel(app._engine.terrainTag, terrainObj)
+                    || app._engine.terrainTag
+                    || "Terrain";
                 const chips = [];
                 if (weather !== 0) chips.push({ label: bd.weatherName ?? "Weather", value: fmt(-weather), icon: "fas fa-cloud-sun-rain", tooltip: "Weather shifts the night check. Rough weather makes a camp event more likely. The value is this factor's effect on the DC." });
                 if (shelter !== 0) chips.push({ label: "Shelter", value: fmt(-shelter), icon: "fas fa-campground", tooltip: "A tent or shelter spell hides the camp and lowers the encounter DC, so a night event is less likely." });

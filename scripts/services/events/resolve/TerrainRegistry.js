@@ -1,5 +1,22 @@
 import { MODULE_ID } from "../../../data/moduleId.js";
 import { Logger } from "../../../utils/Logger.js";
+import { localize, localizeData, localizeEventRecord } from "../../../utils/I18n.js";
+
+/** Shared Library terrain labels (same spine as Quartermaster). */
+const LIBRARY_BASE_LABEL_KEYS = {
+    forest: "IONRIFT.LIBRARY.TERRAIN.Forest",
+    swamp: "IONRIFT.LIBRARY.TERRAIN.Swamp",
+    desert: "IONRIFT.LIBRARY.TERRAIN.Desert",
+    urban: "IONRIFT.LIBRARY.TERRAIN.Urban",
+    dungeon: "IONRIFT.LIBRARY.TERRAIN.Dungeon"
+};
+
+const CATEGORY_GROUP_KEYS = {
+    built: "IONRIFT.RESPITE.DATA.TERRAIN.CategoryBuilt",
+    "safe-haven": "IONRIFT.RESPITE.DATA.TERRAIN.CategorySafeHaven",
+    wilderness: "IONRIFT.RESPITE.DATA.TERRAIN.CategoryWilderness",
+    custom: "IONRIFT.RESPITE.DATA.TERRAIN.CategoryCustom"
+};
 /**
  * TerrainRegistry
  * Centralized, data-driven terrain configuration for Respite.
@@ -273,13 +290,61 @@ export class TerrainRegistry {
     }
 
     /**
-     * Get all loaded terrain manifests, sorted alphabetically by label.
+     * Resolve a terrain display label via labelKey → localize at read time.
+     * Shared base terrains prefer Library keys (QM pattern).
+     * @param {string} tag
+     * @param {object} [data]
+     * @returns {string}
+     */
+    static resolveLabel(tag, data = undefined) {
+        const t = data ?? this.get(tag);
+        if (!t) return tag ?? "";
+        const labelKey = t.labelKey ?? LIBRARY_BASE_LABEL_KEYS[tag] ?? null;
+        if (labelKey) return localizeData(labelKey, t.label ?? tag);
+        return t.label ?? tag;
+    }
+
+    /**
+     * @param {string} tag
+     * @param {object} [data]
+     * @returns {string}
+     */
+    static resolveComfortReason(tag, data = undefined) {
+        const t = data ?? this.get(tag);
+        if (!t) return "";
+        return localizeData(t.comfortReasonKey, t.comfortReason ?? "");
+    }
+
+    /**
+     * Localize scoutFlavor pools (arrays may hold i18n keys or legacy English).
+     * @param {string} tag
+     * @param {object} [data]
+     * @returns {Record<string, string[]>|null}
+     */
+    static resolveScoutFlavor(tag, data = undefined) {
+        const t = data ?? this.get(tag);
+        const raw = t?.scoutFlavor;
+        if (!raw || typeof raw !== "object") return null;
+        const out = {};
+        for (const [tier, lines] of Object.entries(raw)) {
+            if (!Array.isArray(lines)) continue;
+            out[tier] = lines.map(line => {
+                if (typeof line !== "string") return line;
+                if (line.startsWith("IONRIFT.")) return localizeData(line, line);
+                return line;
+            });
+        }
+        return out;
+    }
+
+    /**
+     * Get all loaded terrain manifests, sorted alphabetically by localized label.
      * @returns {object[]}
      */
     static getAll() {
         const merged = [...this._terrains.values(), ...this._customTerrains.values()];
         return merged.sort((a, b) =>
-            (a.label ?? a.id).localeCompare(b.label ?? b.id)
+            this.resolveLabel(a.id, a).localeCompare(this.resolveLabel(b.id, b))
         );
     }
 
@@ -312,10 +377,12 @@ export class TerrainRegistry {
         const safeHaven = [];
         const wilderness = [];
         const custom = [];
+        const lastSuffix = localize("IONRIFT.RESPITE.DATA.TERRAIN.LastUsedSuffix");
         for (const t of this.getAll()) {
+            const base = this.resolveLabel(t.id, t);
             const opt = {
                 value: t.id,
-                label: (t.label ?? t.id) + (lastTerrain && t.id === lastTerrain ? " (last used)" : "")
+                label: base + (lastTerrain && t.id === lastTerrain ? lastSuffix : "")
             };
             const category = this.getCategory(t.id);
             if (category === "built") built.push(opt);
@@ -324,10 +391,10 @@ export class TerrainRegistry {
             else wilderness.push(opt);
         }
         const groups = [];
-        if (built.length) groups.push({ group: "Built", options: built });
-        if (safeHaven.length) groups.push({ group: "Safe Haven", options: safeHaven });
-        if (wilderness.length) groups.push({ group: "Wilderness", options: wilderness });
-        if (custom.length) groups.push({ group: "Custom", options: custom });
+        if (built.length) groups.push({ group: localize(CATEGORY_GROUP_KEYS.built), options: built });
+        if (safeHaven.length) groups.push({ group: localize(CATEGORY_GROUP_KEYS["safe-haven"]), options: safeHaven });
+        if (wilderness.length) groups.push({ group: localize(CATEGORY_GROUP_KEYS.wilderness), options: wilderness });
+        if (custom.length) groups.push({ group: localize(CATEGORY_GROUP_KEYS.custom), options: custom });
         return groups;
     }
 
@@ -379,7 +446,7 @@ export class TerrainRegistry {
         return {
             comfort,
             travelAvailable: TerrainRegistry.isTravelAvailable(tag),
-            scoutFlavor: t.scoutFlavor ?? null,
+            scoutFlavor: this.resolveScoutFlavor(tag, t),
             mealRules: t.mealRules ?? { waterPerDay: 2, foodPerDay: 1 }
         };
     }
@@ -416,7 +483,7 @@ export class TerrainRegistry {
                 if (!resp.ok) return;
                 const data = await resp.json();
                 for (const evt of (data.events ?? [])) {
-                    events.push(evt);
+                    events.push(localizeEventRecord({ ...evt }));
                 }
             } catch (e) {
                 console.warn(`${MODULE_ID} | TerrainRegistry: Failed to load events from ${path}:`, e);

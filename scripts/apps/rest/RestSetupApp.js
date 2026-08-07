@@ -855,7 +855,7 @@ _buildCampConditionsBar(campScanData, { safeRestSpot = false, encountersEnabled 
 
         const terrainTag = this._engine.terrainTag ?? "forest";
         const terrain = TerrainRegistry.get(terrainTag);
-        const terrainLabel = terrain?.label ?? terrainTag;
+        const terrainLabel = TerrainRegistry.resolveLabel(terrainTag, terrain);
         const terrainIcon = terrain?.icon ?? "fas fa-mountain";
 
         if (safeRestSpot) {

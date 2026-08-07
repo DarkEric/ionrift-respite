@@ -174,7 +174,7 @@ export function buildEventPoolFilterGroups(allEvents) {
         for (const opt of group.options) {
             const terrain = opt.value;
             const legacyPacks = bindings.get(terrain);
-            const terrainLabel = TerrainRegistry.get(terrain)?.label ?? terrain;
+            const terrainLabel = TerrainRegistry.resolveLabel(terrain);
 
             if (legacyPacks?.length) {
                 options.push({

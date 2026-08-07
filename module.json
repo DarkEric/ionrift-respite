@@ -118,7 +118,19 @@
                                                                      "minimum":  "2.5.13"
                                                                  }
                                            }
-                                       ]
+                                       ],
+                          "recommends":  [
+                                             {
+                                                 "id":  "babele",
+                                                 "type":  "module",
+                                                 "reason":  "Runtime translation of Respite compendium packs."
+                                             },
+                                             {
+                                                 "id":  "lib-wrapper",
+                                                 "type":  "module",
+                                                 "reason":  "Required by Babele."
+                                             }
+                                         ]
                       },
     "authors":  [
                     {

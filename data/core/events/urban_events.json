@@ -81,7 +81,9 @@
             },
             "tier": "normal",
             "sentiment": "negative",
-            "pack": "base"
+            "pack": "base",
+            "nameKey": "IONRIFT.RESPITE.DATA.EVENT.evt_urban_thieves.Name",
+            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_urban_thieves.Description"
         },
         {
             "id": "evt_urban_noise",
@@ -139,7 +141,9 @@
             },
             "tier": "normal",
             "sentiment": "negative",
-            "pack": "base"
+            "pack": "base",
+            "nameKey": "IONRIFT.RESPITE.DATA.EVENT.evt_urban_noise.Name",
+            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_urban_noise.Description"
         },
         {
             "id": "evt_urban_street_merchant",
@@ -200,7 +204,9 @@
             },
             "tier": "normal",
             "sentiment": "positive",
-            "pack": "base"
+            "pack": "base",
+            "nameKey": "IONRIFT.RESPITE.DATA.EVENT.evt_urban_street_merchant.Name",
+            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_urban_street_merchant.Description"
         },
         {
             "id": "evt_urban_patrol",
@@ -258,7 +264,9 @@
             },
             "tier": "normal",
             "sentiment": "negative",
-            "pack": "base"
+            "pack": "base",
+            "nameKey": "IONRIFT.RESPITE.DATA.EVENT.evt_urban_patrol.Name",
+            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_urban_patrol.Description"
         },
         {
             "id": "evt_urban_nightlife",
@@ -281,7 +289,9 @@
             "mechanical": null,
             "tier": "normal",
             "sentiment": "neutral",
-            "pack": "base"
+            "pack": "base",
+            "nameKey": "IONRIFT.RESPITE.DATA.EVENT.evt_urban_nightlife.Name",
+            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_urban_nightlife.Description"
         }
     ]
 }

@@ -1,5 +1,5 @@
 import { Logger } from "../../../../utils/Logger.js";
-import { localize, format } from "../../../../utils/I18n.js";
+import { localize, format, localizeActivityRecord } from "../../../../utils/I18n.js";
 import { MODULE_ID } from "../../../../data/moduleId.js";
 import { STUB_RECIPES } from "../../../../data/stub-content.js";
 import { applyCustomRecipesToEngine } from "../../../../services/crafting/recipes/RecipeCatalog.js";
@@ -645,7 +645,7 @@ export class RestSessionDelegate {
 
         try {
             const activityResp = await fetch(`modules/${MODULE_ID}/data/activities/default_activities.json`);
-            const activities = await activityResp.json();
+            const activities = (await activityResp.json()).map(a => localizeActivityRecord({ ...a }));
             app._activities = activities;
             app._activityResolver.load(activities);
 
@@ -894,8 +894,8 @@ export class RestSessionDelegate {
             baseTerrainComfort,
             effectiveScanLevel,
             shelterSpellCamp,
-            terrainCamp?.comfortReason ?? "",
-            terrainCamp?.label ?? terrainTagCamp,
+            terrainCamp ? TerrainRegistry.resolveComfortReason(terrainTagCamp, terrainCamp) : "",
+            terrainCamp ? TerrainRegistry.resolveLabel(terrainTagCamp, terrainCamp) : terrainTagCamp,
             encMod,
             !!app._engine?.safeRestSpot
         ) ?? null;

@@ -1,5 +1,6 @@
 import { Logger as RespiteLog } from "./utils/Logger.js";
 import { localize, format } from "./utils/I18n.js";
+import "./i18n/registerBabele.js";
 import { CalendarHandler } from "./services/rest/session/CalendarHandler.js";
 import { TerrainRegistry } from "./services/events/resolve/TerrainRegistry.js";
 import { RestSetupApp } from "./apps/rest/RestSetupApp.js";

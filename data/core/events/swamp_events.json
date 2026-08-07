@@ -126,7 +126,9 @@
             },
             "tier": "normal",
             "sentiment": "negative",
-            "pack": "base"
+            "pack": "base",
+            "nameKey": "IONRIFT.RESPITE.DATA.EVENT.evt_swamp_stalkers.Name",
+            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_swamp_stalkers.Description"
         },
         {
             "id": "evt_swamp_leeches",
@@ -198,7 +200,9 @@
             },
             "tier": "normal",
             "sentiment": "negative",
-            "pack": "base"
+            "pack": "base",
+            "nameKey": "IONRIFT.RESPITE.DATA.EVENT.evt_swamp_leeches.Name",
+            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_swamp_leeches.Description"
         },
         {
             "id": "evt_swamp_miasma",
@@ -269,7 +273,9 @@
             },
             "tier": "normal",
             "sentiment": "negative",
-            "pack": "base"
+            "pack": "base",
+            "nameKey": "IONRIFT.RESPITE.DATA.EVENT.evt_swamp_miasma.Name",
+            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_swamp_miasma.Description"
         },
         {
             "id": "evt_swamp_bog_rot",
@@ -328,7 +334,9 @@
             },
             "tier": "normal",
             "sentiment": "negative",
-            "pack": "base"
+            "pack": "base",
+            "nameKey": "IONRIFT.RESPITE.DATA.EVENT.evt_swamp_bog_rot.Name",
+            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_swamp_bog_rot.Description"
         },
         {
             "id": "evt_swamp_will_o_wisp",
@@ -351,7 +359,9 @@
             "mechanical": null,
             "tier": "normal",
             "sentiment": "neutral",
-            "pack": "base"
+            "pack": "base",
+            "nameKey": "IONRIFT.RESPITE.DATA.EVENT.evt_swamp_will_o_wisp.Name",
+            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_swamp_will_o_wisp.Description"
         }
     ]
 }

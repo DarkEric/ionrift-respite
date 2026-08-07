@@ -6,14 +6,49 @@
     "comfort": "sheltered",
     "comfortReason": "Buildings and infrastructure provide ready-made cover. Safety varies by neighborhood.",
     "scoutFlavor": {
-        "nat1":    ["An abandoned warehouse. Spacious, dry, door still locks.", "A quiet alley tucked behind a row of shops. Out of sight.", "An empty shop with shuttered windows. Private."],
-        "poor":    ["A doorway. Drafty, exposed.", "Under a bridge. Company likely.", "An alley between buildings. Cramped."],
-        "average": ["An abandoned building, roof mostly intact.", "A quiet courtyard, walls on three sides.", "A cellar with a lockable door."],
-        "good":    ["A forgotten attic space, hidden entrance.", "A walled garden, single gate.", "An old watchtower, clear sightlines."],
-        "nat20":   ["A safe house with intact locks and a back exit.", "A noble's abandoned estate, fully furnished.", "A temple sanctuary, warded and respected."]
+        "nat1": [
+            "IONRIFT.RESPITE.DATA.TERRAIN.urban.ScoutFlavor.nat1.0",
+            "IONRIFT.RESPITE.DATA.TERRAIN.urban.ScoutFlavor.nat1.1",
+            "IONRIFT.RESPITE.DATA.TERRAIN.urban.ScoutFlavor.nat1.2"
+        ],
+        "poor": [
+            "IONRIFT.RESPITE.DATA.TERRAIN.urban.ScoutFlavor.poor.0",
+            "IONRIFT.RESPITE.DATA.TERRAIN.urban.ScoutFlavor.poor.1",
+            "IONRIFT.RESPITE.DATA.TERRAIN.urban.ScoutFlavor.poor.2"
+        ],
+        "average": [
+            "IONRIFT.RESPITE.DATA.TERRAIN.urban.ScoutFlavor.average.0",
+            "IONRIFT.RESPITE.DATA.TERRAIN.urban.ScoutFlavor.average.1",
+            "IONRIFT.RESPITE.DATA.TERRAIN.urban.ScoutFlavor.average.2"
+        ],
+        "good": [
+            "IONRIFT.RESPITE.DATA.TERRAIN.urban.ScoutFlavor.good.0",
+            "IONRIFT.RESPITE.DATA.TERRAIN.urban.ScoutFlavor.good.1",
+            "IONRIFT.RESPITE.DATA.TERRAIN.urban.ScoutFlavor.good.2"
+        ],
+        "nat20": [
+            "IONRIFT.RESPITE.DATA.TERRAIN.urban.ScoutFlavor.nat20.0",
+            "IONRIFT.RESPITE.DATA.TERRAIN.urban.ScoutFlavor.nat20.1",
+            "IONRIFT.RESPITE.DATA.TERRAIN.urban.ScoutFlavor.nat20.2"
+        ]
     },
-    "mealRules": { "waterPerDay": 2, "foodPerDay": 1, "note": "Water and basic food are generally available in towns." },
-    "weather": ["clear", "overcast", "fog", "rain", "heavy_rain", "thunderstorm", "snow", "extreme_heat"],
+    "mealRules": {
+        "waterPerDay": 2,
+        "foodPerDay": 1,
+        "note": "Water and basic food are generally available in towns."
+    },
+    "weather": [
+        "clear",
+        "overcast",
+        "fog",
+        "rain",
+        "heavy_rain",
+        "thunderstorm",
+        "snow",
+        "extreme_heat"
+    ],
     "eventsFile": "core/events/urban_events.json",
-    "travelActivities": []
+    "travelActivities": [],
+    "labelKey": "IONRIFT.LIBRARY.TERRAIN.Urban",
+    "comfortReasonKey": "IONRIFT.RESPITE.DATA.TERRAIN.urban.ComfortReason"
 }

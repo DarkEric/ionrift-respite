@@ -1205,8 +1205,8 @@ export class CampCeremonyDelegate {
                 baseTerrainComfort,
                 effectiveScanLevel,
                 shelterSpellCamp,
-                terrainCamp?.comfortReason ?? "",
-                terrainCamp?.label ?? terrainTagCamp,
+                terrainCamp ? TerrainRegistry.resolveComfortReason(terrainTagCamp, terrainCamp) : "",
+                terrainCamp ? TerrainRegistry.resolveLabel(terrainTagCamp, terrainCamp) : terrainTagCamp,
                 encMod,
                 !!app._engine?.safeRestSpot
             );

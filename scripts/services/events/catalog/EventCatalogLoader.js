@@ -1,5 +1,6 @@
 import { TerrainRegistry } from "../resolve/TerrainRegistry.js";
 import { MODULE_ID } from "../../../data/moduleId.js";
+import { localizeEventRecord } from "../../../utils/I18n.js";
 
 /**
  * Loads the full event catalog for curation and migration.
@@ -18,7 +19,7 @@ export async function loadAllCatalogEvents() {
         const overlayPacks = await OverlayEventLoader.loadAll();
         for (const { data } of overlayPacks) {
             for (const evt of (data.events ?? [])) {
-                events.push(evt);
+                events.push(localizeEventRecord({ ...evt }));
             }
         }
     } catch (e) {
@@ -32,7 +33,7 @@ export async function loadAllCatalogEvents() {
     const importedPacks = game.settings.get(MODULE_ID, "importedPacks") ?? {};
     for (const packData of Object.values(importedPacks)) {
         for (const evt of (packData.events ?? [])) {
-            events.push(evt);
+            events.push(localizeEventRecord({ ...evt }));
         }
     }
 
