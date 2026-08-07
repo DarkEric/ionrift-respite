@@ -102,18 +102,28 @@ export class EventBrowserApp extends foundry.applications.api.ApplicationV2 {
                 </optgroup>`)
             .join("");
 
+        const filterLabel = (context.terrainOptionGroups ?? [])
+            .flatMap(g => g.options ?? [])
+            .find(o => o.value === context.activeFilter)?.label
+            ?? context.activeFilter;
         const terrainCountLabel = context.activeFilter && context.terrainPoolCount !== null
-            ? ` · ${context.terrainPoolCount} in ${context.activeFilter}`
+            ? format("IONRIFT.RESPITE.EVENTPOOL.TerrainCount", {
+                count: context.terrainPoolCount,
+                filter: filterLabel
+            })
             : "";
 
         let html = `
         <div class="event-browser-filter">
-            <label for="terrain-filter"><i class="fas fa-map-marker-alt"></i> Terrain</label>
+            <label for="terrain-filter"><i class="fas fa-map-marker-alt"></i> ${localize("IONRIFT.RESPITE.EVENTPOOL.Terrain")}</label>
             <select id="terrain-filter" class="event-terrain-select">
-                <option value="">All terrains</option>
+                <option value="">${localize("IONRIFT.RESPITE.EVENTPOOL.AllTerrains")}</option>
                 ${terrainGroupHtml}
             </select>
-            <span class="event-pool-summary">${context.poolCount} in pool (${context.catalogCount} available)${terrainCountLabel}</span>
+            <span class="event-pool-summary">${format("IONRIFT.RESPITE.EVENTPOOL.PoolSummary", {
+                pool: context.poolCount,
+                available: context.catalogCount
+            })}${terrainCountLabel}</span>
         </div>`;
 
         if (context.poolCount === 0 && context.hasEvents) {
@@ -122,15 +132,15 @@ export class EventBrowserApp extends foundry.applications.api.ApplicationV2 {
             <div class="art-nudge-content">
                 <i class="fas fa-book-open art-nudge-icon"></i>
                 <div class="art-nudge-text">
-                    <span class="art-nudge-title">Your camp event pool is empty.</span>
-                    <span class="art-nudge-subtitle">Tick the events you are willing to run at camp, then Save Pool. Use Import Custom Events to add community JSON packs.</span>
+                    <span class="art-nudge-title">${localize("IONRIFT.RESPITE.EVENTPOOL.EmptyTitle")}</span>
+                    <span class="art-nudge-subtitle">${localize("IONRIFT.RESPITE.EVENTPOOL.EmptySubtitle")}</span>
                 </div>
             </div>
         </div>`;
         }
 
         html += `
-        <p class="event-pool-intro">Tick events you are willing to run at camp. Only selected events can appear on a night check roll. Import a custom JSON event pack with the button below.</p>`;
+        <p class="event-pool-intro">${localize("IONRIFT.RESPITE.EVENTPOOL.Intro")}</p>`;
 
         if (context.hasEvents) {
             let disasterDividerShown = false;
@@ -142,7 +152,7 @@ export class EventBrowserApp extends foundry.applications.api.ApplicationV2 {
                 if (isDisaster && !disasterDividerShown) {
                     disasterDividerShown = true;
                     divider = `
-                <div class="event-pool-group-divider"><i class="fas fa-triangle-exclamation"></i> Disasters</div>`;
+                <div class="event-pool-group-divider"><i class="fas fa-triangle-exclamation"></i> ${localize("IONRIFT.RESPITE.EVENTPOOL.Disasters")}</div>`;
                 }
                 const disasterClass = isDisaster ? " disaster" : "";
                 return `${divider}
@@ -168,18 +178,18 @@ export class EventBrowserApp extends foundry.applications.api.ApplicationV2 {
             html += `
             <div class="event-browser-empty">
                 <i class="fas fa-ghost"></i>
-                <p>No events match this filter.</p>
-                <p class="event-browser-empty-hint">Import a custom JSON pack, or clear the terrain filter to see the full catalog.</p>
+                <p>${localize("IONRIFT.RESPITE.EVENTPOOL.NoMatch")}</p>
+                <p class="event-browser-empty-hint">${localize("IONRIFT.RESPITE.EVENTPOOL.NoMatchHint")}</p>
             </div>`;
         }
 
         html += `
         <div class="event-pool-footer">
-            <button type="button" class="event-pool-import-btn" title="Import a custom JSON event pack">
-                <i class="fas fa-file-import"></i> Import Custom Events
+            <button type="button" class="event-pool-import-btn" title="${localize("IONRIFT.RESPITE.EVENTPOOL.ImportTooltip")}">
+                <i class="fas fa-file-import"></i> ${localize("IONRIFT.RESPITE.EVENTPOOL.ImportCustom")}
             </button>
             <button type="button" class="event-pool-save-btn" ${context.dirty ? "" : "disabled"}>
-                <i class="fas fa-save"></i> Save Pool
+                <i class="fas fa-save"></i> ${localize("IONRIFT.RESPITE.EVENTPOOL.SavePool")}
             </button>
         </div>`;
 

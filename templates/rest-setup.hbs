@@ -3083,12 +3083,12 @@
         <div class="art-nudge-banner event-pool-nudge-banner">
             <div class="art-nudge-content">
                 <div class="art-nudge-text">
-                    <span class="art-nudge-title">Event Pool: {{eventPoolTerrainLabel}} - {{eventPoolCount}} events curated</span>
+                    <span class="art-nudge-title">{{localize 'IONRIFT.RESPITE.EVENTPOOL.NudgeTitle' terrain=eventPoolTerrainLabel count=eventPoolCount}}</span>
                 </div>
             </div>
             <div class="art-nudge-actions">
                 <button type="button" data-action="openEventPoolCurator" class="art-nudge-btn primary">
-                    Curate Pool
+                    {{localize 'IONRIFT.RESPITE.EVENTPOOL.CuratePool'}}
                 </button>
             </div>
         </div>
@@ -3348,26 +3348,26 @@
         <button type="button" class="travel-skip-link nw-no-event-link" data-action="nightPasses"
             {{#if eventsCommitPending}}disabled{{/if}}
             {{#unless campPrepsResolved}}disabled{{/unless}}
-            data-tooltip="{{#if eventsCommitPending}}Waiting for the night check...{{else if campPrepsResolved}}GM override: skip the night check and run no event.{{else}}Awaiting camp activity rolls{{/if}}">
-            <i class="fas fa-moon"></i> No event
+            data-tooltip="{{#if eventsCommitPending}}{{localize 'IONRIFT.RESPITE.EVENT.WaitingNightCheck'}}{{else if campPrepsResolved}}{{localize 'IONRIFT.RESPITE.EVENT.SkipNightCheckTooltip'}}{{else}}{{localize 'IONRIFT.RESPITE.EVENT.AwaitingCampRolls'}}{{/if}}">
+            <i class="fas fa-moon"></i> {{localize 'IONRIFT.RESPITE.EVENT.NoEvent'}}
         </button>
         <button type="button" class="btn-primary btn-roll-events" data-action="commitEventsMode"
             {{#if eventsCommitPending}}disabled{{/if}}
-            {{#unless campPrepsResolved}}disabled data-tooltip="Awaiting camp activity rolls"{{/unless}}>
+            {{#unless campPrepsResolved}}disabled data-tooltip="{{localize 'IONRIFT.RESPITE.EVENT.AwaitingCampRolls'}}"{{/unless}}>
             {{#if eventsCommitPending}}
             <i class="fas fa-circle-notch fa-spin"></i>
-            {{#if eventsModeIsPick}}Opening pool...{{else}}Rolling...{{/if}}
+            {{#if eventsModeIsPick}}{{localize 'IONRIFT.RESPITE.EVENT.OpeningPool'}}{{else}}{{localize 'IONRIFT.RESPITE.UI.Rolling'}}{{/if}}
             {{else if eventsModeIsPick}}
-            <i class="fas fa-book-open"></i> Choose event
+            <i class="fas fa-book-open"></i> {{localize 'IONRIFT.RESPITE.EVENT.ChooseEvent'}}
             {{else}}
-            <i class="fas fa-dice-d20"></i> {{localize 'IONRIFT.RESPITE.UI.Roll'}} for Events
+            <i class="fas fa-dice-d20"></i> {{localize 'IONRIFT.RESPITE.EVENT.RollForEvents'}}
             {{/if}}
         </button>
         {{else}}
         <button type="button" class="btn-primary btn-night-passes" data-action="nightPasses"
             {{#if eventsCommitPending}}disabled{{/if}}>
             {{#if eventsCommitPending}}
-            <i class="fas fa-circle-notch fa-spin"></i> Continuing...
+            <i class="fas fa-circle-notch fa-spin"></i> {{localize 'IONRIFT.RESPITE.EVENT.Continuing'}}
             {{else}}
             <i class="fas fa-moon"></i> {{localize 'IONRIFT.RESPITE.EVENT.TheNightPasses'}}
             {{/if}}
