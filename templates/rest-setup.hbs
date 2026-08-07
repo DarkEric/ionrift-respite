@@ -53,7 +53,7 @@
         {{else}}
         <span class="camp-status-chip comfort-{{campConditionsBar.campComfort}}"
               data-tooltip="{{campConditionsBar.campComfortTooltip}}{{#if campConditionsBar.comfortContext}} · {{campConditionsBar.comfortContext}}{{/if}}">
-            <i class="fas fa-temperature-half" aria-hidden="true"></i> {{campConditionsBar.campComfortLabel}} camp
+            <i class="fas fa-temperature-half" aria-hidden="true"></i> {{localize 'IONRIFT.RESPITE.REST.ComfortCamp' comfort=campConditionsBar.campComfortLabel}}
         </span>
         <span class="camp-status-chip weather-chip {{#if campConditionsBar.weatherIsNeutral}}weather-neutral{{/if}}"
               data-tooltip="{{campConditionsBar.weatherTooltip}}{{#if campConditionsBar.weatherShieldNote}} · {{campConditionsBar.weatherShieldNote}}{{/if}}">
@@ -859,7 +859,7 @@
                 <div class="totm-factor-tile fire {{#if campColdCampDecided}}cold{{else if campFireIsLit}}present{{else}}missing{{/if}}"
                      data-tooltip="{{#if campColdCampDecided}}{{localize 'IONRIFT.RESPITE.CAMPFIRE.ColdCampFactorTooltip'}}{{else if campFireIsLit}}{{#each campFirePickerLevels}}{{#if selected}}{{label}}: {{fireTierPlain id}}{{/if}}{{/each}}{{else}}{{localize 'IONRIFT.RESPITE.CAMPFIRE.NoFireLitYet'}}{{/if}}">
                     <i class="fas fa-fire totm-factor-tile-icon" aria-hidden="true"></i>
-                    <span class="totm-factor-tile-label">Fire</span>
+                    <span class="totm-factor-tile-label">{{localize 'IONRIFT.RESPITE.FIRE.Label'}}</span>
                     {{#if campFireIsLit}}
                     <span class="totm-factor-tile-status fire-active">🔥</span>
                     {{else if campColdCampDecided}}
@@ -930,7 +930,7 @@
                 {{#if campFireIsLit}}
                 <span class="totm-camp-fire-status lit"><i class="fas fa-circle" aria-hidden="true"></i> {{campFireLabel}}</span>
                 {{else if campColdCampDecided}}
-                <span class="totm-camp-fire-status cold"><i class="fas fa-moon" aria-hidden="true"></i> Cold camp</span>
+                <span class="totm-camp-fire-status cold"><i class="fas fa-moon" aria-hidden="true"></i> {{localize 'IONRIFT.RESPITE.FIRE.LEVEL.cold_camp'}}</span>
                 {{else}}
                 <span class="totm-camp-fire-status unlit"><i class="fas fa-circle" aria-hidden="true"></i> {{localize 'IONRIFT.RESPITE.CAMPFIRE.Unlit'}}</span>
                 {{/if}}
@@ -1662,7 +1662,7 @@
         {{#if totmFireTabVisible}}
         <button type="button" class="totm-tab {{#if (eq totmActiveTab 'fire')}}active{{/if}}"
                 data-action="switchTotmTab" data-totm-tab="fire">
-            <i class="fas fa-fire" aria-hidden="true"></i> Fire
+            <i class="fas fa-fire" aria-hidden="true"></i> {{localize 'IONRIFT.RESPITE.FIRE.Label'}}
         </button>
         {{/if}}
     </div>

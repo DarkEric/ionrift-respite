@@ -1,4 +1,5 @@
 import { Logger } from "../../../utils/Logger.js";
+import { localize } from "../../../utils/I18n.js";
 import { MODULE_ID } from "../../../data/moduleId.js";
 /**
  * StationInteractionLayer
@@ -1449,8 +1450,14 @@ function _spawnStationOverlays({ sceneTokens, terrainTag, emptyFadeMap, campPitM
 
         const displayOverride = campPitModeOnly
             ? (campPitUnlit
-                ? { title: "Light the fire", tagline: "Set up camp and light the fire" }
-                : { title: "Campfire", tagline: (station.tagline ?? "").replace(/,/g, " · ") })
+                ? {
+                    title: localize("IONRIFT.RESPITE.STATION.LightTheFire"),
+                    tagline: localize("IONRIFT.RESPITE.STATION.LightTheFireTagline")
+                }
+                : {
+                    title: localize("IONRIFT.RESPITE.STATION.campfire.Label"),
+                    tagline: (station.tagline ?? "").replace(/,/g, " · ")
+                })
             : null;
 
         const overlay = new StationOverlay(

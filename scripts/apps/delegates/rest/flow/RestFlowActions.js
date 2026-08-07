@@ -243,13 +243,15 @@ export class RestFlowActions {
             app._restLedger.add({
                 phase: "setup", category: "shelter", icon: "fas fa-campground",
                 summary: `Shelter: ${activeShelters.join(", ")}`,
-                detail: shelterEncounterMod > 0 ? `Encounter DC +${shelterEncounterMod}` : ""
+                detail: shelterEncounterMod > 0
+                    ? format("IONRIFT.RESPITE.REST.EncounterDcPlus", { n: shelterEncounterMod })
+                    : ""
             });
         }
         app._restLedger.add({
             phase: "setup", category: "comfort", icon: "fas fa-bed",
             summary: `Comfort: ${effectiveComfort}`,
-            detail: safeRestSpot ? "Safe rest spot" : ""
+            detail: safeRestSpot ? localize("IONRIFT.RESPITE.REST.SafeRestSpot") : ""
         });
         app._refreshLedgerApp();
 

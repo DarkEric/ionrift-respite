@@ -144,11 +144,13 @@ export class RestPrepareContext {
         if (currentRestType === "long") {
             shelterOptions.unshift({
                 id: "tent",
-                name: "Tent",
+                name: localize("IONRIFT.RESPITE.SHELTER.tent.Name"),
                 icon: "fas fa-campground",
                 available: tentAvailable,
                 casterNames: tentOwnerNames,
-                hint: tentAvailable ? `Carried by ${tentOwnerNames}. Weather shield. Encounter DC +2.` : "No tent in party inventory.",
+                hint: tentAvailable
+                    ? format("IONRIFT.RESPITE.SHELTER.tent.HintAvailable", { names: tentOwnerNames })
+                    : localize("IONRIFT.RESPITE.SHELTER.tent.HintMissing"),
                 comfortFloor: null,
                 encounterMod: 2,
                 active: !!app._shelterOverrides.tent
@@ -157,11 +159,11 @@ export class RestPrepareContext {
 
         shelterOptions.push({
             id: "none",
-            name: "Open Air",
+            name: localize("IONRIFT.RESPITE.SHELTER.none.Name"),
             icon: "fas fa-cloud-moon",
             available: true,
             casterNames: null,
-            hint: "Under the open sky. No protection from weather or encounters.",
+            hint: localize("IONRIFT.RESPITE.SHELTER.none.Hint"),
             comfortFloor: null,
             encounterMod: 0,
             active: !!app._shelterOverrides.none
@@ -975,15 +977,15 @@ export class RestPrepareContext {
             // subtracts a negative, RAISING effectiveDC (harder to avoid encounters).
             // "Fire is a beacon"; see CampGearScanner.FIRE_ENCOUNTER_MOD_BY_LEVEL.
             if (effectiveScanLevel === "cold_camp") {
-                campFireEncounterHint = "Cold camp: harder for enemies to spot (lower encounter chance).";
+                campFireEncounterHint = localize("IONRIFT.RESPITE.FIRE.HINT.ColdCamp");
             } else if (effectiveScanLevel === "unlit") {
-                campFireEncounterHint = "No fire is lit yet. The tier row shows what each level would do.";
+                campFireEncounterHint = localize("IONRIFT.RESPITE.FIRE.HINT.NoFireLit");
             } else if (effectiveScanLevel === "embers") {
-                campFireEncounterHint = "Embers: no change to encounter chance.";
+                campFireEncounterHint = localize("IONRIFT.RESPITE.FIRE.HINT.Embers");
             } else if (effectiveScanLevel === "campfire") {
-                campFireEncounterHint = "Campfire: light makes the camp easier for enemies to spot.";
+                campFireEncounterHint = localize("IONRIFT.RESPITE.FIRE.HINT.Campfire");
             } else if (effectiveScanLevel === "bonfire") {
-                campFireEncounterHint = "Bonfire: visible from far off; enemies spot the camp easily.";
+                campFireEncounterHint = localize("IONRIFT.RESPITE.FIRE.HINT.Bonfire");
             } else {
                 campFireEncounterHint = "";
             }
@@ -1006,13 +1008,13 @@ export class RestPrepareContext {
             const hasTinder = campScanData?.canLightFire ?? false;
             const tierDisabledReason = (canPick, cost) => {
                 if (canPick) return "";
-                if (!hasTinder) return "Someone needs a tinderbox or flint and steel.";
-                return `Need at least ${cost} firewood in the party.`;
+                if (!hasTinder) return localize("IONRIFT.RESPITE.FIRE.HINT.NeedsTinderbox");
+                return format("IONRIFT.RESPITE.NOTIFY.NeedAtLeastFirewood", { need: cost });
             };
             campFirePickerLevels = [
                 {
                     id: "embers",
-                    label: "Embers",
+                    label: localize("IONRIFT.RESPITE.FIRE.LEVEL.embers"),
                     costLabel: CampGearScanner.firewoodCostLabel("embers"),
                     disabled: !fs.canPickEmbers,
                     disabledReason: tierDisabledReason(fs.canPickEmbers, fs.costEmbers ?? 1),
@@ -1020,7 +1022,7 @@ export class RestPrepareContext {
                 },
                 {
                     id: "campfire",
-                    label: "Campfire",
+                    label: localize("IONRIFT.RESPITE.FIRE.LEVEL.campfire"),
                     costLabel: CampGearScanner.firewoodCostLabel("campfire"),
                     disabled: !fs.canPickCampfire,
                     disabledReason: tierDisabledReason(fs.canPickCampfire, fs.costCampfire ?? 2),
@@ -1028,7 +1030,7 @@ export class RestPrepareContext {
                 },
                 {
                     id: "bonfire",
-                    label: "Bonfire",
+                    label: localize("IONRIFT.RESPITE.FIRE.LEVEL.bonfire"),
                     costLabel: CampGearScanner.firewoodCostLabel("bonfire"),
                     disabled: !fs.canPickBonfire,
                     disabledReason: tierDisabledReason(fs.canPickBonfire, fs.costBonfire ?? 3),
@@ -1119,10 +1121,10 @@ export class RestPrepareContext {
 
             // Tier cards for map campfire dialog and camp context
             if (app._phase === "camp") {
-                const TIER_BODIES = {
-                    embers: "No cooking. No comfort change.",
-                    campfire: "Cooking and warmth. Easier for enemies to spot.",
-                    bonfire: "+1 camp comfort. Visible from far off."
+                const TIER_BODY_KEYS = {
+                    embers: "IONRIFT.RESPITE.FIRE.TIP.EmbersShort",
+                    campfire: "IONRIFT.RESPITE.FIRE.TIP.CampfireShort",
+                    bonfire: "IONRIFT.RESPITE.FIRE.TIP.BonfireShort"
                 };
                 const TIER_LABELS = Object.fromEntries(
                     COMFORT_TIERS.map(k => [k, CampGearScanner.getRules(k).label])
@@ -1142,13 +1144,16 @@ export class RestPrepareContext {
                     const resultComfort = COMFORT_TIERS[resultIdx] ?? baseComfort;
                     const resultLabel = TIER_LABELS[resultComfort] ?? resultComfort;
                     const comfortHint = delta !== 0
-                        ? `${TIER_LABELS[baseComfort] ?? baseComfort} to ${resultLabel}`
+                        ? format("IONRIFT.RESPITE.CAMP.ComfortTransition", {
+                            from: TIER_LABELS[baseComfort] ?? baseComfort,
+                            to: resultLabel
+                        })
                         : resultLabel;
                     return {
                         id,
-                        label: id.charAt(0).toUpperCase() + id.slice(1),
+                        label: localize(`IONRIFT.RESPITE.FIRE.LEVEL.${id}`),
                         costLabel: CampGearScanner.firewoodCostLabel(id),
-                        body: TIER_BODIES[id],
+                        body: localize(TIER_BODY_KEYS[id]),
                         comfortHint,
                         comfortChanged: delta !== 0,
                         active: selectedTier === id
@@ -2019,9 +2024,11 @@ export class RestPrepareContext {
             campFireEncounterHint,
             showCampCeremonyMinigame: app._campCeremonyMinigameEnabled(),
             campFirePreviewLabel: (() => {
-                if (app._coldCampDecided || app._isCampColdCampPreview()) return "Cold camp";
+                if (app._coldCampDecided || app._isCampColdCampPreview()) {
+                    return localize("IONRIFT.RESPITE.FIRE.LEVEL.cold_camp");
+                }
                 const p = app._campFirePreviewLevel ?? "embers";
-                return p.charAt(0).toUpperCase() + p.slice(1);
+                return localize(`IONRIFT.RESPITE.FIRE.LEVEL.${p}`);
             })(),
             campFirePickerLevels,
             campFirePreviewLevel: app._campFirePreviewLevel ?? "embers",
@@ -2031,7 +2038,7 @@ export class RestPrepareContext {
             campFireIsLit,
             campFireLabel: (() => {
                 const l = app._fireLevel ?? "unlit";
-                return l.charAt(0).toUpperCase() + l.slice(1);
+                return localize(`IONRIFT.RESPITE.FIRE.LEVEL.${l}`);
             })(),
             campFireLitBy,
             campSelectedFirewoodCost,
