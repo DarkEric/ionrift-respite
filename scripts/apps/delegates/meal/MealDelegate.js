@@ -419,20 +419,24 @@ export class MealDelegate {
                 overlay.classList.add("ionrift-armor-modal-overlay");
                 overlay.innerHTML = `
                     <div class="ionrift-armor-modal">
-                        <h3><i class="fas fa-exclamation-triangle"></i> Characters Without Rations</h3>
-                        <p>These characters are missing rations:</p>
+                        <h3><i class="fas fa-exclamation-triangle"></i> ${localize("IONRIFT.RESPITE.MEAL.WithoutRationsTitle")}</h3>
+                        <p>${localize("IONRIFT.RESPITE.MEAL.WithoutRationsIntro")}</p>
                         <ul>${missing.map(m => {
                             let detail = "";
-                            if (m.missingFood && m.missingWater) detail = " (no food or water)";
-                            else if (m.missingFood) detail = " (no food)";
-                            else if (m.missingWater) detail = " (no water)";
-                            const awaiting = m.awaitingPlayer ? ' <span style="opacity:0.6">(awaiting player)</span>' : "";
+                            if (m.missingFood && m.missingWater) detail = localize("IONRIFT.RESPITE.MEAL.MissingFoodAndWater");
+                            else if (m.missingFood) detail = localize("IONRIFT.RESPITE.MEAL.MissingFood");
+                            else if (m.missingWater) detail = localize("IONRIFT.RESPITE.MEAL.MissingWater");
+                            const awaiting = m.awaitingPlayer
+                                ? ` <span style="opacity:0.6">${localize("IONRIFT.RESPITE.MEAL.AwaitingPlayer")}</span>`
+                                : "";
                             return `<li>${m.name}${detail}${awaiting}</li>`;
                         }).join("")}</ul>
-                        <p>Processing now treats them as skipping all meals${anyPlayer ? ", even if a player is still choosing" : ""}, applying any starvation and dehydration.</p>
+                        <p>${localize(anyPlayer
+                            ? "IONRIFT.RESPITE.MEAL.WithoutRationsBodyPlayer"
+                            : "IONRIFT.RESPITE.MEAL.WithoutRationsBody")}</p>
                         <div class="ionrift-armor-modal-buttons">
-                            <button class="btn-armor-confirm"><i class="fas fa-forward"></i> Process Anyway</button>
-                            <button class="btn-armor-cancel"><i class="fas fa-clock"></i> Go Back</button>
+                            <button class="btn-armor-confirm"><i class="fas fa-forward"></i> ${localize("IONRIFT.RESPITE.MEAL.ProcessAnyway")}</button>
+                            <button class="btn-armor-cancel"><i class="fas fa-clock"></i> ${localize("IONRIFT.RESPITE.UI.GoBack")}</button>
                         </div>
                     </div>`;
                 document.body.appendChild(overlay);
@@ -512,7 +516,7 @@ export class MealDelegate {
                             resolved: true,
                             passed: false,
                             total: 0,
-                            reason: `starvation (${r.starvationExhaustion} exhaustion)`
+                            reason: format("IONRIFT.RESPITE.MEAL.StarvationReason", { count: r.starvationExhaustion })
                         });
                     }
                 }
@@ -536,7 +540,10 @@ export class MealDelegate {
                         await stampDeprivationExhaustionFloor(actor, newLevel);
                         const restsSinceWater = actor.getFlag("ionrift-respite", "restsSinceWater") ?? 0;
                         await ChatMessage.create({
-                            content: `<div class="respite-recovery-chat"><strong>${r.actorName}</strong> gains 1 level of exhaustion from severe dehydration (auto-fail, ${restsSinceWater} rests without water).</div>`,
+                            content: format("IONRIFT.RESPITE.CHAT.DehydrationAutoFailExhaustion", {
+                                name: r.actorName,
+                                rests: restsSinceWater
+                            }),
                             speaker: ChatMessage.getSpeaker({ actor })
                         });
                         app._pendingDehydrationSaves.push({
@@ -546,7 +553,7 @@ export class MealDelegate {
                             resolved: true,
                             passed: false,
                             total: 0,
-                            reason: `dehydration auto-fail (${restsSinceWater} rests without water)`
+                            reason: format("IONRIFT.RESPITE.MEAL.DehydrationAutoFailReason", { rests: restsSinceWater })
                         });
                     }
                 } else if (r.dehydrationSaveDC > 0) {
@@ -706,8 +713,8 @@ export class MealDelegate {
                         icon: "fas fa-tired",
                         actor: save.characterId,
                         actorName: save.actorName ?? "",
-                        summary: "+1 exhaustion",
-                        detail: "Dehydration (GM skipped save)"
+                        summary: localize("IONRIFT.RESPITE.MEAL.ExhaustionPlusOne"),
+                        detail: localize("IONRIFT.RESPITE.MEAL.DehydrationGmSkippedDetail")
                     });
                 }
             }
@@ -715,7 +722,7 @@ export class MealDelegate {
             save.resolved = true;
             save.passed = false;
             save.total = 0;
-            save.reason = "dehydration (GM skipped)";
+            save.reason = localize("IONRIFT.RESPITE.MEAL.DehydrationGmSkippedReason");
         }
 
         const allResults = app._pendingDehydrationSaves.map(s => ({
@@ -733,7 +740,7 @@ export class MealDelegate {
 
         await app._saveRestState();
         app.render();
-        ui.notifications.info(`Skipped ${unresolved.length} pending save(s). Exhaustion applied.`);
+        ui.notifications.info(format("IONRIFT.RESPITE.MEAL.SkippedPendingSaves", { count: unresolved.length }));
     }
 
         async receiveMealChoices(userId, choices) {

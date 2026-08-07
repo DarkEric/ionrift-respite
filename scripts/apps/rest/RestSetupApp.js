@@ -717,7 +717,7 @@ _shouldShowEventPoolNudge(terrainTag) {
                     title: localize("IONRIFT.RESPITE.APP.DiscardRestTitle"),
                     content: `${localize("IONRIFT.RESPITE.APP.DiscardRestContent")}${ungrantedNote}`,
                     yesLabel: localize("IONRIFT.RESPITE.COMMON.Discard"),
-                    noLabel: "Go Back",
+                    noLabel: localize("IONRIFT.RESPITE.UI.GoBack"),
                     yesIcon: "fas fa-times",
                     noIcon: "fas fa-arrow-left",
                     defaultYes: false

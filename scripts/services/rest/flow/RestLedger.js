@@ -5,6 +5,8 @@
  * played out. GM-only, not broadcast to players.
  */
 
+import { localize, format } from "../../../utils/I18n.js";
+
 /** @typedef {"setup"|"travel"|"camp"|"activity"|"meal"|"events"|"resolve"} LedgerPhase */
 
 /**
@@ -187,11 +189,11 @@ export class RestLedger {
 
         if (r.starvationExhaustion > 0) {
             levels += r.starvationExhaustion;
-            reasons.push(`starvation (+${r.starvationExhaustion})`);
+            reasons.push(format("IONRIFT.RESPITE.MEAL.LedgerStarvation", { count: r.starvationExhaustion }));
         }
         if (r.dehydrationAutoFail) {
             levels += 1;
-            reasons.push("dehydration auto-fail (+1)");
+            reasons.push(localize("IONRIFT.RESPITE.MEAL.LedgerDehydrationAutoFail"));
         }
 
         if (levels === 0) return null;
@@ -202,7 +204,7 @@ export class RestLedger {
             icon: "fas fa-tired",
             actor: r.characterId ?? null,
             actorName: r.actorName ?? "",
-            summary: `+${levels} exhaustion`,
+            summary: format("IONRIFT.RESPITE.MEAL.LedgerExhaustionSummary", { levels }),
             detail: reasons.join(", ")
         };
     }
