@@ -1111,7 +1111,7 @@
   "IONRIFT.RESPITE.RECIPE.EmptyList": "Пока нет своих рецептов.",
   "IONRIFT.RESPITE.RECIPE.Export": "Экспорт",
   "IONRIFT.RESPITE.RECIPE.FineName": "{name} (отборный)",
-  "IONRIFT.RESPITE.RECIPE.FoodTag": "Тег еды",
+  "IONRIFT.RESPITE.RECIPE.FoodTagLabel": "Тег еды",
   "IONRIFT.RESPITE.RECIPE.FoodTag.cooked_meal": "Приготовленное блюдо",
   "IONRIFT.RESPITE.RECIPE.FoodTag.drink": "Напиток",
   "IONRIFT.RESPITE.RECIPE.FoodTag.meat": "Сырое мясо",

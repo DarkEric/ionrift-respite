@@ -1111,7 +1111,7 @@
   "IONRIFT.RESPITE.RECIPE.EmptyList": "No custom recipes yet.",
   "IONRIFT.RESPITE.RECIPE.Export": "Export",
   "IONRIFT.RESPITE.RECIPE.FineName": "{name} (Fine)",
-  "IONRIFT.RESPITE.RECIPE.FoodTag": "Food tag",
+  "IONRIFT.RESPITE.RECIPE.FoodTagLabel": "Food tag",
   "IONRIFT.RESPITE.RECIPE.FoodTag.cooked_meal": "Cooked meal",
   "IONRIFT.RESPITE.RECIPE.FoodTag.drink": "Drink",
   "IONRIFT.RESPITE.RECIPE.FoodTag.meat": "Raw meat",

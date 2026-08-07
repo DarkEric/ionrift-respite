@@ -330,7 +330,7 @@ export class RecipeEditorApp extends foundry.applications.api.ApplicationV2 {
             </div>
             <div class="recipe-editor-fields recipe-editor-fields--double">
                 <div class="recipe-editor-field">
-                    <label class="recipe-editor-label">${this._esc(localize("IONRIFT.RESPITE.RECIPE.FoodTag"))}</label>
+                    <label class="recipe-editor-label">${this._esc(localize("IONRIFT.RESPITE.RECIPE.FoodTagLabel"))}</label>
                     <select class="recipe-editor-select" name="${prefix}FoodTag">${foodTagOptions}</select>
                 </div>
                 <div class="recipe-editor-field">
