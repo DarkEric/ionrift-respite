@@ -27,6 +27,10 @@ import {
     emitPhaseChanged
 } from "../../../services/socket/SocketController.js";
 import { applyPlayerTravelDeclarationToGm } from "../../../services/travel/settings/travelDeclarationSync.js";
+import { localize } from "../../../utils/I18n.js";
+
+const FORAGE_REQUIRES_PACK_KEY = "IONRIFT.RESPITE.TRAVEL.ForageRequiresPack";
+const HUNT_REQUIRES_PROVISION_KEY = "IONRIFT.RESPITE.TRAVEL.HuntRequiresProvision";
 
 const MAX_TRAVEL_DAYS = 3;
 
@@ -228,7 +232,7 @@ export class TravelResolutionDelegate {
      * @returns {{ disabled: boolean, disabledReasonKey: string|null }}
      */
     getForageGate(terrainTag) {
-        const disabledReasonKey = "ionrift-respite.travel.forage.requires_pack";
+        const disabledReasonKey = FORAGE_REQUIRES_PACK_KEY;
         if (!ForageActivityValidator.isForageAvailable(this.#resolver, terrainTag)) {
             return { disabled: true, disabledReasonKey };
         }
@@ -241,7 +245,7 @@ export class TravelResolutionDelegate {
      * @returns {{ disabled: boolean, disabledReasonKey: string|null }}
      */
     getHuntGate(terrainTag) {
-        const disabledReasonKey = "ionrift-respite.travel.hunt.requires_provision";
+        const disabledReasonKey = HUNT_REQUIRES_PROVISION_KEY;
         if (!ForageActivityValidator.isHuntAvailable(this.#resolver, terrainTag)) {
             return { disabled: true, disabledReasonKey };
         }
@@ -539,7 +543,7 @@ export class TravelResolutionDelegate {
 
         let disabledReason = null;
         if (!canForage && !canHunt) {
-            const label = terrain?.label ?? terrainTag;
+            const label = TerrainRegistry.resolveLabel(terrainTag, terrain);
             if (terrainTag === "tavern") {
                 disabledReason = `No need to forage or hunt at a ${label}. Supplies are available for purchase.`;
             } else if (terrainTag === "dungeon") {
@@ -655,7 +659,7 @@ export class TravelResolutionDelegate {
             travelSkipRecommended: !canForage && !canHunt,
             disabledReason,
             terrainTag,
-            terrainLabel: terrain?.label ?? terrainTag,
+            terrainLabel: TerrainRegistry.resolveLabel(terrainTag, terrain),
             fullyResolved: this.isFullyResolved(),
             scoutingAllowed: this.#scoutingAllowed,
             scoutingResult: this.#scoutingResult,
@@ -664,12 +668,12 @@ export class TravelResolutionDelegate {
             forageDisabled,
             forageDisabledReasonKey,
             forageDisabledTooltip: forageDisabledReasonKey
-                ? game.i18n.localize(forageDisabledReasonKey)
+                ? localize(forageDisabledReasonKey)
                 : null,
             huntDisabled,
             huntDisabledReasonKey,
             huntDisabledTooltip: huntDisabledReasonKey
-                ? game.i18n.localize(huntDisabledReasonKey)
+                ? localize(huntDisabledReasonKey)
                 : null,
             forageGMAdj: this.#forageDCOverride !== null
                 ? ((this.forageDC - TravelResolver.FORAGE_DC >= 0 ? "+" : "") + (this.forageDC - TravelResolver.FORAGE_DC))
@@ -790,7 +794,7 @@ export class TravelResolutionDelegate {
                 : `${best.actorName} rolled ${best.total}, ${tier}`;
 
             ChatMessage.create({
-                content: `<div class="ionrift-chat-msg"><strong>🔭 Scouting Results</strong><br>${allNames}<br><em>${bestMsg}</em></div>`,
+                content: format("IONRIFT.RESPITE.CHAT.ScoutingResults", { names: allNames, msg: bestMsg }),
                 whisper: ChatMessage.getWhisperRecipients("GM").map(u => u.id),
                 speaker: { alias: "Respite" }
             });
@@ -883,25 +887,23 @@ export class TravelResolutionDelegate {
         if (!this.#scoutingResult) return null;
 
         const terrain = TerrainRegistry.get(terrainTag);
+        const flavor = TerrainRegistry.resolveScoutFlavor(terrainTag, terrain);
         const effects = SCOUTING_EFFECTS[this.#scoutingResult] ?? SCOUTING_EFFECTS.none;
         const isNat1 = this.#scoutingResult === "nat1";
 
-        const TIER_LABELS = {
-            nat1: "Nat 1: Hidden Complication",
-            poor: "Poor", average: "Average", good: "Good",
-            nat20: "Nat 20: Perfect Campsite"
-        };
+        const tierKey = (tier) => `IONRIFT.RESPITE.DATA.SCOUT.Tier.${tier}`;
+        const resolveTierLabel = (tier) => localize(tierKey(tier));
 
         const scouts = (this.#scoutRolls ?? []).map(s => {
             const sTier = s.tier ?? this._totalToScoutTier(s.total, s.natD20 ?? null);
-            const pool = terrain?.scoutFlavor?.[sTier];
+            const pool = flavor?.[sTier];
             const narrative = pool ? pool[Math.floor(Math.random() * pool.length)] : null;
             return {
                 actorName: s.actorName,
                 actorId: s.actorId,
                 total: s.total,
                 tier: sTier,
-                tierLabel: TIER_LABELS[sTier] ?? sTier,
+                tierLabel: resolveTierLabel(sTier) || sTier,
                 isBest: !!s.isBest,
                 narrative
             };
@@ -912,7 +914,7 @@ export class TravelResolutionDelegate {
 
         return {
             tier: this.#scoutingResult,
-            tierLabel: TIER_LABELS[this.#scoutingResult] ?? "None",
+            tierLabel: resolveTierLabel(this.#scoutingResult) || localize("IONRIFT.RESPITE.DATA.SCOUT.Tier.none"),
             narrative: winningNarrative,
             scouts,
             bestName: bestScout?.actorName ?? null,
@@ -1032,8 +1034,8 @@ export class TravelResolutionDelegate {
             const gate = app._travel?.getForageGate?.(terrainTag);
             if (gate?.disabled) {
                 try {
-                    ui.notifications?.warn(game.i18n.localize(
-                        gate.disabledReasonKey ?? "ionrift-respite.travel.forage.requires_pack"
+                    ui.notifications?.warn(localize(
+                        gate.disabledReasonKey ?? FORAGE_REQUIRES_PACK_KEY
                     ));
                 } catch { /* noop */ }
                 return;
@@ -1099,7 +1101,7 @@ export class TravelResolutionDelegate {
                     day
                 });
 
-        ui.notifications.info(`${actor.name} rolled ${roll.total}.`);
+        ui.notifications.info(format("IONRIFT.RESPITE.NOTIFY.RolledTotal", { name: actor.name, total: roll.total }));
         app.render();
     
     }
@@ -1395,7 +1397,7 @@ export class TravelResolutionDelegate {
                     day
                 });
 
-        ui.notifications.info(`${actor.name} rolled ${total}.`);
+        ui.notifications.info(format("IONRIFT.RESPITE.NOTIFY.RolledTotal", { name: actor.name, total }));
         app.render();
     
     }
@@ -1485,7 +1487,7 @@ export class TravelResolutionDelegate {
             day
         });
 
-        ui.notifications.info(`${actor.name} rolled loot (${rolls.join(", ")}).`);
+        ui.notifications.info(format("IONRIFT.RESPITE.NOTIFY.RolledLoot", { name: actor.name, rolls: rolls.join(", ") }));
         app.render();
     
     }
@@ -1511,7 +1513,7 @@ export class TravelResolutionDelegate {
                 travelRollRequest: { activities: payloads, day }
             });
 
-        ui.notifications.info(`Day ${day} roll requests sent to ${payloads.length} character(s).`);
+        ui.notifications.info(format("IONRIFT.RESPITE.NOTIFY.DayRollsSent", { day, count: payloads.length }));
         app._saveRestState();
         app.render();
     
@@ -1678,7 +1680,7 @@ export class TravelResolutionDelegate {
                 travelRollRequest: { activities: [payload], day }
             });
 
-        ui.notifications.info(`Custom roll request (DC ${dc}) sent for ${game.actors.get(actorId)?.name ?? "character"}.`);
+        ui.notifications.info(format("IONRIFT.RESPITE.NOTIFY.CustomRollSent", { dc, name: game.actors.get(actorId)?.name ?? localize("IONRIFT.RESPITE.COMMON.Character") }));
         app._saveRestState();
         app.render();
     

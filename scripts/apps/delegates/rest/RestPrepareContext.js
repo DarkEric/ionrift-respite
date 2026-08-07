@@ -9,7 +9,7 @@ import { CampfireTokenLinker } from "../../../services/camp/fire/CampfireTokenLi
 import { hasCampPlaced, hasCampfirePlaced } from "../../../services/camp/props/CompoundCampPlacer.js";
 import { ImageResolver } from "../../../utils/ImageResolver.js";
 import {
-    WEATHER_TABLE, SKILL_NAMES, COMFORT_RANK, RANK_TO_KEY, ACTIVITY_ICONS, SHELTER_SPELLS,
+    WEATHER_TABLE, resolveWeather, SKILL_NAMES, COMFORT_RANK, RANK_TO_KEY, ACTIVITY_ICONS, SHELTER_SPELLS, resolveShelterSpell,
     getComfortTip, getStationsForTerrain, getActivityAdvisory, buildActivityAssignments,
     applyActivityPortraitAssignments, foldOrphanedAssignmentsOntoOther, isWorkbenchIdentifyUiEnabled
 } from "../../../data/RestConstants.js";
@@ -26,6 +26,9 @@ import {
 import { getPartyActors } from "../../../services/party/partyActors.js";
 import * as RestAfkState from "../../../services/rest/session/RestAfkState.js";
 import { MODULE_ID } from "../../../data/moduleId.js";
+import { localize, format } from "../../../utils/I18n.js";
+
+const FORAGE_REQUIRES_PACK_KEY = "IONRIFT.RESPITE.TRAVEL.ForageRequiresPack";
 
 export class RestPrepareContext {
     constructor(app) {
@@ -235,7 +238,7 @@ export class RestPrepareContext {
                         lines.push(`Check: ${abilityLabel}, DC ${act.check.dc ?? 12}`);
                     } else {
                         const primary = SKILL_NAMES[act.check.skill] ?? act.check.skill;
-                        const alt = act.check.altSkill ? ` or ${SKILL_NAMES[act.check.altSkill] ?? act.check.altSkill}` : "";
+                        const alt = act.check.altSkill ? format("IONRIFT.RESPITE.OR.SkillAlt", { skill: SKILL_NAMES[act.check.altSkill] ?? act.check.altSkill }) : "";
                         lines.push(`Check: ${primary}${alt}, DC ${act.check.dc ?? 12}`);
                     }
                 }
@@ -951,8 +954,9 @@ export class RestPrepareContext {
         if (_needsFireData) {
             const terrainTagCamp = app._selectedTerrain ?? app._engine?.terrainTag ?? "forest";
             const terrainCamp = TerrainRegistry.get(terrainTagCamp);
-            const shelterSpellCamp = (app._engine?.activeShelters ?? []).find(s => s !== "tent" && s !== "none")
-                ? SHELTER_SPELLS[(app._engine?.activeShelters ?? []).find(s => s !== "tent" && s !== "none")]?.label ?? null
+            const shelterKey = (app._engine?.activeShelters ?? []).find(s => s !== "tent" && s !== "none");
+            const shelterSpellCamp = shelterKey
+                ? resolveShelterSpell(SHELTER_SPELLS.find(s => s.id === shelterKey))?.label ?? null
                 : null;
             const campfirePlacedGate = hasCampfirePlaced();
             // Gate: fire is lit, OR table decided cold camp (no fire)
@@ -990,8 +994,8 @@ export class RestPrepareContext {
                 baseTerrainComfort,
                 effectiveScanLevel,
                 shelterSpellCamp,
-                terrainCamp?.comfortReason ?? "",
-                terrainCamp?.label ?? terrainTagCamp,
+                terrainCamp ? TerrainRegistry.resolveComfortReason(terrainTagCamp, terrainCamp) : "",
+                terrainCamp ? TerrainRegistry.resolveLabel(terrainTagCamp, terrainCamp) : terrainTagCamp,
                 encMod,
                 !!app._engine?.safeRestSpot
             );
@@ -1288,8 +1292,8 @@ export class RestPrepareContext {
         const _activityNextStep = showMealStep ? "meal" : (_includeEventsStep ? "events" : "resolve");
         const activityProceed = ({
             meal:    { label: "Proceed to Rations", icon: "fas fa-arrow-right" },
-            events:  { label: "Proceed to Events", icon: "fas fa-moon" },
-            resolve: { label: "Proceed to Resolution", icon: "fas fa-arrow-right" }
+            events:  { label: localize("IONRIFT.RESPITE.FLOW.ProceedToEvents"), icon: "fas fa-moon" },
+            resolve: { label: localize("IONRIFT.RESPITE.FLOW.ProceedToResolution"), icon: "fas fa-arrow-right" }
         })[_activityNextStep];
 
         // Setup-screen summary of the settings that reshape this rest, so global
@@ -1305,12 +1309,12 @@ export class RestPrepareContext {
                 const professionsActive = professions && !isTavernSetup;
                 const mealsActive = meals && !isTavernSetup;
                 const comfortBypassTooltip = isTavernSetup
-                    ? "Comfort bypassed: tavern rest is fully safe with automatic recovery."
-                    : "Comfort bypassed: safe rest spot negates comfort penalties, fire, and exhaustion saves.";
+                    ? localize("IONRIFT.RESPITE.BADGE.ComfortBypassTavern")
+                    : localize("IONRIFT.RESPITE.BADGE.ComfortBypassSafe");
                 return [
-                    { on: comfortActive, icon: "fas fa-temperature-half", label: "Comfort", tooltip: setupSafeHaven ? comfortBypassTooltip : comfort ? "Comfort tiers, fire, and exhaustion saves are on. Change under Recovery Rules." : "Comfort off: no fire phase and no terrain exhaustion saves. Change under Recovery Rules." },
-                    { on: professionsActive, icon: "fas fa-hammer", label: "Professions", tooltip: isTavernSetup ? "Professions not offered at a tavern; personal activities only." : professions ? "Crafting professions and the travel phase are on. Change under Travel & Activities." : "Professions off: the travel phase is skipped. Change under Travel & Activities." },
-                    { on: mealsActive, icon: "fas fa-drumstick-bite", label: "Meals", tooltip: isTavernSetup ? "Meals provided by the establishment; no ration tracking at a tavern." : meals ? "Food and water tracking is on; the Meal phase runs." : "Meal tracking off: no rations or dehydration saves. Change in module settings." }
+                    { on: comfortActive, icon: "fas fa-temperature-half", label: localize("IONRIFT.RESPITE.BADGE.Comfort"), tooltip: setupSafeHaven ? comfortBypassTooltip : comfort ? localize("IONRIFT.RESPITE.BADGE.ComfortOn") : localize("IONRIFT.RESPITE.BADGE.ComfortOff") },
+                    { on: professionsActive, icon: "fas fa-hammer", label: localize("IONRIFT.RESPITE.BADGE.Professions"), tooltip: isTavernSetup ? localize("IONRIFT.RESPITE.BADGE.ProfessionsTavern") : professions ? localize("IONRIFT.RESPITE.BADGE.ProfessionsOn") : localize("IONRIFT.RESPITE.BADGE.ProfessionsOff") },
+                    { on: mealsActive, icon: "fas fa-drumstick-bite", label: localize("IONRIFT.RESPITE.BADGE.Meals"), tooltip: isTavernSetup ? localize("IONRIFT.RESPITE.BADGE.MealsTavern") : meals ? localize("IONRIFT.RESPITE.BADGE.MealsOn") : localize("IONRIFT.RESPITE.BADGE.MealsOff") }
                 ];
             })()
             : [];
@@ -1391,7 +1395,7 @@ export class RestPrepareContext {
                 const hasTravelOptions = canForage || canHunt || canScout;
                 let disabledReason = null;
                 if (!canForage && !canHunt) {
-                    const label = terrain?.label ?? terrainTag;
+                    const label = TerrainRegistry.resolveLabel(terrainTag, terrain);
                     if (terrainTag === "tavern") {
                         disabledReason = `No need to forage or hunt at a ${label}. Supplies are available for purchase.`;
                     } else if (terrainTag === "dungeon") {
@@ -1486,7 +1490,7 @@ export class RestPrepareContext {
                 }
 
                 const forageGate = app._travel?.getForageGate?.(terrainTag)
-                    ?? { disabled: true, disabledReasonKey: "ionrift-respite.travel.forage.requires_pack" };
+                    ?? { disabled: true, disabledReasonKey: FORAGE_REQUIRES_PACK_KEY };
                 const forageDisabled = canForage && forageGate.disabled;
                 const forageDisabledReasonKey = forageDisabled ? forageGate.disabledReasonKey : null;
 
@@ -1521,14 +1525,14 @@ export class RestPrepareContext {
                     travelSkipRecommended: !canForage && !canHunt,
                     disabledReason,
                     terrainTag,
-                    terrainLabel: terrain?.label ?? terrainTag,
+                    terrainLabel: TerrainRegistry.resolveLabel(terrainTag, terrain),
                     hasOwnedCharacters: partyActors.some(a => a.isOwner),
                     forageDC: app._travelForageDC ?? 12,
                     huntDC: app._travelHuntDC ?? 14,
                     forageDisabled,
                     forageDisabledReasonKey,
                     forageDisabledTooltip: forageDisabledReasonKey
-                        ? game.i18n.localize(forageDisabledReasonKey)
+                        ? localize(forageDisabledReasonKey)
                         : null,
                     travelPeerRoster
                 };
@@ -1599,7 +1603,7 @@ export class RestPrepareContext {
                     lastWeather = game.settings.get(MODULE_ID, "lastWeather") ?? "";
                 } catch { /* settings not ready */ }
                 return TerrainRegistry.getWeather(terrain)
-                    .map(key => ({ value: key, ...WEATHER_TABLE[key] }))
+                    .map(key => ({ value: key, ...resolveWeather(key) }))
                     .filter(w => w.label)
                     .map(w => {
                         const isDefault = w.value === defaultKey;
@@ -1623,7 +1627,7 @@ export class RestPrepareContext {
                 if (match) match.label += " (terrain default)";
                 return opts;
             })(),
-            comfortReason: TerrainRegistry.get(app._selectedTerrain ?? "forest")?.comfortReason ?? "",
+            comfortReason: TerrainRegistry.resolveComfortReason(app._selectedTerrain ?? "forest"),
             restModeOptions: (() => {
                 const current = app._isTotM ? "theater" : "stations";
                 return [
@@ -1657,7 +1661,7 @@ export class RestPrepareContext {
             setupSafeHaven,
             isTavernSetup,
             tavernForcesTotm,
-            selectedWeatherLabel: WEATHER_TABLE[app._resolveSetupWeather(app._selectedTerrain ?? "forest")]?.label ?? "Clear",
+            selectedWeatherLabel: resolveWeather(app._resolveSetupWeather(app._selectedTerrain ?? "forest")).label,
             shelterNeeded: (app._selectedTerrain ?? "forest") !== "tavern",
             defaultComfort,
             shelterOptions,
@@ -1924,7 +1928,10 @@ export class RestPrepareContext {
                 const rawComfort = app._engine.comfort;
                 const fireIsLit = (app._fireLevel ?? "unlit") !== "unlit";
                 const activeShelters = app._engine.activeShelters ?? [];
-                const shelterSpell = activeShelters.find(s => s !== "tent" && s !== "none") ? SHELTER_SPELLS[activeShelters.find(s => s !== "tent" && s !== "none")]?.label ?? null : null;
+                const shelterKey = activeShelters.find(s => s !== "tent" && s !== "none");
+                const shelterSpell = shelterKey
+                    ? resolveShelterSpell(SHELTER_SPELLS.find(s => s.id === shelterKey))?.label ?? null
+                    : null;
                 const tiers = RANK_TO_KEY;
                 let effectiveIdx = COMFORT_RANK[rawComfort] ?? COMFORT_RANK.rough;
                 if (shelterSpell) {
@@ -1934,23 +1941,23 @@ export class RestPrepareContext {
                 const comfort = RANK_TO_KEY[effectiveIdx];
 
                 const weatherKey = app._engine.weather ?? "clear";
-                const wx = WEATHER_TABLE[weatherKey] ?? WEATHER_TABLE.clear;
+                const wx = resolveWeather(weatherKey);
                 const weatherParts = [];
-                if (wx.comfortPenalty > 0) weatherParts.push(`Comfort -${wx.comfortPenalty} step`);
-                if (wx.encounterDC > 0) weatherParts.push(`Night check mod +${wx.encounterDC}`);
-                if (wx.tentCancels) weatherParts.push("Tent cancels");
-                else if (wx.tentReduces) weatherParts.push("Tent reduces by 1");
+                if (wx.comfortPenalty > 0) weatherParts.push(format("IONRIFT.RESPITE.WEATHER.PartComfortStep", { n: wx.comfortPenalty }));
+                if (wx.encounterDC > 0) weatherParts.push(format("IONRIFT.RESPITE.WEATHER.PartNightMod", { n: wx.encounterDC }));
+                if (wx.tentCancels) weatherParts.push(localize("IONRIFT.RESPITE.WEATHER.PartTentCancels"));
+                else if (wx.tentReduces) weatherParts.push(localize("IONRIFT.RESPITE.WEATHER.PartTentReduces"));
                 const SHELTER_TOOLTIPS = {
-                    tent: "Tent: encounter threshold -2, cancels or reduces weather",
-                    tiny_hut: "Tiny Hut: comfort floor sheltered, encounter threshold -5",
-                    rope_trick: "Rope Trick: extradimensional shelter, hidden from the outside",
-                    magnificent_mansion: "Mansion: comfort floor safe, no encounters"
+                    tent: localize("IONRIFT.RESPITE.SHELTER.TIP.tent"),
+                    tiny_hut: localize("IONRIFT.RESPITE.SHELTER.TIP.tiny_hut"),
+                    rope_trick: localize("IONRIFT.RESPITE.SHELTER.TIP.rope_trick"),
+                    magnificent_mansion: localize("IONRIFT.RESPITE.SHELTER.TIP.magnificent_mansion")
                 };
                 const FIRE_TIPS = {
-                    unlit: "Unlit: -1 comfort step at resolution",
-                    embers: "Embers: no change to encounter chance.",
-                    campfire: "Campfire: +1 encounter DC (light draws attention).",
-                    bonfire: "+1 camp comfort. +2 encounter DC (beacon in the dark)."
+                    unlit: localize("IONRIFT.RESPITE.FIRE.TIP.unlitStatus"),
+                    embers: localize("IONRIFT.RESPITE.FIRE.TIP.embersStatus"),
+                    campfire: localize("IONRIFT.RESPITE.FIRE.TIP.campfireStatus"),
+                    bonfire: localize("IONRIFT.RESPITE.FIRE.TIP.bonfireStatus")
                 };
                 return app._campStatus = {
                     comfort,
@@ -1959,10 +1966,10 @@ export class RestPrepareContext {
                     weatherLabel: wx.label,
                     weatherTooltip: weatherParts.length ? `${wx.label}: ${weatherParts.join(", ")}` : wx.label,
                     fireLevel: app._fireLevel ?? "unlit",
-                    fireTooltip: FIRE_TIPS[app._fireLevel ?? "unlit"] ?? "Fire",
+                    fireTooltip: FIRE_TIPS[app._fireLevel ?? "unlit"] ?? localize("IONRIFT.RESPITE.FIRE.Label"),
                     hasTent: (app._engine.activeShelters ?? []).includes("tent"),
                     activeShelters: (app._engine.activeShelters ?? []).map(id => {
-                        const SHELTER_LABELS = { tent: "Tent", tiny_hut: "Tiny Hut", rope_trick: "Rope Trick", magnificent_mansion: "Mansion", none: "Open Air" };
+                        const SHELTER_LABELS = { tent: localize("IONRIFT.RESPITE.SHELTER.LABEL.tent"), tiny_hut: localize("IONRIFT.RESPITE.SHELTER.LABEL.tiny_hut"), rope_trick: localize("IONRIFT.RESPITE.SHELTER.LABEL.rope_trick"), magnificent_mansion: localize("IONRIFT.RESPITE.SHELTER.LABEL.magnificent_mansion"), none: localize("IONRIFT.RESPITE.SHELTER.LABEL.none") };
                         const SHELTER_ICONS = { tent: "fas fa-campground", tiny_hut: "fas fa-igloo", rope_trick: "fas fa-hat-wizard", magnificent_mansion: "fas fa-chess-rook", none: "fas fa-cloud-moon" };
                         return { id, name: SHELTER_LABELS[id] ?? id, icon: SHELTER_ICONS[id] ?? "fas fa-shield-alt", tooltip: SHELTER_TOOLTIPS[id] ?? SHELTER_LABELS[id] ?? id };
                     })
@@ -1987,7 +1994,7 @@ export class RestPrepareContext {
                 return {
                     eventPoolCount: poolCount,
                     showEventPoolNudge: encountersEnabled && app._shouldShowEventPoolNudge(terrainTag),
-                    eventPoolTerrainLabel: terrain?.label ?? terrainTag,
+                    eventPoolTerrainLabel: TerrainRegistry.resolveLabel(terrainTag, terrain),
                     eventsMode: effectiveMode,
                     eventsModePickAvailable: pickAvailable,
                     eventsModeIsRandom: effectiveMode === "random",
@@ -2072,7 +2079,9 @@ export class RestPrepareContext {
         Logger.log(`[Respite:UI] encounterBar: baseDC=${baseDC}, shelter=${shelter}, weather=${weather}, scouting=${scouting}, fire=${fire}, total=${total}, defenses=${defenses}, earlyDefenseBonus=${earlyDefenseBonus}, gmAdj=${gmAdj}, effectiveDC=${effectiveDC}`);
                 const fmt = (v) => v > 0 ? `+${v}` : `${v}`;
                 const terrainObj = TerrainRegistry.get(app._engine.terrainTag);
-                const terrainLabel = terrainObj?.label ?? app._engine.terrainTag ?? "Terrain";
+                const terrainLabel = TerrainRegistry.resolveLabel(app._engine.terrainTag, terrainObj)
+                    || app._engine.terrainTag
+                    || "Terrain";
                 const chips = [];
                 if (weather !== 0) chips.push({ label: bd.weatherName ?? "Weather", value: fmt(-weather), icon: "fas fa-cloud-sun-rain", tooltip: "Weather shifts the night check. Rough weather makes a camp event more likely. The value is this factor's effect on the DC." });
                 if (shelter !== 0) chips.push({ label: "Shelter", value: fmt(-shelter), icon: "fas fa-campground", tooltip: "A tent or shelter spell hides the camp and lowers the encounter DC, so a night event is less likely." });

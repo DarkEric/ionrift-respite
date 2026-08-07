@@ -1,4 +1,5 @@
 import { Logger } from "../../utils/Logger.js";
+import { localize, format } from "../../utils/I18n.js";
 import { MODULE_ID } from "../../data/moduleId.js";
 
 import {
@@ -86,7 +87,7 @@ export class StationActivityDialog extends HandlebarsApplicationMixin(Applicatio
         id: "ionrift-station-activity-dialog",
         classes: ["ionrift-window", "glass-ui", "ionrift", "ionrift-station-dialog"],
         window: {
-            title: "Choose Activity",
+            title: localize("IONRIFT.RESPITE.APP.StationChooseActivityTitle"),
             resizable: false,
             minimizable: false
         },
@@ -469,10 +470,10 @@ export class StationActivityDialog extends HandlebarsApplicationMixin(Applicatio
             canShowDetectMagicScanButton: computeCanShowDetectMagicScanButton(getPartyActors()),
             canTriggerDetectMagicScan: computeCanTriggerDetectMagicScan(getPartyActors()),
             detectMagicScanButtonLabel: this._restApp?._magicScanComplete
-                ? DETECT_MAGIC_BTN_LABEL_DISMISS
-                : (game.user?.isGM ? DETECT_MAGIC_BTN_LABEL_GM : DETECT_MAGIC_BTN_LABEL_PLAYER),
+                ? localize(DETECT_MAGIC_BTN_LABEL_DISMISS)
+                : (game.user?.isGM ? localize(DETECT_MAGIC_BTN_LABEL_GM) : localize(DETECT_MAGIC_BTN_LABEL_PLAYER)),
             detectMagicScanButtonTitle: game.user?.isGM
-                ? DETECT_MAGIC_BTN_TITLE_GM
+                ? localize(DETECT_MAGIC_BTN_TITLE_GM)
                 : (getDetectMagicPlayerAccessReason(getPartyActors()) ?? ""),
             magicScanResults: this._restApp?._magicScanResults ?? [],
             magicScanComplete: !!this._restApp?._magicScanComplete,
@@ -743,7 +744,7 @@ export class StationActivityDialog extends HandlebarsApplicationMixin(Applicatio
             onCooked: () => { void dialog._onMonstrousFeastCookCompleted(); }
         });
         if (!opened) {
-            ui.notifications.warn("The Monster Cooking book is not available right now.");
+            ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.MonsterCookingUnavailable"));
         }
     }
 
@@ -1217,7 +1218,7 @@ export class StationActivityDialog extends HandlebarsApplicationMixin(Applicatio
             fireLevel: level
         });
         restApp.setStationFirePreviewLevel?.(null);
-        ui.notifications.info("Fire change sent to the GM.");
+        ui.notifications.info(localize("IONRIFT.RESPITE.NOTIFY.FireChangeSent"));
     }
 
     static async #onSetColdCamp() {
@@ -1235,7 +1236,7 @@ export class StationActivityDialog extends HandlebarsApplicationMixin(Applicatio
         if (game.user.isGM) return;
         emitActivityColdCampRequest(game.user.id);
         this._restApp?.setStationFirePreviewLevel?.(null);
-        ui.notifications.info("Cold camp request sent to the GM.");
+        ui.notifications.info(localize("IONRIFT.RESPITE.NOTIFY.ColdCampSent"));
     }
 
     /**
@@ -1326,7 +1327,7 @@ export class StationActivityDialog extends HandlebarsApplicationMixin(Applicatio
         if (!cookActor) return;
 
         if (!game.user.isGM && !cookActor.isOwner) {
-            ui.notifications.warn("Only the GM or the cook's player can serve party meals.");
+            ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.OnlyCookCanServe"));
             return;
         }
 
@@ -1335,7 +1336,7 @@ export class StationActivityDialog extends HandlebarsApplicationMixin(Applicatio
 
         const partyActors = getPartyActors().filter(a => a.id !== actorId);
         if (!partyActors.length) {
-            ui.notifications.warn("No other party members to serve.");
+            ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.NoOthersToServe"));
             return;
         }
 
@@ -1433,12 +1434,12 @@ export class StationActivityDialog extends HandlebarsApplicationMixin(Applicatio
         const caster = this._actor;
         const ownerActor = game.actors.get(itemActorId);
         if (!ownerActor) {
-            ui.notifications.warn("Item owner not found.");
+            ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.ItemOwnerNotFound"));
             return;
         }
         const itemBefore = ownerActor.items.get(itemId);
         if (!itemBefore) {
-            ui.notifications.warn("Item not found.");
+            ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.ItemNotFound"));
             return;
         }
         const wb = this._restApp?._workbench;
@@ -1717,7 +1718,7 @@ export class StationActivityDialog extends HandlebarsApplicationMixin(Applicatio
 
     async close(options = {}) {
         if (this._craftRollPending) {
-            ui.notifications.info("Wait for the dice to finish.");
+            ui.notifications.info(localize("IONRIFT.RESPITE.NOTIFY.WaitForDice"));
             return;
         }
         // Safety net: commit crafting result even when closed via the window X button.

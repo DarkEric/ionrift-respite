@@ -1,4 +1,5 @@
 import { Logger } from "../../utils/Logger.js";
+import { localize, format } from "../../utils/I18n.js";
 import { refreshGmRestIndicator } from "../ui/sheet/RejoinManager.js";
 import { MODULE_ID } from "../../data/moduleId.js";
 import { RestSetupApp } from "../../apps/rest/RestSetupApp.js";
@@ -125,7 +126,7 @@ export function handleRestStarted(data, ctx) {
                 existingId
             });
             Logger.log(`${MODULE_ID} | Closing stale rest window for new rest`);
-            ui.notifications.info("The GM has started a new rest. Refreshing your window.");
+            ui.notifications.info(localize("IONRIFT.RESPITE.NOTIFY.GmStartedNewRest"));
             existing.close({ skipRejoin: true });
             ctx.setActivePlayerRestApp(null);
         }
@@ -340,7 +341,7 @@ export function handleShortRestCompletionSummary(data, ctx) {
 export function handleShortRestComplete(data, ctx) {
     const app = ctx.activeShortRestApp;
     if (app) {
-        ui.notifications.info("Short rest complete. Class features recovered.");
+        ui.notifications.info(localize("IONRIFT.RESPITE.NOTIFY.ShortRestComplete"));
         app._isTerminating = true;
         app.close();
         ctx.setActiveShortRestApp(null);
@@ -353,7 +354,7 @@ export function handleShortRestAbandoned(data, ctx) {
     void closeOpenStationDialog().catch(err => console.warn(`${MODULE_ID} | closeOpenStationDialog`, err));
     const app = ctx.activeShortRestApp;
     if (app) {
-        ui.notifications.info("The GM has abandoned the short rest.");
+        ui.notifications.info(localize("IONRIFT.RESPITE.NOTIFY.GmAbandonedShortRest"));
         app._isTerminating = true;
         app.close();
         ctx.setActiveShortRestApp(null);
@@ -488,7 +489,7 @@ export async function handleCampStationPlace(data, ctx) {
         return;
     }
     if (!canPlaceStation(actor, stationKey)) {
-        ui.notifications.warn("That character cannot place this station.");
+        ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.CannotPlaceStation"));
         return;
     }
     const placed = await placeStation(x, y, stationKey);
@@ -531,12 +532,12 @@ export async function handleCampStationReclaim(data, ctx) {
         return;
     }
     if (!canPlaceStation(actor, stationKey)) {
-        ui.notifications.warn("That character cannot pick up this station.");
+        ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.CannotPickupStation"));
         return;
     }
     const n = await clearSharedCampStation(stationKey);
     if (n > 0) { emitCampStationPlaced(); }
-    else { ui.notifications.info("Nothing to pick up on the scene for that station."); }
+    else { ui.notifications.info(localize("IONRIFT.RESPITE.NOTIFY.NothingToPickupStation")); }
     ctx.activeRestSetupApp?.render();
     ctx.activePlayerRestApp?.render();
 }
@@ -567,7 +568,7 @@ export function handleCopySpellProposal(data, ctx) {
 }
 
 export function handleCopySpellBusy(data, ctx) {
-    ui.notifications.warn("The GM is processing another Copy Spell transaction. Please wait and try again.");
+    ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.CopySpellBusy"));
     if (ctx.activePlayerRestApp && data.actorId) {
         ctx.activePlayerRestApp._lockedCharacters?.delete(data.actorId);
         ctx.activePlayerRestApp._earlyResults?.delete(data.actorId);

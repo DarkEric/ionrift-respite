@@ -7,6 +7,7 @@
  * All socket events route through the same module.js handlers.
  */
 import { CampfirePhysics } from "../../services/camp/fire/CampfirePhysics.js";
+import { localize, format } from "../../utils/I18n.js";
 import { CampfireTokenLinker } from "../../services/camp/fire/CampfireTokenLinker.js";
 import {
     CampGearScanner,
@@ -572,7 +573,7 @@ export class CampfireEmbed {
         else if (level === "campfire") targetLevel = "embers";
         else if (level === "embers") {
             if (!game.user.isGM) {
-                ui.notifications.warn("Only the GM can douse the fire to cold camp.");
+                ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.OnlyGmDouse"));
                 return;
             }
             targetLevel = "unlit";
@@ -859,16 +860,16 @@ export class CampfireEmbed {
 
     _onStrikeFlint() {
         if (this._makeCampCeremony && !this._canCommitCeremonyIgnite()) {
-            ui.notifications.warn("Place the campfire on the map before lighting.");
+            ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.PlaceCampfireFirst"));
             return;
         }
         const lighter = this._getStrikeFireLighter();
         if (!lighter) {
-            ui.notifications.warn("This character needs a tinderbox or flint and steel.");
+            ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.NeedsTinderbox"));
             return;
         }
         if (!this._kindlingPlaced && !this._ceremonyReadyToLight) {
-            ui.notifications.warn("Place enough kindling for this tier first.");
+            ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.PlaceKindlingFirst"));
             return;
         }
         this._strikeCount++;
@@ -923,7 +924,7 @@ export class CampfireEmbed {
     _ignite(playerName, igniteMeta = {}) {
         if (this._lit) return;
         if (this._makeCampCeremony && !this._canCommitCeremonyIgnite()) {
-            ui.notifications.warn("Place the campfire on the map before lighting.");
+            ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.PlaceCampfireFirst"));
             return;
         }
         this._lit = true;
@@ -1017,16 +1018,16 @@ export class CampfireEmbed {
 
     _onCantripIgnite() {
         if (this._makeCampCeremony && !this._canCommitCeremonyIgnite()) {
-            ui.notifications.warn("Place the campfire on the map before lighting.");
+            ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.PlaceCampfireFirst"));
             return;
         }
         const cantrip = this._findFireCantrip();
         if (!cantrip) {
-            ui.notifications.warn("This character has no fire cantrip.");
+            ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.NoFireCantrip"));
             return;
         }
         if (!this._kindlingPlaced && !this._ceremonyReadyToLight) {
-            ui.notifications.warn("Place enough kindling for this tier first.");
+            ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.PlaceKindlingFirst"));
             return;
         }
         const actorName = this._getPlayerActor()?.name ?? game.user.name;

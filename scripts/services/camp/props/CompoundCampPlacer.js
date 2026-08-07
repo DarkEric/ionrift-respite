@@ -1,4 +1,5 @@
 import { Logger } from "../../../utils/Logger.js";
+import { localize, format } from "../../../utils/I18n.js";
 import { MODULE_ID } from "../../../data/moduleId.js";
 /**
  * CompoundCampPlacer
@@ -587,7 +588,7 @@ export function stationPlacementRequirementHint(stationKey) {
  */
 export async function placeCampfire(worldX, worldY, options = {}) {
     if (!game.user.isGM) {
-        ui.notifications.warn("Only the GM can place the campfire.");
+        ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.OnlyGmPlaceCampfire"));
         return null;
     }
 
@@ -675,7 +676,7 @@ export async function placeCampfire(worldX, worldY, options = {}) {
     await scene.createEmbeddedDocuments("Token", [baseData, flameData]);
 
     Logger.log(`${MODULE_ID} | CompoundCampPlacer: placed campfire at (${cx}, ${cy}), session: ${sessionId}`);
-    ui.notifications.info("Campfire placed on scene.");
+    ui.notifications.info(localize("IONRIFT.RESPITE.NOTIFY.CampfirePlaced"));
 
     return { sessionId, center: { x: cx, y: cy } };
 }
@@ -695,12 +696,12 @@ export async function placeStation(worldX, worldY, stationKey) {
 
     const rawDef = FURNITURE[stationKey];
     if (!rawDef) {
-        ui.notifications.warn("Unknown camp station.");
+        ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.UnknownStation"));
         return false;
     }
 
     if (isStationDeployed(stationKey)) {
-        ui.notifications.warn("That station is already on the map.");
+        ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.StationAlreadyOnMap"));
         return false;
     }
 
@@ -779,7 +780,7 @@ export async function placePlayerGear(worldX, worldY, gearType, actorId) {
     if (!actor) return false;
 
     if (isGearDeployed(actorId, gearType)) {
-        ui.notifications.warn("That gear is already on the map.");
+        ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.GearAlreadyOnMap"));
         return false;
     }
 

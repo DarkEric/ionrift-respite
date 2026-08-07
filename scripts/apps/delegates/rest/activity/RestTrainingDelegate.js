@@ -1,4 +1,5 @@
 import { MODULE_ID } from "../../../../data/moduleId.js";
+import { localize, format } from "../../../../utils/I18n.js";
 import {
     executeAbilityRoll,
     waitForDiceSoNice,
@@ -36,7 +37,7 @@ export class RestTrainingDelegate {
         const actor = game.actors.get(characterId);
         if (!actor) return;
         if (!actor.isOwner && !game.user.isGM) {
-            ui.notifications.warn("Only the character's owner can roll training checks.");
+            ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.TrainingOwnerOnly"));
             return;
         }
 
@@ -92,7 +93,7 @@ export class RestTrainingDelegate {
                 app._totmFollowUpExpanded = null;
 
                 const award = outcome.training?.awardedXP ?? 0;
-                ui.notifications.info(`${actor.name}: Training complete · +${award} XP`);
+                ui.notifications.info(format("IONRIFT.RESPITE.NOTIFY.TrainingComplete", { name: actor.name, xp: award }));
 
                 if (!game.user.isGM) {
                     emitTrainingComplete(characterId, outcome);
@@ -113,7 +114,7 @@ export class RestTrainingDelegate {
             }
         } catch (err) {
             console.warn(`${MODULE_ID} | Training roll failed:`, err);
-            ui.notifications.error("Training roll failed. Try again.");
+            ui.notifications.error(localize("IONRIFT.RESPITE.NOTIFY.TrainingRollFailed"));
         } finally {
             state.rolling = false;
             app.render();

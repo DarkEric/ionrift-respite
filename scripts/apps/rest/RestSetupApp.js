@@ -1,4 +1,5 @@
 import { Logger } from "../../utils/Logger.js";
+import { localize, format } from "../../utils/I18n.js";
 import { RestFlowEngine } from "../../services/rest/flow/RestFlowEngine.js";
 import { TerrainRegistry } from "../../services/events/resolve/TerrainRegistry.js";
 import { ActivityResolver } from "../../services/rest/flow/ActivityResolver.js";
@@ -42,7 +43,7 @@ import { ActivityStationsDelegate } from "../delegates/rest/activity/ActivitySta
 import { EventsPhaseDelegate } from "../delegates/events/EventsPhaseDelegate.js";
 import { WorkbenchDelegate } from "../delegates/crafting/WorkbenchDelegate.js";
 import { DetectMagicDelegate, collectPartyIdentifyEmbedData, spawnDetectMagicCastRipple } from "../delegates/crafting/DetectMagicDelegate.js";
-import { WEATHER_TABLE, getComfortTip, inferCanvasStationForActivity } from "../../data/RestConstants.js";
+import { WEATHER_TABLE, getComfortTip, inferCanvasStationForActivity, resolveWeather } from "../../data/RestConstants.js";
 import { isComfortEnabled } from "../../services/camp/gear/ComfortCalculator.js";
 import { buildTravelGatherPayload } from "../../services/travel/resolve/TravelGatherPayload.js";
 import { deactivateStationLayer } from "../../services/camp/props/StationInteractionLayer.js";
@@ -99,7 +100,7 @@ export class RestSetupApp extends HandlebarsApplicationMixin(ApplicationV2) {
         id: "ionrift-respite-setup",
         classes: ["ionrift-window", "glass-ui", "ionrift-respite-app"],
         window: {
-            title: "Respite: Rest Phase",
+            title: localize("IONRIFT.RESPITE.APP.RestPhaseTitle"),
             resizable: true
         },
         position: {
@@ -713,9 +714,9 @@ _shouldShowEventPoolNudge(terrainTag) {
                     : "";
 
                 const confirmed = await game.ionrift.library.confirm({
-                    title: "Discard Rest?",
-                    content: `<p>The rest has not been applied yet. Closing now will discard all results.</p>${ungrantedNote}`,
-                    yesLabel: "Discard",
+                    title: localize("IONRIFT.RESPITE.APP.DiscardRestTitle"),
+                    content: `${localize("IONRIFT.RESPITE.APP.DiscardRestContent")}${ungrantedNote}`,
+                    yesLabel: localize("IONRIFT.RESPITE.COMMON.Discard"),
                     noLabel: "Go Back",
                     yesIcon: "fas fa-times",
                     noIcon: "fas fa-arrow-left",
@@ -854,7 +855,7 @@ _buildCampConditionsBar(campScanData, { safeRestSpot = false, encountersEnabled 
 
         const terrainTag = this._engine.terrainTag ?? "forest";
         const terrain = TerrainRegistry.get(terrainTag);
-        const terrainLabel = terrain?.label ?? terrainTag;
+        const terrainLabel = TerrainRegistry.resolveLabel(terrainTag, terrain);
         const terrainIcon = terrain?.icon ?? "fas fa-mountain";
 
         if (safeRestSpot) {
@@ -868,14 +869,14 @@ _buildCampConditionsBar(campScanData, { safeRestSpot = false, encountersEnabled 
         if (!isComfortEnabled()) return null;
 
         const weatherKey = this._engine.weather ?? "clear";
-        const wx = WEATHER_TABLE[weatherKey] ?? WEATHER_TABLE.clear;
+        const wx = resolveWeather(weatherKey);
         const campComfort = campScanData?.campComfort ?? this._engine.comfort ?? "rough";
         const campComfortLabel = campScanData?.campComfortLabel ?? CampGearScanner.getRules(campComfort).label;
 
         const impactParts = [];
-        if (wx.comfortPenalty > 0) impactParts.push(`Comfort −${wx.comfortPenalty}`);
-        if (wx.encounterDC > 0) impactParts.push(`Night +${wx.encounterDC}`);
-        if (wx.encounterDC < 0) impactParts.push(`Night ${wx.encounterDC}`);
+        if (wx.comfortPenalty > 0) impactParts.push(format("IONRIFT.RESPITE.WEATHER.ImpactComfort", { n: wx.comfortPenalty }));
+        if (wx.encounterDC > 0) impactParts.push(format("IONRIFT.RESPITE.WEATHER.ImpactNightPlus", { n: wx.encounterDC }));
+        if (wx.encounterDC < 0) impactParts.push(format("IONRIFT.RESPITE.WEATHER.ImpactNight", { n: wx.encounterDC }));
 
         const activeShelters = this._engine.activeShelters ?? [];
         const hasTent = activeShelters.includes("tent");
@@ -883,11 +884,11 @@ _buildCampConditionsBar(campScanData, { safeRestSpot = false, encountersEnabled 
 
         let weatherShieldNote = null;
         if (hasHut) {
-            weatherShieldNote = "Shelter spell cancels weather penalties";
+            weatherShieldNote = localize("IONRIFT.RESPITE.WEATHER.ShieldHut");
         } else if (hasTent && wx.tentCancels && (wx.comfortPenalty > 0 || wx.encounterDC !== 0)) {
-            weatherShieldNote = "Tent cancels these weather effects";
+            weatherShieldNote = localize("IONRIFT.RESPITE.WEATHER.ShieldTentCancel");
         } else if (hasTent && wx.tentReduces && wx.comfortPenalty > 0) {
-            weatherShieldNote = "Tent reduces weather comfort penalty by 1";
+            weatherShieldNote = localize("IONRIFT.RESPITE.WEATHER.ShieldTentReduce");
         }
 
         let comfortContext = null;

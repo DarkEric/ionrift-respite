@@ -1,4 +1,5 @@
 import { Logger } from "../../../../utils/Logger.js";
+import { localize, format } from "../../../../utils/I18n.js";
 import { TerrainRegistry } from "../../../../services/events/resolve/TerrainRegistry.js";
 import { CopySpellHandler } from "../../../../services/crafting/outcomes/CopySpellHandler.js";
 import { MealPhaseHandler } from "../../../../services/meal/phase/MealPhaseHandler.js";
@@ -101,7 +102,7 @@ export class ActivityStationsDelegate {
             if (app.rendered) app.render();
         } else if (activityId === "act_train" && actor && app._engine) {
             app._initTrainingState(characterId, activityId, actor);
-            ui.notifications.info(`${actor.name}: Training started. Roll your sets in the rest window.`);
+            ui.notifications.info(format("IONRIFT.RESPITE.NOTIFY.TrainingStarted", { name: actor.name }));
             if (app.rendered) app.render();
         } else if (actor && app._engine) {
             const followUpValue = options.followUpValue ?? app._gmFollowUps?.get(characterId) ?? app._getFollowUpForCharacter(characterId);
@@ -117,7 +118,7 @@ export class ActivityStationsDelegate {
                 : activityResult.result === "failure_complication" ? "Failed (complication)"
                 : activityResult.result === "failure" ? "Failed" : activityResult.result;
             const actName = activity?.name ?? activityId;
-            ui.notifications.info(`${actor.name}: ${actName} - ${tier}`);
+            ui.notifications.info(format("IONRIFT.RESPITE.NOTIFY.ActivityTier", { name: actor.name, activity: actName, tier }));
             if (app.rendered) app.render();
         }
 
@@ -140,7 +141,7 @@ export class ActivityStationsDelegate {
                 );
 
         const actName = activity?.name ?? activityId;
-        ui.notifications.info(`${game.actors.get(characterId)?.name ?? "Character"} will ${actName}.`);
+        ui.notifications.info(format("IONRIFT.RESPITE.NOTIFY.WillActivity", { name: game.actors.get(characterId)?.name ?? localize("IONRIFT.RESPITE.COMMON.Character"), activity: actName }));
 
         if (canvasStationId) {
             app._stationCanvasIdByCharacter.set(characterId, canvasStationId);
@@ -412,7 +413,7 @@ export class ActivityStationsDelegate {
                     userId: game.user.id,
                     partyIds: roster.map(a => a.id)
                 });
-                ui.notifications.warn("No character assigned for you in app rest. Ask the GM to check the party roster.");
+                ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.NoCharacterAssigned"));
                 return;
             }
             const terrainTagForStation = app._selectedTerrain ?? app._engine?.terrainTag ?? "forest";
@@ -431,7 +432,7 @@ export class ActivityStationsDelegate {
                         const ownerName = bedrollOwnerActorId
                             ? (game.actors.get(bedrollOwnerActorId)?.name ?? "someone else")
                             : "someone else";
-                        ui.notifications.warn(`That bedroll belongs to ${ownerName}.`);
+                        ui.notifications.warn(format("IONRIFT.RESPITE.NOTIFY.BedrollBelongsTo", { name: ownerName }));
                     }
                     return;
                 }
@@ -713,7 +714,7 @@ export class ActivityStationsDelegate {
         if (!item) return;
         const att = item.system?.attunement;
         if ((att !== "required" && att !== 1) || item.system?.attuned) {
-            ui.notifications.warn("That item cannot be attuned here.");
+            ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.CannotAttuneHere"));
             return;
         }
         const attuneSlots = actor.system?.attributes?.attunement;
@@ -721,17 +722,17 @@ export class ActivityStationsDelegate {
             const current = attuneSlots.value ?? 0;
             const max = attuneSlots.max ?? 3;
             if (current >= max) {
-                ui.notifications.warn(`${actor.name} is already attuned to the maximum number of items (${max}).`);
+                ui.notifications.warn(format("IONRIFT.RESPITE.NOTIFY.AttuneAtMax", { name: actor.name, max }));
                 return;
             }
         }
         try {
             await item.update({ "system.attuned": true });
-            ui.notifications.info(`${actor.name} attunes to ${item.name}.`);
+            ui.notifications.info(format("IONRIFT.RESPITE.NOTIFY.AttunesTo", { name: actor.name, item: item.name }));
         } catch (e) {
 
             console.warn(`${MODULE_ID} | attuneWorkbenchItemForActor:`, e);
-            ui.notifications.error("Could not attune that item.");
+            ui.notifications.error(localize("IONRIFT.RESPITE.NOTIFY.AttuneFailed"));
             return;
         }
         if (app.rendered) app.render();
@@ -904,7 +905,7 @@ export class ActivityStationsDelegate {
             }
             if (app.rendered) app.render();
             _refreshGmRestIndicator(app);
-            ui.notifications.info(`${actor.name}: rations recorded for app rest.`);
+            ui.notifications.info(format("IONRIFT.RESPITE.NOTIFY.RationsRecorded", { name: actor.name }));
             return;
         }
 
@@ -1154,7 +1155,7 @@ export class ActivityStationsDelegate {
             gearSlots: [
                 slot({
                     gearType: "bedroll",
-                    title: "Bedroll",
+                    title: localize("IONRIFT.RESPITE.APP.BedrollTitle"),
                     icon: "fas fa-bed",
                     owned: g.hasBedroll,
                     deployed: g.bedrollDeployed,
@@ -1164,7 +1165,7 @@ export class ActivityStationsDelegate {
                 }),
                 slot({
                     gearType: "tent",
-                    title: "Tent",
+                    title: localize("IONRIFT.RESPITE.APP.TentTitle"),
                     icon: "fas fa-campground",
                     owned: g.hasTent,
                     deployed: g.tentDeployed,
@@ -1246,7 +1247,7 @@ export class ActivityStationsDelegate {
         if (!characterId || !profession) return;
 
         if (app._lockedCharacters?.has(characterId) || app.hasCompletedCrafting(characterId, profession)) {
-            ui.notifications.warn("This character has already completed crafting for this rest.");
+            ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.CraftingAlreadyDone"));
             return;
         }
 
@@ -1302,7 +1303,7 @@ export class ActivityStationsDelegate {
                         choices: Object.fromEntries(app._characterChoices),
                         craftingResults: { [characterId]: result }
                     });
-                    ui.notifications.info(`${actor.name}'s activity submitted.`);
+                    ui.notifications.info(format("IONRIFT.RESPITE.NOTIFY.ActivitySubmitted", { name: actor.name }));
                 }
                 if (app.rendered) app.render();
             },

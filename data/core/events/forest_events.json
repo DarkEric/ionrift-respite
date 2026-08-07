@@ -77,7 +77,9 @@
             },
             "tier": "normal",
             "sentiment": "negative",
-            "pack": "base"
+            "pack": "base",
+            "nameKey": "IONRIFT.RESPITE.DATA.EVENT.evt_forest_wolves.Name",
+            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_forest_wolves.Description"
         },
         {
             "id": "evt_forest_deadfall",
@@ -197,7 +199,9 @@
             },
             "tier": "normal",
             "sentiment": "negative",
-            "pack": "base"
+            "pack": "base",
+            "nameKey": "IONRIFT.RESPITE.DATA.EVENT.evt_forest_deadfall.Name",
+            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_forest_deadfall.Description"
         },
         {
             "id": "evt_forest_mist",
@@ -267,7 +271,9 @@
             },
             "tier": "normal",
             "sentiment": "negative",
-            "pack": "base"
+            "pack": "base",
+            "nameKey": "IONRIFT.RESPITE.DATA.EVENT.evt_forest_mist.Name",
+            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_forest_mist.Description"
         },
         {
             "id": "evt_forest_clearing",
@@ -390,7 +396,9 @@
             },
             "tier": "normal",
             "sentiment": "positive",
-            "pack": "base"
+            "pack": "base",
+            "nameKey": "IONRIFT.RESPITE.DATA.EVENT.evt_forest_clearing.Name",
+            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_forest_clearing.Description"
         },
         {
             "id": "evt_forest_birdsong",
@@ -413,7 +421,9 @@
             "mechanical": null,
             "tier": "normal",
             "sentiment": "neutral",
-            "pack": "base"
+            "pack": "base",
+            "nameKey": "IONRIFT.RESPITE.DATA.EVENT.evt_forest_birdsong.Name",
+            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_forest_birdsong.Description"
         }
     ]
 }

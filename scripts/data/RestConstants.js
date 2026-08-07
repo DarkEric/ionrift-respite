@@ -1,4 +1,5 @@
 import { isGearDeployed } from "../services/camp/props/CompoundCampPlacer.js";
+import { localize, format } from "../utils/I18n.js";
 import { HD_PENALTY, boostComfort, isComfortEnabled, getComfortDcMod, COMFORT_RANK, RANK_TO_KEY } from "../services/camp/gear/ComfortCalculator.js";
 import { isSimpleStationsMode } from "../services/rest/flow/RestProfileSettings.js";
 import { getFletchingYieldHint, isFletchingEnabled } from "../services/crafting/settings/FletchingSettings.js";
@@ -11,42 +12,69 @@ import { MODULE_ID } from "./moduleId.js";
  * and tent interaction. `tentReduces` means tent lowers penalty by 1 (partial help).
  */
 export const WEATHER_TABLE = {
-    clear:          { label: "Clear",          hint: "No effect on comfort or encounters.",                                       comfortPenalty: 0, encounterDC: 0, tentCancels: true,  tentReduces: false },
-    overcast:       { label: "Overcast",       hint: "No effect. Dimmer light, neutral conditions.",                              comfortPenalty: 0, encounterDC: 0, tentCancels: true,  tentReduces: false },
-    fog:            { label: "Fog",            hint: "Encounter DC +2. Weather hides camp, but also masks approaching threats.",  comfortPenalty: 0, encounterDC: 2, tentCancels: true,  tentReduces: false },
-    rain:           { label: "Rain",           hint: "Comfort -1 step if unsheltered. Tent cancels.",                             comfortPenalty: 1, encounterDC: 0, tentCancels: true,  tentReduces: false },
-    heavy_rain:     { label: "Heavy Rain",     hint: "Comfort -1. Encounter DC +1. Tent cancels.",                               comfortPenalty: 1, encounterDC: 1, tentCancels: true,  tentReduces: false },
-    thunderstorm:   { label: "Thunderstorm",   hint: "Comfort -2. Encounter DC +2. Tent reduces to -1. Hut cancels.",            comfortPenalty: 2, encounterDC: 2, tentCancels: false, tentReduces: true },
-    snow:           { label: "Snow",           hint: "Comfort -1 step if unsheltered. Tent cancels.",                             comfortPenalty: 1, encounterDC: 0, tentCancels: true,  tentReduces: false },
-    blizzard:       { label: "Blizzard",       hint: "Comfort -2. Encounter DC +1. Tent reduces to -1. Hut cancels.",            comfortPenalty: 2, encounterDC: 1, tentCancels: false, tentReduces: true },
-    extreme_cold:   { label: "Extreme Cold",   hint: "Comfort -1. Extra CON DC 10 or +1 exhaustion. Tent: partial.",             comfortPenalty: 1, encounterDC: 0, tentCancels: false, tentReduces: true },
-    extreme_heat:   { label: "Extreme Heat",   hint: "Comfort -1. Extra CON DC 10 or +1 exhaustion. Tent does not help.",        comfortPenalty: 1, encounterDC: 0, tentCancels: false, tentReduces: false },
-    sandstorm:      { label: "Sandstorm",      hint: "Comfort -2. Encounter DC +2. Tent: partial. Hut cancels.",                 comfortPenalty: 2, encounterDC: 2, tentCancels: false, tentReduces: true },
-    hail:           { label: "Hail",           hint: "Comfort -1. Minor damage risk. Tent cancels.",                             comfortPenalty: 1, encounterDC: 0, tentCancels: true,  tentReduces: false },
-    volcanic_ash:   { label: "Volcanic Ash",   hint: "Comfort -1. Encounter DC +1. Difficult breathing.",                        comfortPenalty: 1, encounterDC: 1, tentCancels: false, tentReduces: true },
-    fungal_spores:  { label: "Fungal Spores",  hint: "Comfort -1. CON save or poisoned. Tent: partial.",                         comfortPenalty: 1, encounterDC: 0, tentCancels: false, tentReduces: true },
-    faerzress:      { label: "Faerzress",      hint: "No comfort penalty. Wild magic risk on spellcasting during rest.",          comfortPenalty: 0, encounterDC: 0, tentCancels: false, tentReduces: false },
+    clear: { labelKey: "IONRIFT.RESPITE.WEATHER.clear.Label", hintKey: "IONRIFT.RESPITE.WEATHER.clear.Hint",                                       comfortPenalty: 0, encounterDC: 0, tentCancels: true,  tentReduces: false },
+    overcast: { labelKey: "IONRIFT.RESPITE.WEATHER.overcast.Label", hintKey: "IONRIFT.RESPITE.WEATHER.overcast.Hint",                              comfortPenalty: 0, encounterDC: 0, tentCancels: true,  tentReduces: false },
+    fog: { labelKey: "IONRIFT.RESPITE.WEATHER.fog.Label", hintKey: "IONRIFT.RESPITE.WEATHER.fog.Hint",  comfortPenalty: 0, encounterDC: 2, tentCancels: true,  tentReduces: false },
+    rain: { labelKey: "IONRIFT.RESPITE.WEATHER.rain.Label", hintKey: "IONRIFT.RESPITE.WEATHER.rain.Hint",                             comfortPenalty: 1, encounterDC: 0, tentCancels: true,  tentReduces: false },
+    heavy_rain: { labelKey: "IONRIFT.RESPITE.WEATHER.heavy_rain.Label", hintKey: "IONRIFT.RESPITE.WEATHER.heavy_rain.Hint",                               comfortPenalty: 1, encounterDC: 1, tentCancels: true,  tentReduces: false },
+    thunderstorm: { labelKey: "IONRIFT.RESPITE.WEATHER.thunderstorm.Label", hintKey: "IONRIFT.RESPITE.WEATHER.thunderstorm.Hint",            comfortPenalty: 2, encounterDC: 2, tentCancels: false, tentReduces: true },
+    snow: { labelKey: "IONRIFT.RESPITE.WEATHER.snow.Label", hintKey: "IONRIFT.RESPITE.WEATHER.snow.Hint",                             comfortPenalty: 1, encounterDC: 0, tentCancels: true,  tentReduces: false },
+    blizzard: { labelKey: "IONRIFT.RESPITE.WEATHER.blizzard.Label", hintKey: "IONRIFT.RESPITE.WEATHER.blizzard.Hint",            comfortPenalty: 2, encounterDC: 1, tentCancels: false, tentReduces: true },
+    extreme_cold: { labelKey: "IONRIFT.RESPITE.WEATHER.extreme_cold.Label", hintKey: "IONRIFT.RESPITE.WEATHER.extreme_cold.Hint",             comfortPenalty: 1, encounterDC: 0, tentCancels: false, tentReduces: true },
+    extreme_heat: { labelKey: "IONRIFT.RESPITE.WEATHER.extreme_heat.Label", hintKey: "IONRIFT.RESPITE.WEATHER.extreme_heat.Hint",        comfortPenalty: 1, encounterDC: 0, tentCancels: false, tentReduces: false },
+    sandstorm: { labelKey: "IONRIFT.RESPITE.WEATHER.sandstorm.Label", hintKey: "IONRIFT.RESPITE.WEATHER.sandstorm.Hint",                 comfortPenalty: 2, encounterDC: 2, tentCancels: false, tentReduces: true },
+    hail: { labelKey: "IONRIFT.RESPITE.WEATHER.hail.Label", hintKey: "IONRIFT.RESPITE.WEATHER.hail.Hint",                             comfortPenalty: 1, encounterDC: 0, tentCancels: true,  tentReduces: false },
+    volcanic_ash: { labelKey: "IONRIFT.RESPITE.WEATHER.volcanic_ash.Label", hintKey: "IONRIFT.RESPITE.WEATHER.volcanic_ash.Hint",                        comfortPenalty: 1, encounterDC: 1, tentCancels: false, tentReduces: true },
+    fungal_spores: { labelKey: "IONRIFT.RESPITE.WEATHER.fungal_spores.Label", hintKey: "IONRIFT.RESPITE.WEATHER.fungal_spores.Hint",                         comfortPenalty: 1, encounterDC: 0, tentCancels: false, tentReduces: true },
+    faerzress: { labelKey: "IONRIFT.RESPITE.WEATHER.faerzress.Label", hintKey: "IONRIFT.RESPITE.WEATHER.faerzress.Hint",          comfortPenalty: 0, encounterDC: 0, tentCancels: false, tentReduces: false },
     // Tavern atmosphere (flavor only, zero mechanical effect)
-    tavern_rain:    { label: "Raining Outside",  hint: "Rain patters on the windows. A somber, reflective evening.",              comfortPenalty: 0, encounterDC: 0, tentCancels: true,  tentReduces: false },
-    tavern_storm:   { label: "Stormy Outside",   hint: "Thunder rattles the shutters. Good night to be indoors.",                 comfortPenalty: 0, encounterDC: 0, tentCancels: true,  tentReduces: false },
+    tavern_rain: { labelKey: "IONRIFT.RESPITE.WEATHER.tavern_rain.Label", hintKey: "IONRIFT.RESPITE.WEATHER.tavern_rain.Hint",              comfortPenalty: 0, encounterDC: 0, tentCancels: true,  tentReduces: false },
+    tavern_storm: { labelKey: "IONRIFT.RESPITE.WEATHER.tavern_storm.Label", hintKey: "IONRIFT.RESPITE.WEATHER.tavern_storm.Hint",                 comfortPenalty: 0, encounterDC: 0, tentCancels: true,  tentReduces: false },
     // Tavern grades (flavor only, zero mechanical effect)
-    tavern_flophouse: { label: "Flophouse",      hint: "Hard beds, thin walls, sounds you'd rather not identify.",               comfortPenalty: 0, encounterDC: 0, tentCancels: true,  tentReduces: false },
-    tavern_modest:    { label: "Modest Inn",      hint: "Clean sheets, warm stew. Nothing fancy, nothing wrong.",                comfortPenalty: 0, encounterDC: 0, tentCancels: true,  tentReduces: false },
-    tavern_fine:      { label: "Fine Lodgings",   hint: "Feather pillows, a hot bath, and someone else's cooking.",              comfortPenalty: 0, encounterDC: 0, tentCancels: true,  tentReduces: false },
-    tavern_luxury:    { label: "Luxury Suite",    hint: "You could get used to this. You probably shouldn't.",                   comfortPenalty: 0, encounterDC: 0, tentCancels: true,  tentReduces: false },
+    tavern_flophouse: { labelKey: "IONRIFT.RESPITE.WEATHER.tavern_flophouse.Label", hintKey: "IONRIFT.RESPITE.WEATHER.tavern_flophouse.Hint",               comfortPenalty: 0, encounterDC: 0, tentCancels: true,  tentReduces: false },
+    tavern_modest: { labelKey: "IONRIFT.RESPITE.WEATHER.tavern_modest.Label", hintKey: "IONRIFT.RESPITE.WEATHER.tavern_modest.Hint",                comfortPenalty: 0, encounterDC: 0, tentCancels: true,  tentReduces: false },
+    tavern_fine: { labelKey: "IONRIFT.RESPITE.WEATHER.tavern_fine.Label", hintKey: "IONRIFT.RESPITE.WEATHER.tavern_fine.Hint",              comfortPenalty: 0, encounterDC: 0, tentCancels: true,  tentReduces: false },
+    tavern_luxury: { labelKey: "IONRIFT.RESPITE.WEATHER.tavern_luxury.Label", hintKey: "IONRIFT.RESPITE.WEATHER.tavern_luxury.Hint",                   comfortPenalty: 0, encounterDC: 0, tentCancels: true,  tentReduces: false },
     // Underground atmosphere (flavor)
-    dungeon_normal:   { label: "Normal",          hint: "Still air. Unremarkable conditions.",                                   comfortPenalty: 0, encounterDC: 0, tentCancels: true,  tentReduces: false },
-    dungeon_damp:     { label: "Damp",            hint: "Water drips from the ceiling. Everything feels clammy.",                comfortPenalty: 0, encounterDC: 0, tentCancels: true,  tentReduces: false }
+    dungeon_normal: { labelKey: "IONRIFT.RESPITE.WEATHER.dungeon_normal.Label", hintKey: "IONRIFT.RESPITE.WEATHER.dungeon_normal.Hint",                                   comfortPenalty: 0, encounterDC: 0, tentCancels: true,  tentReduces: false },
+    dungeon_damp: { labelKey: "IONRIFT.RESPITE.WEATHER.dungeon_damp.Label", hintKey: "IONRIFT.RESPITE.WEATHER.dungeon_damp.Hint",                comfortPenalty: 0, encounterDC: 0, tentCancels: true,  tentReduces: false }
 };
 
+/** Resolve weather display strings at render time. */
+export function resolveWeather(key) {
+    const w = WEATHER_TABLE[key] ?? WEATHER_TABLE.clear;
+    return {
+        ...w,
+        label: localize(w.labelKey ?? "IONRIFT.RESPITE.WEATHER.clear.Label"),
+        hint: localize(w.hintKey ?? "IONRIFT.RESPITE.WEATHER.clear.Hint")
+    };
+}
+
 /** DnD5e skill abbreviation -> readable name */
-export const SKILL_NAMES = {
-    acr: "Acrobatics", ani: "Animal Handling", arc: "Arcana", ath: "Athletics",
-    dec: "Deception", his: "History", ins: "Insight", itm: "Intimidation",
-    inv: "Investigation", med: "Medicine", nat: "Nature", prc: "Perception",
-    prf: "Performance", per: "Persuasion", rel: "Religion", sle: "Sleight of Hand",
-    ste: "Stealth", sur: "Survival"
+const SKILL_NAME_KEYS = {
+    acr: "IONRIFT.RESPITE.SKILL.acr", ani: "IONRIFT.RESPITE.SKILL.ani", arc: "IONRIFT.RESPITE.SKILL.arc", ath: "IONRIFT.RESPITE.SKILL.ath",
+    dec: "IONRIFT.RESPITE.SKILL.dec", his: "IONRIFT.RESPITE.SKILL.his", ins: "IONRIFT.RESPITE.SKILL.ins", itm: "IONRIFT.RESPITE.SKILL.itm",
+    inv: "IONRIFT.RESPITE.SKILL.inv", med: "IONRIFT.RESPITE.SKILL.med", nat: "IONRIFT.RESPITE.SKILL.nat", prc: "IONRIFT.RESPITE.SKILL.prc",
+    prf: "IONRIFT.RESPITE.SKILL.prf", per: "IONRIFT.RESPITE.SKILL.per", rel: "IONRIFT.RESPITE.SKILL.rel", sle: "IONRIFT.RESPITE.SKILL.sle",
+    ste: "IONRIFT.RESPITE.SKILL.ste", sur: "IONRIFT.RESPITE.SKILL.sur"
 };
+
+/** Localized skill names (resolve at access time). */
+export const SKILL_NAMES = new Proxy(SKILL_NAME_KEYS, {
+    get(target, prop) {
+        if (prop === Symbol.iterator) {
+            return function* () { for (const k of Object.keys(target)) yield [k, localize(target[k])]; };
+        }
+        if (typeof prop !== "string") return Reflect.get(target, prop);
+        if (prop in target) return localize(target[prop]);
+        return undefined;
+    },
+    ownKeys(target) { return Reflect.ownKeys(target); },
+    getOwnPropertyDescriptor(target, prop) {
+        if (prop in target) return { configurable: true, enumerable: true, value: localize(target[prop]) };
+        return undefined;
+    }
+});
 
 export { COMFORT_RANK, RANK_TO_KEY };
 
@@ -83,10 +111,10 @@ export function isWorkbenchExamineUiEnabled() {
  * Do not restate "no check required"; the neutral chip below the detail already says it.
  */
 const ACTIVITY_HINTS_STATIC = {
-    act_tell_tales: "Inspires one ally. All allies on exceptional roll",
-    act_cook: "Prepare a meal from ingredients",
-    act_tailor: "Stitch materials into gear",
-    act_craft: "Work raw materials into items"
+    act_tell_tales: "IONRIFT.RESPITE.ADVISORY.TellTales",
+    act_cook: "IONRIFT.RESPITE.ADVISORY.Cook",
+    act_tailor: "IONRIFT.RESPITE.ADVISORY.Tailor",
+    act_craft: "IONRIFT.RESPITE.ADVISORY.Craft"
 };
 
 /**
@@ -119,10 +147,10 @@ export function getActivityAdvisory(activityId, actor, partyState) {
         case "act_keep_watch": {
             const watchers = partyState.watcherCount ?? 0;
             if (!partyState.hasWatcher)
-                return { text: "No one on watch yet. Take the first shift.", urgent: true };
+                return { text: localize("IONRIFT.RESPITE.ADVISORY.NoWatcher"), urgent: true };
             if (watchers >= 2)
-                return { text: `${watchers} watchers already assigned. Consider another activity`, urgent: false };
-            return { text: "+3 initiative, surprise immune, +1 party initiative on alarm", urgent: false, cardOnly: true };
+                return { text: format("IONRIFT.RESPITE.ADVISORY.WatchersAssigned", { count: watchers }), urgent: false };
+            return { text: localize("IONRIFT.RESPITE.ADVISORY.KeepWatchBenefits"), urgent: false, cardOnly: true };
         }
         case "act_tend_wounds": {
             const injured = partyState.injuredMembers.filter(m => m.id !== actor.id);
@@ -131,23 +159,23 @@ export function getActivityAdvisory(activityId, actor, partyState) {
                 && ((i.system?.uses?.value ?? i.system?.quantity ?? 0) > 0)
             );
             const hasFeat = actor.items?.some(i => i.type === "feat" && i.name?.toLowerCase() === "healer");
-            const gearNote = hasFeat && hasKit ? ", Healer feat + kit"
-                : hasKit ? ", kit gives advantage"
+            const gearNote = hasFeat && hasKit ? localize("IONRIFT.RESPITE.ADVISORY.GearFeatKit")
+                : hasKit ? localize("IONRIFT.RESPITE.ADVISORY.GearKit")
                 : "";
             if (!injured.length)
-                return { text: "No one is injured", urgent: false, nonViable: true };
+                return { text: localize("IONRIFT.RESPITE.ADVISORY.NoOneInjured"), urgent: false, nonViable: true };
             const worst = injured[0];
-            return { text: `${worst.name} at ${worst.hpPct}% HP${gearNote}`, urgent: worst.hpPct < 50 };
+            return { text: format("IONRIFT.RESPITE.ADVISORY.InjuredAtHp", { name: worst.name, hp: worst.hpPct, gear: gearNote }), urgent: worst.hpPct < 50 };
         }
         case "act_defenses": {
             if (partyState.hasDefenses)
-                return { text: "Someone is already setting defenses. Consider another activity", urgent: false };
-            return { text: "Lowers encounter chance by 2, grants +1 party initiative on success", urgent: false, cardOnly: true };
+                return { text: localize("IONRIFT.RESPITE.ADVISORY.DefensesTaken"), urgent: false };
+            return { text: localize("IONRIFT.RESPITE.ADVISORY.DefensesBenefits"), urgent: false, cardOnly: true };
         }
         case "act_scout": {
             if (partyState.hasScout)
-                return { text: "Someone is already scouting. Consider another activity", urgent: false };
-            return { text: "Advantage on initiative and surprise on success", urgent: false, cardOnly: true };
+                return { text: localize("IONRIFT.RESPITE.ADVISORY.ScoutTaken"), urgent: false };
+            return { text: localize("IONRIFT.RESPITE.ADVISORY.ScoutBenefits"), urgent: false, cardOnly: true };
         }
         case "act_rest_fully": {
             const comfortTier = partyState.comfort ?? "sheltered";
@@ -167,59 +195,59 @@ export function getActivityAdvisory(activityId, actor, partyState) {
             // Safe rest spot: Rest Fully's main value is the extra -1 exhaustion
             if (isSafe) {
                 if (exhaustion >= 2)
-                    return { text: `${exhaustion} exhaustion. Rest Fully reduces an extra level beyond the long rest base`, urgent: true };
+                    return { text: format("IONRIFT.RESPITE.ADVISORY.SafeExhaustionMulti", { count: exhaustion }), urgent: true };
                 if (exhaustion === 1)
-                    return { text: "1 exhaustion. Rest Fully clears it entirely (base -1 + bonus -1)", urgent: false };
+                    return { text: localize("IONRIFT.RESPITE.ADVISORY.SafeExhaustionOne"), urgent: false };
                 if (hdDeficit >= 1 && effectiveGain > 0)
-                    return { text: `Missing ${hdDeficit} HD. Rest Fully recovers +${effectiveGain} extra HD`, urgent: false };
-                return { text: "Full recovery guaranteed. No additional benefit", urgent: false, nonViable: true };
+                    return { text: format("IONRIFT.RESPITE.ADVISORY.MissingHdExtra", { deficit: hdDeficit, gain: effectiveGain }), urgent: false };
+                return { text: localize("IONRIFT.RESPITE.ADVISORY.FullRecoveryNoBenefit"), urgent: false, nonViable: true };
             }
             if (isHostile) {
                 if (hdDeficit >= 1)
-                    return { text: `Hostile camp. Rest Fully recovers ${effectiveGain || 1} extra HD, removes HP cap`, urgent: true };
+                    return { text: format("IONRIFT.RESPITE.ADVISORY.HostileExtraHd", { gain: effectiveGain || 1 }), urgent: true };
                 if (hpPct < 100)
-                    return { text: "Hostile camp. Rest Fully restores full HP recovery", urgent: true };
-                return { text: "All HD and HP full. No recovery benefit", urgent: false, nonViable: true };
+                    return { text: localize("IONRIFT.RESPITE.ADVISORY.HostileFullHp"), urgent: true };
+                return { text: localize("IONRIFT.RESPITE.ADVISORY.AllFullNoBenefit"), urgent: false, nonViable: true };
             }
             if (isRough) {
                 if (effectiveGain > 0) {
-                    const exNote = exhaustion >= 1 ? ", clears exhaustion DC" : "";
-                    return { text: `Rough camp. Rest Fully recovers ${effectiveGain} extra HD${exNote}`, urgent: true };
+                    const exNote = exhaustion >= 1 ? localize("IONRIFT.RESPITE.ADVISORY.ExNoteClearsDc") : "";
+                    return { text: format("IONRIFT.RESPITE.ADVISORY.RoughExtraHd", { gain: effectiveGain, exNote }), urgent: true };
                 }
                 if (exhaustion >= 1)
-                    return { text: `Rough camp + ${exhaustion} exhaustion. Rest Fully clears exhaustion DC`, urgent: true };
+                    return { text: format("IONRIFT.RESPITE.ADVISORY.RoughClearsDc", { count: exhaustion }), urgent: true };
                 if (hdDeficit >= 1)
-                    return { text: "Recovery at this comfort covers all missing HD", urgent: false, nonViable: true };
-                return { text: "No recovery benefit at this comfort", urgent: false, nonViable: true };
+                    return { text: localize("IONRIFT.RESPITE.ADVISORY.RecoveryCoversHd"), urgent: false, nonViable: true };
+                return { text: localize("IONRIFT.RESPITE.ADVISORY.NoRecoveryBenefit"), urgent: false, nonViable: true };
             }
             if (effectiveGain > 0)
-                return { text: `Missing ${hdDeficit} HD. Rest Fully recovers +${effectiveGain} extra HD`, urgent: false };
+                return { text: format("IONRIFT.RESPITE.ADVISORY.MissingHdExtra", { deficit: hdDeficit, gain: effectiveGain }), urgent: false };
             if (hdDeficit >= 1)
-                return { text: "Recovery at this comfort covers all missing HD", urgent: false, nonViable: true };
-            return { text: "All HD and HP full. No recovery benefit", urgent: false, nonViable: true };
+                return { text: localize("IONRIFT.RESPITE.ADVISORY.RecoveryCoversHd"), urgent: false, nonViable: true };
+            return { text: localize("IONRIFT.RESPITE.ADVISORY.AllFullNoBenefit"), urgent: false, nonViable: true };
         }
         case "act_pray": {
             if (!isPrayMeditateEnabled())
-                return { text: "Pray / Meditate is off for this world", urgent: false, nonViable: true };
+                return { text: localize("IONRIFT.RESPITE.ADVISORY.PrayOff"), urgent: false, nonViable: true };
             const prof = actor.system?.attributes?.prof ?? 2;
-            return { text: `+${prof} temp HP on success`, urgent: false };
+            return { text: format("IONRIFT.RESPITE.ADVISORY.PrayTempHp", { prof }), urgent: false };
         }
         case "act_fletch": {
             if (!isFletchingEnabled())
-                return { text: "Fletching is off for this world", urgent: false, nonViable: true };
+                return { text: localize("IONRIFT.RESPITE.ADVISORY.FletchOff"), urgent: false, nonViable: true };
             const ammo = _countAmmo(actor);
             const prof = actor.system?.attributes?.prof ?? 2;
             const yieldHint = getFletchingYieldHint(undefined, prof);
             if (ammo !== null && ammo < 10)
-                return { text: `Low ammo: ${ammo} remaining. ${yieldHint}`, urgent: true };
-            return { text: `Craft arrows or bolts. ${yieldHint}`, urgent: false };
+                return { text: format("IONRIFT.RESPITE.ADVISORY.LowAmmo", { ammo, yieldHint }), urgent: true };
+            return { text: format("IONRIFT.RESPITE.ADVISORY.CraftAmmo", { yieldHint }), urgent: false };
         }
         case "act_train": {
             if (!isTrainingEnabled())
-                return { text: "Training is off for this world", urgent: false, nonViable: true };
+                return { text: localize("IONRIFT.RESPITE.ADVISORY.TrainOff"), urgent: false, nonViable: true };
             const level = actor.system?.details?.level ?? 1;
             if (level > 5)
-                return { text: "Training has no effect above level 5", urgent: false, nonViable: true };
+                return { text: localize("IONRIFT.RESPITE.ADVISORY.TrainAbove5"), urgent: false, nonViable: true };
             const xpValues = getTrainingXpValues();
             const passXp = xpValues?.passXp ?? 10;
             const failXp = xpValues?.failXp ?? 3;
@@ -232,19 +260,19 @@ export function getActivityAdvisory(activityId, actor, partyState) {
             const effectiveXP = Math.max(baseXP - reduction, 0);
             const effectiveFailTotal = Math.max(effectiveFailXP - reduction, 0);
             if (effectiveXP <= 0)
-                return { text: "Diminishing returns: no XP gain this rest. Try something else", urgent: false, nonViable: true };
+                return { text: localize("IONRIFT.RESPITE.ADVISORY.TrainNoXp"), urgent: false, nonViable: true };
             if (gap !== null && gap > 0 && gap <= effectiveXP)
-                return { text: `${gap} XP to level up. Training can close that gap this rest`, urgent: true };
+                return { text: format("IONRIFT.RESPITE.ADVISORY.TrainLevelGap", { gap }), urgent: true };
             if (streak >= 1)
-                return { text: `Training streak (${streak}): three sets, up to ${effectiveXP} XP, as low as ${effectiveFailTotal}`, urgent: false };
+                return { text: format("IONRIFT.RESPITE.ADVISORY.TrainStreak", { streak, xp: effectiveXP, failXp: effectiveFailTotal }), urgent: false };
             if (gap !== null && gap > 0)
-                return { text: `${gap} XP to next level. Three sets, up to ${effectiveXP} XP, as low as ${effectiveFailTotal}`, urgent: false };
-            return { text: `Three sets, up to ${effectiveXP} XP, as low as ${effectiveFailTotal}`, urgent: false };
+                return { text: format("IONRIFT.RESPITE.ADVISORY.TrainGapSets", { gap, xp: effectiveXP, failXp: effectiveFailTotal }), urgent: false };
+            return { text: format("IONRIFT.RESPITE.ADVISORY.TrainSets", { xp: effectiveXP, failXp: effectiveFailTotal }), urgent: false };
         }
         case "act_scribe":
-            return { text: "50gp per spell level. Scroll consumed regardless of success", urgent: false };
+            return { text: localize("IONRIFT.RESPITE.ADVISORY.ScribeCost"), urgent: false };
         default:
-            return { text: ACTIVITY_HINTS_STATIC[activityId] ?? null, urgent: false };
+            return { text: ACTIVITY_HINTS_STATIC[activityId] ? localize(ACTIVITY_HINTS_STATIC[activityId]) : null, urgent: false };
     }
 }
 
@@ -305,55 +333,55 @@ function _countAmmo(actor) {
 export const CAMP_STATIONS = [
     {
         id: "workbench",
-        label: "Workbench",
+        labelKey: "IONRIFT.RESPITE.STATION.workbench.Label",
         icon: "fas fa-tools",
         furnitureKey: "table",
-        tagline: "Identify & scribe",
+        taglineKey: "IONRIFT.RESPITE.STATION.workbench.Tagline",
         activities: ["act_identify", "act_scribe"]
     },
     {
         id: "weapon_rack",
-        label: "Weapon Rack",
+        labelKey: "IONRIFT.RESPITE.STATION.weapon_rack.Label",
         icon: "fas fa-shield-alt",
         furnitureKey: "weaponRack",
-        tagline: "Fletch, defences, watch, other",
+        taglineKey: "IONRIFT.RESPITE.STATION.weapon_rack.Tagline",
         activities: ["act_fletch", "act_defenses", "act_keep_watch", "act_other"],
         terrainHide: ["tavern"]
     },
     {
         id: "medical_bed",
-        label: "Medical Bed",
+        labelKey: "IONRIFT.RESPITE.STATION.medical_bed.Label",
         icon: "fas fa-hand-holding-medical",
         furnitureKey: "medicalBed",
-        tagline: "Tend wounds, rest fully",
+        taglineKey: "IONRIFT.RESPITE.STATION.medical_bed.Tagline",
         activities: ["act_tend_wounds", "act_rest_fully"]
     },
     {
         id: "bedroll",
-        label: "Your Bedroll",
+        labelKey: "IONRIFT.RESPITE.STATION.bedroll.Label",
         icon: "fas fa-bed",
         furnitureKey: null,
-        tagline: "Rest, pray, train, tales, craft, other",
+        taglineKey: "IONRIFT.RESPITE.STATION.bedroll.Tagline",
         activities: ["act_rest_fully", "act_pray", "act_train", "act_tell_tales", "act_craft", "act_other"],
-        terrainLabel: { tavern: "Your Room" }
+        terrainLabelKey: { tavern: "IONRIFT.RESPITE.STATION.bedroll.TavernLabel" }
     },
     {
         id: "campfire",
-        label: "Campfire",
+        labelKey: "IONRIFT.RESPITE.STATION.campfire.Label",
         icon: "fas fa-fire",
         furnitureKey: "campfire",
-        tagline: "Fire state, comfort, personal camp",
+        taglineKey: "IONRIFT.RESPITE.STATION.campfire.Tagline",
         activities: [],
         terrainHide: ["tavern"]
     },
     {
         id: "cooking_station",
-        label: "Cooking Station",
+        labelKey: "IONRIFT.RESPITE.STATION.cooking_station.Label",
         icon: "fas fa-utensils",
         furnitureKey: "cookingArea",
-        tagline: "Cook, brew",
+        taglineKey: "IONRIFT.RESPITE.STATION.cooking_station.Tagline",
         activities: ["act_cook", "act_brew"],
-        terrainLabel: { tavern: "Hearth & Table" }
+        terrainLabelKey: { tavern: "IONRIFT.RESPITE.STATION.cooking_station.TavernLabel" }
     }
 ];
 
@@ -393,15 +421,15 @@ export function getStationsForTerrain(terrainTag, safeRestSpot = false, options 
         if (hidden.has(station.id)) continue;
         if (isTavern && station.id === "cooking_station") continue;
         if ((safeRestSpot || isTavern) && station.id === "medical_bed") continue;
-        let label = station.terrainLabel?.[terrainTag] ?? station.label;
+        let label = localize(station.terrainLabelKey?.[terrainTag] ?? station.labelKey ?? station.label ?? "");
         let activities = [...(station.activities ?? [])];
-        let tagline = station.tagline;
+        let tagline = localize(station.taglineKey ?? station.tagline ?? "");
         if (isTavern && station.id === "bedroll") {
             activities = activities.filter(id => id !== "act_rest_fully");
         }
         if (safeRestSpot && station.id === "weapon_rack") {
-            label = "Supply Table";
-            tagline = "Fletch, other";
+            label = localize("IONRIFT.RESPITE.STATION.weapon_rack.SupplyTable");
+            tagline = localize("IONRIFT.RESPITE.STATION.weapon_rack.SupplyTagline");
             activities = ["act_fletch", "act_other"];
         }
         const extra = station.id === "bedroll" ? orphanedActivities : [];
@@ -419,16 +447,16 @@ export function getStationsForTerrain(terrainTag, safeRestSpot = false, options 
             if (s.id === "bedroll") {
                 return {
                     ...s,
-                    label: "Bedrolls",
+                    label: localize("IONRIFT.RESPITE.STATION.bedroll.SimpleLabel"),
                     furnitureKey: "sharedBedroll",
-                    tagline: "Rest by the fire",
+                    tagline: localize("IONRIFT.RESPITE.STATION.bedroll.SimpleTagline"),
                     activities: ["act_other"]
                 };
             }
             if (s.id === "workbench") {
                 return {
                     ...s,
-                    tagline: "Workbench",
+                    tagline: localize("IONRIFT.RESPITE.STATION.workbench.TaglineSimple"),
                     activities: (s.activities ?? []).filter(id => id !== "act_scribe")
                 };
             }
@@ -503,34 +531,37 @@ export function applyActivityPortraitAssignments(item, assigned) {
 
 /** Shelter spell definitions. Used in setup phase for shelter detection. */
 export const SHELTER_SPELLS = [
-    { id: "tiny_hut", name: "Tiny Hut", altNames: ["leomund's tiny hut", "tiny hut", "cozy cabin"], icon: "fas fa-igloo", comfortFloor: "sheltered", encounterMod: 5, restTypes: ["long"], blocksFire: true,
-        hint: "Impenetrable force dome. Comfort floor: Sheltered. Encounter DC +5. No campfire, cooking, or brewing (sealed dome)." },
-    { id: "rope_trick", name: "Rope Trick", altNames: ["rope trick"], icon: "fas fa-hat-wizard", comfortFloor: null, encounterMod: 5, restTypes: ["short"], blocksFire: true,
-        hint: "Hidden extradimensional space. Short rest only (1 hr). Encounter DC +5. No campfire (no ventilation)." },
-    { id: "magnificent_mansion", name: "Mansion", altNames: ["magnificent mansion", "mordenkainen's magnificent mansion", "mordenkainen", "resplendent mansion"], icon: "fas fa-chess-rook", comfortFloor: "safe", encounterMod: 99, restTypes: ["long"], blocksFire: true,
-        hint: "Separate dimension. No encounters. Safe rest guaranteed. Has its own hearth and kitchen." }
+    { id: "tiny_hut", nameKey: "IONRIFT.RESPITE.SHELTER.tiny_hut.Name", altNames: ["leomund's tiny hut", "tiny hut", "cozy cabin"], icon: "fas fa-igloo", comfortFloor: "sheltered", encounterMod: 5, restTypes: ["long"], blocksFire: true,
+        hintKey: "IONRIFT.RESPITE.SHELTER.tiny_hut.Hint" },
+    { id: "rope_trick", nameKey: "IONRIFT.RESPITE.SHELTER.rope_trick.Name", altNames: ["rope trick"], icon: "fas fa-hat-wizard", comfortFloor: null, encounterMod: 5, restTypes: ["short"], blocksFire: true,
+        hintKey: "IONRIFT.RESPITE.SHELTER.rope_trick.Hint" },
+    { id: "magnificent_mansion", nameKey: "IONRIFT.RESPITE.SHELTER.magnificent_mansion.Name", altNames: ["magnificent mansion", "mordenkainen's magnificent mansion", "mordenkainen", "resplendent mansion"], icon: "fas fa-chess-rook", comfortFloor: "safe", encounterMod: 99, restTypes: ["long"], blocksFire: true,
+        hintKey: "IONRIFT.RESPITE.SHELTER.magnificent_mansion.Hint" }
 ];
+
+/** Localized shelter spell fields for UI. */
+export function resolveShelterSpell(spell) {
+    if (!spell) return spell;
+    const name = localize(spell.nameKey ?? spell.name ?? "");
+    return { ...spell, name, hint: localize(spell.hintKey ?? spell.hint ?? ""), label: name };
+}
 
 /** Comfort tier tooltips for the camp status bar */
 export function getComfortTip(tier) {
-    if (!isComfortEnabled()) return "Comfort rules disabled, full recovery";
-    const tips = {
-        hostile: "Hostile: regain 75% max HP, -2 HD, CON DC 15 or +1 exhaustion",
-        rough: "Rough: full HP, -1 HD, CON DC 10 or +1 exhaustion",
-        sheltered: "Sheltered: full HP, full HD recovery",
-        safe: "Safe: full HP, full HD recovery, no encounter risk"
-    };
-    return tips[tier] ?? tips.sheltered;
+    if (!isComfortEnabled()) return localize("IONRIFT.RESPITE.COMFORT.Disabled");
+    const key = `IONRIFT.RESPITE.COMFORT.${tier}`;
+    const localized = localize(key);
+    return localized !== key ? localized : localize("IONRIFT.RESPITE.COMFORT.sheltered");
 }
 
 /** Identify tab: Detect Magic toolbar label. */
-export const DETECT_MAGIC_BTN_LABEL_PLAYER = "Detect Magic";
-export const DETECT_MAGIC_BTN_LABEL_GM = "Detect Magic";
+export const DETECT_MAGIC_BTN_LABEL_PLAYER = "IONRIFT.RESPITE.DETECT.Label";
+export const DETECT_MAGIC_BTN_LABEL_GM = "IONRIFT.RESPITE.DETECT.Label";
 /** Shown when a scan is already active; clicking again dismisses it. */
-export const DETECT_MAGIC_BTN_LABEL_DISMISS = "Dismiss";
-export const DETECT_MAGIC_BTN_TITLE_GM = "Cast Detect Magic for the party. Use when you are granting the spell at the table; skip if a player should trigger it from their own character.";
-export const DETECT_MAGIC_BTN_TITLE_PLAYER = "Cast Detect Magic";
-export const DETECT_MAGIC_BTN_TITLE_NONE = "No Detect Magic available in the party";
+export const DETECT_MAGIC_BTN_LABEL_DISMISS = "IONRIFT.RESPITE.DETECT.Dismiss";
+export const DETECT_MAGIC_BTN_TITLE_GM = "IONRIFT.RESPITE.DETECT.TitleGm";
+export const DETECT_MAGIC_BTN_TITLE_PLAYER = "IONRIFT.RESPITE.DETECT.TitlePlayer";
+export const DETECT_MAGIC_BTN_TITLE_NONE = "IONRIFT.RESPITE.DETECT.TitleNone";
 
 /**
  * Build per-activity portrait assignment map.
@@ -656,7 +687,9 @@ export function buildFollowUpDataForActivity(activityId, activity, actor, curren
         if (attunement) {
             const current = attunement.value ?? 0;
             const max = attunement.max ?? 3;
-            result.slotInfo = `${current}/${max}${current >= max ? " (at capacity)" : ""}`;
+            result.slotInfo = current >= max
+                ? format("IONRIFT.RESPITE.FOLLOWUP.AtCapacity", { current, max })
+                : format("IONRIFT.RESPITE.FOLLOWUP.Slots", { current, max });
         }
     }
 

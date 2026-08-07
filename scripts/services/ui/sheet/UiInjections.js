@@ -1,4 +1,5 @@
 import { SpoilageClock } from "../../meal/spoilage/SpoilageClock.js";
+import { localize, format } from "../../../utils/I18n.js";
 import { DietConfigApp } from "../../../apps/meal/DietConfigApp.js";
 import { injectPlayerLockdownClasses } from "./PlayerLockdownService.js";
 import {
@@ -36,8 +37,8 @@ export function injectDietButton(app, html) {
     if (!btn) {
         btn = document.createElement("button");
         btn.type = "button";
-        btn.dataset.tooltip = "Diet Configuration";
-        btn.setAttribute("aria-label", "Diet Configuration");
+        btn.dataset.tooltip = localize("IONRIFT.RESPITE.SHEET.DietConfigTooltip");
+        btn.setAttribute("aria-label", localize("IONRIFT.RESPITE.SHEET.DietConfigTooltip"));
         btn.innerHTML = `<i class="fas fa-utensils"></i>`;
         btn.addEventListener("click", (e) => {
             e.preventDefault();

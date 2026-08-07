@@ -32,7 +32,7 @@
 </style>
 
 <div class="training-body">
-    <p class="training-intro">Run three drills. Each set is a separate {{abilityLabel}} check against DC {{dc}}. Every set you land banks XP; the ones you miss still count for a little.</p>
+    <p class="training-intro">{{localize 'IONRIFT.RESPITE.TRAINING.Intro' ability=abilityLabel dc=dc}}</p>
 
     <div class="training-bar">
         {{#each segments}}
@@ -42,7 +42,7 @@
 
     <div class="training-rolls">
         {{#each rolls}}
-        <span class="roll {{#if this.passed}}pass{{else}}fail{{/if}}">Set {{this.set}}: rolled <strong>{{this.total}}</strong>{{#unless this.passed}} (miss){{/unless}}</span>
+        <span class="roll {{#if this.passed}}pass{{else}}fail{{/if}}">{{localize 'IONRIFT.RESPITE.TRAINING.SetRolled' set=this.set total=this.total}}{{#unless this.passed}} {{localize 'IONRIFT.RESPITE.TRAINING.Miss'}}{{/unless}}</span>
         {{/each}}
     </div>
 
@@ -52,16 +52,16 @@
     </button>
     {{else}}
     <div class="training-summary">
-        <p>{{successes}} of {{numRolls}} sets landed.</p>
-        {{#if reduction}}<p class="reduction">Diminishing returns held back {{reduction}} XP this rest.</p>{{/if}}
+        <p>{{localize 'IONRIFT.RESPITE.TRAINING.SetsLanded' successes=successes numRolls=numRolls}}</p>
+        {{#if reduction}}<p class="reduction">{{localize 'IONRIFT.RESPITE.TRAINING.Diminishing' reduction=reduction}}</p>{{/if}}
         {{#if noXp}}
-        <p class="award no-xp">No XP this rest</p>
+        <p class="award no-xp">{{localize 'IONRIFT.RESPITE.TRAINING.NoXp'}}</p>
         {{else}}
-        <p class="award">+{{awardedXP}} XP</p>
+        <p class="award">{{localize 'IONRIFT.RESPITE.TRAINING.AwardXp' xp=awardedXP}}</p>
         {{/if}}
     </div>
     <button type="button" data-action="confirmTraining">
-        <i class="fas fa-check"></i> Confirm and bank XP
+        <i class="fas fa-check"></i> {{localize 'IONRIFT.RESPITE.TRAINING.ConfirmBank'}}
     </button>
     {{/unless}}
 </div>

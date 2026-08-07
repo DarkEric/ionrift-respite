@@ -1,4 +1,5 @@
 import { Logger } from "../../../utils/Logger.js";
+import { localize, format } from "../../../utils/I18n.js";
 import { MODULE_ID } from "../../../data/moduleId.js";
 import {
     notifyWorkbenchIdentifyStagingTouched
@@ -112,10 +113,10 @@ export class WorkbenchDelegate {
             canShowDetectMagicScanButton: computeCanShowDetectMagicScanButton(party),
             canTriggerDetectMagicScan: computeCanTriggerDetectMagicScan(party),
             detectMagicScanButtonLabel: scanComplete
-                ? DETECT_MAGIC_BTN_LABEL_DISMISS
-                : (isGmUser ? DETECT_MAGIC_BTN_LABEL_GM : DETECT_MAGIC_BTN_LABEL_PLAYER),
+                ? localize(DETECT_MAGIC_BTN_LABEL_DISMISS)
+                : (isGmUser ? localize(DETECT_MAGIC_BTN_LABEL_GM) : localize(DETECT_MAGIC_BTN_LABEL_PLAYER)),
             detectMagicScanButtonTitle: isGmUser
-                ? DETECT_MAGIC_BTN_TITLE_GM
+                ? localize(DETECT_MAGIC_BTN_TITLE_GM)
                 : (getDetectMagicPlayerAccessReason(party) ?? ""),
             magicScanResults: app._magicScanResults ?? [],
             magicScanComplete: scanComplete,
@@ -201,13 +202,13 @@ export class WorkbenchDelegate {
         const actor = game.actors.get(actorId);
         if (!actor) return;
         if (!actor.isOwner && !game.user.isGM) {
-            ui.notifications.warn("You can only submit identify choices for characters you control.");
+            ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.SubmitIdentifyOwnOnly"));
             return;
         }
         if (this.submitPending.has(actorId)) return;
         const st = this.getStaging(actorId);
         if (!st.gearItemId && !st.potionItemId) {
-            ui.notifications.warn("Drag at least one item onto the circles, then submit.");
+            ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.DragItemsOntoCircles"));
             return;
         }
         this.submitPending.add(actorId);
@@ -250,7 +251,7 @@ export class WorkbenchDelegate {
             }
             if (!revealed.length) {
                 if (!game.user.isGM) {
-                    ui.notifications.error("Identify failed. Try again or ask the GM.");
+                    ui.notifications.error(localize("IONRIFT.RESPITE.NOTIFY.IdentifyFailedRetry"));
                 }
                 return;
             }
@@ -317,7 +318,7 @@ export class WorkbenchDelegate {
                     identified = true;
                 } catch (err) {
                     console.error(`[Respite] Failed to identify item:`, err);
-                    if (!deferNotify) ui.notifications.error("Failed to identify item.");
+                    if (!deferNotify) ui.notifications.error(localize("IONRIFT.RESPITE.NOTIFY.FailedToIdentify"));
                     return false;
                 }
             }
@@ -363,19 +364,19 @@ export class WorkbenchDelegate {
                     identified = true;
                 } catch (err) {
                     console.error(`[Respite] Failed to identify item:`, err);
-                    if (!deferNotify) ui.notifications.error("Failed to identify item.");
+                    if (!deferNotify) ui.notifications.error(localize("IONRIFT.RESPITE.NOTIFY.FailedToIdentify"));
                     return false;
                 }
             }
         }
 
         if (!identified) {
-            if (!deferNotify) ui.notifications.error("Failed to identify item.");
+            if (!deferNotify) ui.notifications.error(localize("IONRIFT.RESPITE.NOTIFY.FailedToIdentify"));
             return false;
         }
 
         const trueName = resolveTrueName(actor, itemId, item.name);
-        if (!deferNotify) ui.notifications.info(`${trueName} identified by ${actor.name}.`);
+        if (!deferNotify) ui.notifications.info(format("IONRIFT.RESPITE.NOTIFY.IdentifiedBy", { item: trueName, name: actor.name }));
         if (!deferRender) this._app.render();
         return true;
     }
@@ -433,7 +434,7 @@ export class WorkbenchDelegate {
 
         const assignGear = (itemId, itemActorId) => {
             if (this.focusUsed.has(actorId)) {
-                ui.notifications.info("Focus identify already used this rest for this character.");
+                ui.notifications.info(localize("IONRIFT.RESPITE.NOTIFY.FocusIdentifyUsed"));
                 return;
             }
             const v = validateDrop(itemId, "gear", itemActorId);
@@ -490,21 +491,21 @@ export class WorkbenchDelegate {
                     if (dragSlot === "potion" && zoneType === "potion") setPotion(itemId);
                     else if (dragSlot === "gear" && zoneType === "gear") assignGear(itemId);
                     else if (dragSlot === "potion" && zoneType === "gear") {
-                        ui.notifications.warn("Drop potions onto the potion circle.");
+                        ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.DropPotionsCircle"));
                     } else if (dragSlot === "gear" && zoneType === "potion") {
-                        ui.notifications.warn("Drop that item onto the focus circle.");
+                        ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.DropFocusCircle"));
                     }
                     return;
                 }
                 const item = await resolveItemFromDropEvent(e);
                 Logger.log(`[Respite:Workbench] resolveItemFromDropEvent =>`, { found: !!item, itemName: item?.name, parentId: item?.parent?.id, expectedActorId: actorId });
                 if (!item) {
-                    ui.notifications.warn("Could not read that drop. Drag from this character's inventory on the sheet.");
+                    ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.CouldNotReadDrop"));
                     return;
                 }
                 if (item.parent?.id !== actorId) {
                     console.warn(`[Respite:Workbench] item parent mismatch: item.parent.id=${item.parent?.id}, expected=${actorId}`);
-                    ui.notifications.warn("Drop an item that belongs to this character's sheet.");
+                    ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.DropOwnItem"));
                     return;
                 }
                 if (zoneType === "gear") assignGear(item.id);

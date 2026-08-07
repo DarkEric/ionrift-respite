@@ -87,6 +87,11 @@
                           "lang":  "en",
                           "name":  "English",
                           "path":  "lang/en.json"
+                      },
+                      {
+                          "lang":  "ru",
+                          "name":  "Russian",
+                          "path":  "lang/ru.json"
                       }
                   ],
     "styles":  [
@@ -113,7 +118,19 @@
                                                                      "minimum":  "2.5.13"
                                                                  }
                                            }
-                                       ]
+                                       ],
+                          "recommends":  [
+                                             {
+                                                 "id":  "babele",
+                                                 "type":  "module",
+                                                 "reason":  "Runtime translation of Respite compendium packs."
+                                             },
+                                             {
+                                                 "id":  "lib-wrapper",
+                                                 "type":  "module",
+                                                 "reason":  "Required by Babele."
+                                             }
+                                         ]
                       },
     "authors":  [
                     {

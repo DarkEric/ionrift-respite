@@ -4,6 +4,7 @@
  */
 
 import { Logger } from "../../../utils/Logger.js";
+import { localize, format } from "../../../utils/I18n.js";
 import {
     scaleWeightsToTarget,
     sortForageEntries,
@@ -228,7 +229,7 @@ export class CampFuelTableSync {
         const result = await CampFuelTableSync._syncTable(table, entries);
 
         if (notify && result.entryCount > 0) {
-            ui.notifications.info("Respite: Synced camp fuel roll table.");
+            ui.notifications.info(localize("IONRIFT.RESPITE.NOTIFY.SyncedCampFuel"));
         }
         if (result.entryCount === 0) {
             console.warn(`${MODULE_ID} | Camp fuel table sync produced no rows.`);
@@ -373,7 +374,7 @@ export class CampFuelTableSync {
     static async openSheet() {
         const table = CampFuelTableSync.getTable();
         if (!table) {
-            ui.notifications.warn("Respite: Camp fuel table is not ready yet.");
+            ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.CampFuelNotReady"));
             return false;
         }
         await table.sheet.render({ force: true });

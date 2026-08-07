@@ -30,7 +30,9 @@
             "description": "+3 initiative, cannot be surprised. Party gains +1 initiative (alarm)."
         },
         "armorSleepWaiver": true,
-        "category": "camp"
+        "category": "camp",
+        "nameKey": "IONRIFT.RESPITE.DATA.ACTIVITY.act_keep_watch.Name",
+        "descriptionKey": "IONRIFT.RESPITE.DATA.ACTIVITY.act_keep_watch.Description"
     },
     {
         "id": "act_rest_fully",
@@ -65,7 +67,9 @@
             "surpriseDisadvantage": true,
             "description": "Disadvantage on initiative and surprise saves. Deep sleep."
         },
-        "category": "active"
+        "category": "active",
+        "nameKey": "IONRIFT.RESPITE.DATA.ACTIVITY.act_rest_fully.Name",
+        "descriptionKey": "IONRIFT.RESPITE.DATA.ACTIVITY.act_rest_fully.Description"
     },
     {
         "id": "act_cook",
@@ -100,7 +104,9 @@
         "combatModifiers": {
             "description": "Normal readiness. Near the fire, reasonably alert."
         },
-        "category": "profession"
+        "category": "profession",
+        "nameKey": "IONRIFT.RESPITE.DATA.ACTIVITY.act_cook.Name",
+        "descriptionKey": "IONRIFT.RESPITE.DATA.ACTIVITY.act_cook.Description"
     },
     {
         "id": "act_brew",
@@ -138,7 +144,9 @@
         "combatModifiers": {
             "description": "Normal readiness. Near the fire, reasonably alert."
         },
-        "category": "profession"
+        "category": "profession",
+        "nameKey": "IONRIFT.RESPITE.DATA.ACTIVITY.act_brew.Name",
+        "descriptionKey": "IONRIFT.RESPITE.DATA.ACTIVITY.act_brew.Description"
     },
     {
         "id": "act_craft",
@@ -189,7 +197,9 @@
                 "effects": []
             }
         },
-        "category": "profession"
+        "category": "profession",
+        "nameKey": "IONRIFT.RESPITE.DATA.ACTIVITY.act_craft.Name",
+        "descriptionKey": "IONRIFT.RESPITE.DATA.ACTIVITY.act_craft.Description"
     },
     {
         "id": "act_tailor",
@@ -227,7 +237,9 @@
         "combatModifiers": {
             "description": "Normal readiness. Hands busy but aware."
         },
-        "category": "profession"
+        "category": "profession",
+        "nameKey": "IONRIFT.RESPITE.DATA.ACTIVITY.act_tailor.Name",
+        "descriptionKey": "IONRIFT.RESPITE.DATA.ACTIVITY.act_tailor.Description"
     },
     {
         "id": "act_tend_wounds",
@@ -284,7 +296,9 @@
         "combatModifiers": {
             "description": "Normal readiness. Awake and attentive."
         },
-        "category": "recovery"
+        "category": "recovery",
+        "nameKey": "IONRIFT.RESPITE.DATA.ACTIVITY.act_tend_wounds.Name",
+        "descriptionKey": "IONRIFT.RESPITE.DATA.ACTIVITY.act_tend_wounds.Description"
     },
     {
         "id": "act_scout",
@@ -342,7 +356,9 @@
             "description": "Advantage on initiative and surprise saves. Outside camp, aware of approaches."
         },
         "armorSleepWaiver": true,
-        "category": "camp"
+        "category": "camp",
+        "nameKey": "IONRIFT.RESPITE.DATA.ACTIVITY.act_scout.Name",
+        "descriptionKey": "IONRIFT.RESPITE.DATA.ACTIVITY.act_scout.Description"
     },
     {
         "id": "act_tell_tales",
@@ -395,7 +411,9 @@
         "combatModifiers": {
             "description": "Normal readiness. Around the fire, socially alert."
         },
-        "category": "active"
+        "category": "active",
+        "nameKey": "IONRIFT.RESPITE.DATA.ACTIVITY.act_tell_tales.Name",
+        "descriptionKey": "IONRIFT.RESPITE.DATA.ACTIVITY.act_tell_tales.Description"
     },
     {
         "id": "act_pray",
@@ -442,7 +460,9 @@
             "initiativeDisadvantage": true,
             "description": "Disadvantage on initiative. Deep focus, slow to break."
         },
-        "category": "active"
+        "category": "active",
+        "nameKey": "IONRIFT.RESPITE.DATA.ACTIVITY.act_pray.Name",
+        "descriptionKey": "IONRIFT.RESPITE.DATA.ACTIVITY.act_pray.Description"
     },
     {
         "id": "act_fletch",
@@ -473,10 +493,28 @@
                             "arrows": "Arrow",
                             "bolts": "Crossbow Bolt"
                         },
-                            "itemDataMap": {
-                                "arrows": { "name": "Arrow", "type": "consumable", "img": "icons/weapons/ammunition/arrow-head-war-flight.webp", "system": { "type": { "value": "ammo" } } },
-                                "bolts": { "name": "Crossbow Bolt", "type": "consumable", "img": "icons/weapons/ammunition/bolt-tip-engraved.webp", "system": { "type": { "value": "ammo" } } }
+                        "itemDataMap": {
+                            "arrows": {
+                                "name": "Arrow",
+                                "type": "consumable",
+                                "img": "icons/weapons/ammunition/arrow-head-war-flight.webp",
+                                "system": {
+                                    "type": {
+                                        "value": "ammo"
+                                    }
+                                }
                             },
+                            "bolts": {
+                                "name": "Crossbow Bolt",
+                                "type": "consumable",
+                                "img": "icons/weapons/ammunition/bolt-tip-engraved.webp",
+                                "system": {
+                                    "type": {
+                                        "value": "ammo"
+                                    }
+                                }
+                            }
+                        },
                         "quantity": "2d4+prof"
                     }
                 ],
@@ -492,15 +530,23 @@
             "type": "radio",
             "label": "What are you making?",
             "options": [
-                { "value": "arrows", "label": "Arrows" },
-                { "value": "bolts", "label": "Crossbow Bolts" }
+                {
+                    "value": "arrows",
+                    "label": "Arrows"
+                },
+                {
+                    "value": "bolts",
+                    "label": "Crossbow Bolts"
+                }
             ],
             "default": "arrows"
         },
         "combatModifiers": {
             "description": "Normal readiness. Hands busy but aware."
         },
-        "category": "active"
+        "category": "active",
+        "nameKey": "IONRIFT.RESPITE.DATA.ACTIVITY.act_fletch.Name",
+        "descriptionKey": "IONRIFT.RESPITE.DATA.ACTIVITY.act_fletch.Description"
     },
     {
         "id": "act_defenses",
@@ -547,7 +593,9 @@
             "description": "On success: party gains +1 initiative (tripwire warning)."
         },
         "armorSleepWaiver": true,
-        "category": "camp"
+        "category": "camp",
+        "nameKey": "IONRIFT.RESPITE.DATA.ACTIVITY.act_defenses.Name",
+        "descriptionKey": "IONRIFT.RESPITE.DATA.ACTIVITY.act_defenses.Description"
     },
     {
         "id": "act_identify",
@@ -579,7 +627,9 @@
             }
         },
         "combatModifiers": null,
-        "category": "minor"
+        "category": "minor",
+        "nameKey": "IONRIFT.RESPITE.DATA.ACTIVITY.act_identify.Name",
+        "descriptionKey": "IONRIFT.RESPITE.DATA.ACTIVITY.act_identify.Description"
     },
     {
         "id": "act_attune",
@@ -616,7 +666,9 @@
             "initiativeDisadvantage": true,
             "description": "Disadvantage on initiative. Meditation focus."
         },
-        "category": "arcane"
+        "category": "arcane",
+        "nameKey": "IONRIFT.RESPITE.DATA.ACTIVITY.act_attune.Name",
+        "descriptionKey": "IONRIFT.RESPITE.DATA.ACTIVITY.act_attune.Description"
     },
     {
         "id": "act_scribe",
@@ -641,15 +693,42 @@
             "label": "Spell level being copied",
             "default": "1",
             "options": [
-                { "value": "1", "label": "Level 1: 50gp, DC 11" },
-                { "value": "2", "label": "Level 2: 100gp, DC 12" },
-                { "value": "3", "label": "Level 3: 150gp, DC 13" },
-                { "value": "4", "label": "Level 4: 200gp, DC 14" },
-                { "value": "5", "label": "Level 5: 250gp, DC 15" },
-                { "value": "6", "label": "Level 6: 300gp, DC 16" },
-                { "value": "7", "label": "Level 7: 350gp, DC 17" },
-                { "value": "8", "label": "Level 8: 400gp, DC 18" },
-                { "value": "9", "label": "Level 9: 450gp, DC 19" }
+                {
+                    "value": "1",
+                    "label": "Level 1: 50gp, DC 11"
+                },
+                {
+                    "value": "2",
+                    "label": "Level 2: 100gp, DC 12"
+                },
+                {
+                    "value": "3",
+                    "label": "Level 3: 150gp, DC 13"
+                },
+                {
+                    "value": "4",
+                    "label": "Level 4: 200gp, DC 14"
+                },
+                {
+                    "value": "5",
+                    "label": "Level 5: 250gp, DC 15"
+                },
+                {
+                    "value": "6",
+                    "label": "Level 6: 300gp, DC 16"
+                },
+                {
+                    "value": "7",
+                    "label": "Level 7: 350gp, DC 17"
+                },
+                {
+                    "value": "8",
+                    "label": "Level 8: 400gp, DC 18"
+                },
+                {
+                    "value": "9",
+                    "label": "Level 9: 450gp, DC 19"
+                }
             ]
         },
         "outcomes": {
@@ -679,7 +758,9 @@
             "surpriseDisadvantage": true,
             "description": "Disadvantage on initiative and surprise saves. Deep arcane concentration."
         },
-        "category": "arcane"
+        "category": "arcane",
+        "nameKey": "IONRIFT.RESPITE.DATA.ACTIVITY.act_scribe.Name",
+        "descriptionKey": "IONRIFT.RESPITE.DATA.ACTIVITY.act_scribe.Description"
     },
     {
         "id": "act_train",
@@ -732,7 +813,9 @@
             "scale": "triangular",
             "actorFlag": "trainingStreak",
             "resetsOnDifferentActivity": true
-        }
+        },
+        "nameKey": "IONRIFT.RESPITE.DATA.ACTIVITY.act_train.Name",
+        "descriptionKey": "IONRIFT.RESPITE.DATA.ACTIVITY.act_train.Description"
     },
     {
         "id": "act_other",
@@ -755,6 +838,8 @@
         "combatModifiers": {
             "description": "Normal readiness. Present and aware."
         },
-        "category": "active"
+        "category": "active",
+        "nameKey": "IONRIFT.RESPITE.DATA.ACTIVITY.act_other.Name",
+        "descriptionKey": "IONRIFT.RESPITE.DATA.ACTIVITY.act_other.Description"
     }
 ]

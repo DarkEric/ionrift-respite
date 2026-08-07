@@ -1,4 +1,5 @@
 import { DecisionTreeResolver } from "../../../services/events/resolve/DecisionTreeResolver.js";
+import { localize, format } from "../../../utils/I18n.js";
 import { TerrainRegistry } from "../../../services/events/resolve/TerrainRegistry.js";
 import { listPoolEventsForTerrain } from "../../../services/events/catalog/EventCatalogLoader.js";
 import { pickPoolEvent } from "../../events/AdHocEventDialogs.js";
@@ -309,7 +310,7 @@ export class EventsPhaseDelegate {
             rollModes: this.activeTreeState.pendingRollModes ?? {}
         });
 
-        ui.notifications.info("Tree roll request re-sent to players.");
+        ui.notifications.info(localize("IONRIFT.RESPITE.NOTIFY.TreeRollResent"));
     }
 
     
@@ -367,10 +368,10 @@ export class EventsPhaseDelegate {
             this.activeTreeState.pendingDC += bump;
         }
 
-        const suffix = stallCount > 1 ? ` (x${stallCount})` : "";
+        const suffix = stallCount > 1 ? format("IONRIFT.RESPITE.CHAT.StallSuffix", { count: stallCount }) : "";
         ChatMessage.create({
-            content: `<div class="respite-stall-message"><strong>The party stalled${suffix}.</strong><br>${penalty.narrative}</div>`,
-            speaker: { alias: "Respite" }
+            content: format("IONRIFT.RESPITE.CHAT.PartyStalled", { suffix, narrative: penalty.narrative }),
+            speaker: { alias: localize("IONRIFT.RESPITE.CHAT.SpeakerRespite") }
         });
 
         if (penalty.upfrontLoss) {
@@ -415,7 +416,7 @@ export class EventsPhaseDelegate {
             awaitingCombat: true
         });
 
-        ui.notifications.info("Set up and run the encounter. Reopen Respite and click 'Combat Complete' when done.");
+        ui.notifications.info(localize("IONRIFT.RESPITE.NOTIFY.SetupEncounter"));
     }
 
         async completeEncounter() {
@@ -471,7 +472,7 @@ export class EventsPhaseDelegate {
             );
             if (buffs.partyWide.summary) lines.push(`<em>${buffs.partyWide.summary}</em>`);
             await ChatMessage.create({
-                content: `<div style="border-left:3px solid #7eb8da;padding-left:8px;"><strong>Combat Readiness</strong><br>${lines.join("<br>")}</div>`,
+                content: format("IONRIFT.RESPITE.CHAT.CombatReadiness", { lines: lines.join("<br>") }),
                 speaker: { alias: "Respite" }
             });
         }
@@ -564,7 +565,7 @@ export class EventsPhaseDelegate {
                         items: ev.mechanical?.onSuccess?.items ?? [],
                         effects: ev.mechanical?.onFailure?.effects ?? []
                     }];
-                    ui.notifications.info(`Forced encounter: ${ev.name}`);
+                    ui.notifications.info(format("IONRIFT.RESPITE.NOTIFY.ForcedEncounter", { name: ev.name }));
                 } else {
                     app._triggeredEvents = await app._engine.resolveEvents(app._eventResolver, app._engine._encounterBreakdown?.scoutingResult);
                 }
@@ -604,13 +605,13 @@ export class EventsPhaseDelegate {
 
         if (triggered) {
             await roll.toMessage({
-                speaker: { alias: "Night Watch" },
-                flavor: `<strong>Improvised night check</strong> (${terrainTag}) threshold ${effectiveDC}<br>${rawDie} below the threshold. Run your own scenario at the table.`,
+                speaker: { alias: localize("IONRIFT.RESPITE.CHAT.NightWatchAlias") },
+                flavor: format("IONRIFT.RESPITE.CHAT.ImprovisedNightCheckTriggered", { terrain: terrainTag, dc: effectiveDC, die: rawDie }),
                 whisper: game.users.filter(u => u.isGM).map(u => u.id)
             });
             app._triggeredEvents = [{
                 id: `adhoc_${Date.now()}`,
-                name: "Improvised Encounter",
+                name: localize("IONRIFT.RESPITE.EVENT.ImprovisedEncounter"),
                 category: "encounter",
                 description: "",
                 mechanical: null,
@@ -623,8 +624,8 @@ export class EventsPhaseDelegate {
             }];
         } else {
             await roll.toMessage({
-                speaker: { alias: "Night Watch" },
-                flavor: `<strong>Improvised night check</strong> (${terrainTag}) threshold ${effectiveDC}<br>${rawDie} meets or beats the threshold. The night passes without incident.`,
+                speaker: { alias: localize("IONRIFT.RESPITE.CHAT.NightWatchAlias") },
+                flavor: format("IONRIFT.RESPITE.CHAT.ImprovisedNightCheckQuiet", { terrain: terrainTag, dc: effectiveDC, die: rawDie }),
                 whisper: game.users.filter(u => u.isGM).map(u => u.id)
             });
             app._triggeredEvents = [];
@@ -651,7 +652,7 @@ export class EventsPhaseDelegate {
                 awaitingCombat: true
             });
 
-        ui.notifications.info("Set up and run the encounter. Reopen Respite and click 'Combat Complete' when done.");
+        ui.notifications.info(localize("IONRIFT.RESPITE.NOTIFY.SetupEncounter"));
 
         app.close();
     
@@ -690,7 +691,7 @@ export class EventsPhaseDelegate {
                 const lines = buffs.perCharacter.map(b => `<strong>${b.characterName}</strong> (${b.activityName}): ${b.summary}`);
                 if (buffs.partyWide.summary) lines.push(`<em>${buffs.partyWide.summary}</em>`);
                 await ChatMessage.create({
-                    content: `<div style="border-left:3px solid #7eb8da;padding-left:8px;"><strong>Combat Readiness</strong><br>${lines.join("<br>")}</div>`,
+                    content: format("IONRIFT.RESPITE.CHAT.CombatReadiness", { lines: lines.join("<br>") }),
                     speaker: { alias: "Respite" }
                 });
             }
@@ -789,7 +790,7 @@ export class EventsPhaseDelegate {
                     resolvedRolls
                 });
 
-        ui.notifications.info("Tree roll request re-sent to players.");
+        ui.notifications.info(localize("IONRIFT.RESPITE.NOTIFY.TreeRollResent"));
     
     }
 
@@ -837,7 +838,7 @@ export class EventsPhaseDelegate {
                         items: ev.mechanical?.onSuccess?.items ?? [],
                         effects: ev.mechanical?.onFailure?.effects ?? []
                     }];
-                    ui.notifications.info(`Forced encounter: ${ev.name}`);
+                    ui.notifications.info(format("IONRIFT.RESPITE.NOTIFY.ForcedEncounter", { name: ev.name }));
                 } else {
                     app._triggeredEvents = await app._engine.resolveEvents(app._eventResolver, app._engine._encounterBreakdown?.scoutingResult);
                 }
@@ -874,7 +875,7 @@ export class EventsPhaseDelegate {
                 const lines = buffs.perCharacter.map(b => `<strong>${b.characterName}</strong> (${b.activityName}): ${b.summary}`);
                 if (buffs.partyWide.summary) lines.push(`<em>${buffs.partyWide.summary}</em>`);
                 await ChatMessage.create({
-                    content: `<div style="border-left:3px solid #7eb8da;padding-left:8px;"><strong>Combat Readiness</strong><br>${lines.join("<br>")}</div>`,
+                    content: format("IONRIFT.RESPITE.CHAT.CombatReadiness", { lines: lines.join("<br>") }),
                     speaker: { alias: "Respite" }
                 });
             }
@@ -936,13 +937,13 @@ export class EventsPhaseDelegate {
 
         if (triggered) {
             await roll.toMessage({
-                speaker: { alias: "Night Watch" },
-                flavor: `<strong>Improvised night check</strong> (${terrainTag}) threshold ${effectiveDC}<br>${rawDie} below the threshold. Run your own scenario at the table.`,
+                speaker: { alias: localize("IONRIFT.RESPITE.CHAT.NightWatchAlias") },
+                flavor: format("IONRIFT.RESPITE.CHAT.ImprovisedNightCheckTriggered", { terrain: terrainTag, dc: effectiveDC, die: rawDie }),
                 whisper: game.users.filter(u => u.isGM).map(u => u.id)
             });
             app._triggeredEvents = [{
                 id: `adhoc_${Date.now()}`,
-                name: "Improvised Encounter",
+                name: localize("IONRIFT.RESPITE.EVENT.ImprovisedEncounter"),
                 category: "encounter",
                 description: "",
                 mechanical: null,
@@ -955,8 +956,8 @@ export class EventsPhaseDelegate {
             }];
         } else {
             await roll.toMessage({
-                speaker: { alias: "Night Watch" },
-                flavor: `<strong>Improvised night check</strong> (${terrainTag}) threshold ${effectiveDC}<br>${rawDie} meets or beats the threshold. The night passes without incident.`,
+                speaker: { alias: localize("IONRIFT.RESPITE.CHAT.NightWatchAlias") },
+                flavor: format("IONRIFT.RESPITE.CHAT.ImprovisedNightCheckQuiet", { terrain: terrainTag, dc: effectiveDC, die: rawDie }),
                 whisper: game.users.filter(u => u.isGM).map(u => u.id)
             });
             app._triggeredEvents = [];
@@ -974,8 +975,8 @@ export class EventsPhaseDelegate {
         if (!this.beginEventsCommit()) return;
         try {
             await ChatMessage.create({
-                speaker: { alias: "Night Watch" },
-                content: `<div style="border-left:3px solid #7eb8da;padding-left:8px;"><strong>Night Watch</strong><br>The night passes without incident.</div>`,
+                speaker: { alias: localize("IONRIFT.RESPITE.CHAT.NightWatchAlias") },
+                content: localize("IONRIFT.RESPITE.CHAT.NightWatchQuiet"),
                 whisper: game.users.filter(u => u.isGM).map(u => u.id)
             });
             app._triggeredEvents = [];
@@ -997,7 +998,7 @@ export class EventsPhaseDelegate {
         } catch { /* settings not ready */ }
         app._triggeredEvents = [{
             id: `adhoc_${Date.now()}`,
-            name: "Improvised Encounter",
+            name: localize("IONRIFT.RESPITE.EVENT.ImprovisedEncounter"),
             category: "encounter",
             description: "",
             mechanical: null,
@@ -1022,18 +1023,18 @@ export class EventsPhaseDelegate {
         const terrainTag = app._engine.terrainTag ?? app._selectedTerrain ?? "forest";
         const poolEvents = listPoolEventsForTerrain(app._eventResolver, terrainTag);
         if (!poolEvents.length) {
-            ui.notifications.warn("No events in the curated pool for app terrain. Curate the pool first.");
+            ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.NoEventsInPool"));
             return;
         }
 
         const terrain = TerrainRegistry.get(terrainTag);
-        const terrainLabel = terrain?.label ?? terrainTag;
+        const terrainLabel = TerrainRegistry.resolveLabel(terrainTag, terrain);
         const eventId = await pickPoolEvent(poolEvents, terrainLabel, terrainTag);
         if (!eventId) return;
 
         const catalogEvent = app._eventResolver.events.get(eventId);
         if (!catalogEvent) {
-            ui.notifications.error("Selected event is no longer in the pool.");
+            ui.notifications.error(localize("IONRIFT.RESPITE.NOTIFY.EventNoLongerInPool"));
             return;
         }
 
@@ -1102,7 +1103,7 @@ export class EventsPhaseDelegate {
                 awaitingCombat: true
             });
 
-        ui.notifications.info("Set up and run the encounter. Reopen Respite and click 'Combat Complete' when done.");
+        ui.notifications.info(localize("IONRIFT.RESPITE.NOTIFY.SetupEncounter"));
 
         app.close();
     
@@ -1159,7 +1160,7 @@ export class EventsPhaseDelegate {
                 const lines = buffs.perCharacter.map(b => `<strong>${b.characterName}</strong> (${b.activityName}): ${b.summary}`);
                 if (buffs.partyWide.summary) lines.push(`<em>${buffs.partyWide.summary}</em>`);
                 await ChatMessage.create({
-                    content: `<div style="border-left:3px solid #7eb8da;padding-left:8px;"><strong>Combat Readiness</strong><br>${lines.join("<br>")}</div>`,
+                    content: format("IONRIFT.RESPITE.CHAT.CombatReadiness", { lines: lines.join("<br>") }),
                     speaker: { alias: "Respite" }
                 });
             }
@@ -1328,7 +1329,7 @@ export class EventsPhaseDelegate {
                     resolvedRolls
                 });
 
-        ui.notifications.info("Tree roll request re-sent to players.");
+        ui.notifications.info(localize("IONRIFT.RESPITE.NOTIFY.TreeRollResent"));
     
     }
 
@@ -1376,7 +1377,7 @@ export class EventsPhaseDelegate {
         const characterId = button.dataset.characterId;
         const eventIndex = Number.parseInt(button.dataset.eventIndex, 10);
         if (!Number.isFinite(eventIndex)) {
-            ui.notifications.warn("Could not resolve which event check to roll for.");
+            ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.CouldNotResolveEventCheck"));
             return;
         }
         const pendingKey = `${eventIndex}:${characterId}`;
@@ -1385,11 +1386,11 @@ export class EventsPhaseDelegate {
 
         const triggeredEvent = app._triggeredEvents?.[eventIndex];
         if (!triggeredEvent?.awaitingRolls || !characterId) {
-            ui.notifications.warn("This event is not waiting for that roll.");
+            ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.EventNotWaitingRoll"));
             return;
         }
         if (triggeredEvent.resolvedRolls?.some(r => r.characterId === characterId)) {
-            ui.notifications.info(`${triggeredEvent.resolvedRolls.find(r => r.characterId === characterId)?.name ?? "That character"} already rolled.`);
+            ui.notifications.info(format("IONRIFT.RESPITE.NOTIFY.AlreadyRolled", { name: triggeredEvent.resolvedRolls.find(r => r.characterId === characterId)?.name ?? localize("IONRIFT.RESPITE.NOTIFY.ThatCharacter") }));
             return;
         }
 
@@ -1417,7 +1418,7 @@ export class EventsPhaseDelegate {
         } catch (err) {
 
             console.error("[Respite] GM event roll for player failed:", err);
-            ui.notifications.error(`Failed to roll for ${actor.name}.`);
+            ui.notifications.error(format("IONRIFT.RESPITE.NOTIFY.FailedToRoll", { name: actor.name }));
             app.render();
         } finally {
             app._eventGmRollPending.delete(pendingKey);
@@ -1449,10 +1450,10 @@ export class EventsPhaseDelegate {
         }
 
         // Post stall narrative to chat
-        const suffix = stallCount > 1 ? ` (x${stallCount})` : "";
+        const suffix = stallCount > 1 ? format("IONRIFT.RESPITE.CHAT.StallSuffix", { count: stallCount }) : "";
         ChatMessage.create({
-            content: `<div class="respite-stall-message"><strong>The party stalled${suffix}.</strong><br>${penalty.narrative}</div>`,
-            speaker: { alias: "Respite" }
+            content: format("IONRIFT.RESPITE.CHAT.PartyStalled", { suffix, narrative: penalty.narrative }),
+            speaker: { alias: localize("IONRIFT.RESPITE.CHAT.SpeakerRespite") }
         });
 
         // Track upfront loss as an effect to apply at resolution
@@ -1637,7 +1638,7 @@ export class EventsPhaseDelegate {
 
         // Verify this player owns this actor
         if (!actor.isOwner) {
-            ui.notifications.warn("You do not own this character.");
+            ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.DoNotOwnCharacter"));
             return;
         }
 
@@ -1672,7 +1673,7 @@ export class EventsPhaseDelegate {
                     total
                 });
 
-        ui.notifications.info(`${actor.name} rolled ${total} for ${pending.skillName}.`);
+        ui.notifications.info(format("IONRIFT.RESPITE.NOTIFY.RolledForSkill", { name: actor.name, total, skill: pending.skillName }));
         app.render();
     
     }
@@ -1744,7 +1745,7 @@ export class EventsPhaseDelegate {
                 }
             });
 
-        ui.notifications.info(`Roll request sent to ${entry.characterName} for ${entry.activityName}.`);
+        ui.notifications.info(format("IONRIFT.RESPITE.NOTIFY.RollRequestSentActivity", { name: entry.characterName, activity: entry.activityName }));
         app.render();
     
     }
@@ -1764,7 +1765,7 @@ export class EventsPhaseDelegate {
         const actorId = select?.value;
 
         if (!actorId || !itemRef) {
-            ui.notifications.warn("Select a character to receive the items.");
+            ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.SelectCharacterForItems"));
             return;
         }
 
@@ -1776,12 +1777,12 @@ export class EventsPhaseDelegate {
                 ledger: app._grantLedger,
                 slotKey: GrantLedger.discoverySlotKey(eventId, ref)
             });
-            ui.notifications.info(`Granted ${result.rolled}x ${result.itemName} to ${result.actorName}.`);
+            ui.notifications.info(format("IONRIFT.RESPITE.NOTIFY.GrantedItems", { qty: result.rolled, item: result.itemName, name: result.actorName }));
             app.render();
         } catch (e) {
 
             console.error(`[Respite] Failed to grant item:`, e);
-            ui.notifications.error(`Failed to grant ${itemRef}: ${e.message}`);
+            ui.notifications.error(format("IONRIFT.RESPITE.NOTIFY.FailedToGrant", { item: itemRef, message: e.message }));
         }
     
     }
@@ -1996,7 +1997,7 @@ export class EventsPhaseDelegate {
                     total
                 });
 
-        ui.notifications.info(`${actor.name} rolled ${total} for ${activityEntry.activityName}.`);
+        ui.notifications.info(format("IONRIFT.RESPITE.NOTIFY.RolledForSkill", { name: actor.name, total, skill: activityEntry.activityName }));
         app.render();
     
     }

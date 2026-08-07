@@ -5,6 +5,7 @@
  */
 
 import { MODULE_ID } from "../../data/moduleId.js";
+import { localize, format } from "../../utils/I18n.js";
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 const PHASE_LABELS = {
@@ -34,7 +35,7 @@ export class RestLedgerApp extends HandlebarsApplicationMixin(ApplicationV2) {
         classes: ["ionrift-window", "glass-ui", "ionrift-respite-app"],
         tag: "div",
         window: {
-            title: "Rest Ledger",
+            title: localize("IONRIFT.RESPITE.APP.RestLedgerTitle"),
             icon: "fas fa-book",
             resizable: true
         },
@@ -138,7 +139,7 @@ export class RestLedgerApp extends HandlebarsApplicationMixin(ApplicationV2) {
         if (!this.#ledger) return;
         const all = this.#ledger.getAll();
         if (!all.length) {
-            ui.notifications.info("Ledger is empty.");
+            ui.notifications.info(localize("IONRIFT.RESPITE.NOTIFY.LedgerEmpty"));
             return;
         }
         const lines = all.map(e => {
@@ -148,9 +149,9 @@ export class RestLedgerApp extends HandlebarsApplicationMixin(ApplicationV2) {
         });
         try {
             await navigator.clipboard.writeText(lines.join("\n"));
-            ui.notifications.info("Ledger copied to clipboard.");
+            ui.notifications.info(localize("IONRIFT.RESPITE.NOTIFY.LedgerCopied"));
         } catch {
-            ui.notifications.warn("Could not copy to clipboard.");
+            ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.LedgerCopyFailed"));
         }
     }
 

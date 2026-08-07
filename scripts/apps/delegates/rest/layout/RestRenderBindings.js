@@ -1,4 +1,5 @@
 import { CopySpellHandler } from "../../../../services/crafting/outcomes/CopySpellHandler.js";
+import { localize, format } from "../../../../utils/I18n.js";
 import { logCampfireReconnect } from "../../../../services/camp/fire/CampfireReconnectLog.js";
 import {
     hasCampfirePlaced,
@@ -444,7 +445,7 @@ export class RestRenderBindings {
                     app.render();
                 } else if (activityId === "act_train" && actor && app._engine) {
                     app._initTrainingState(characterId, activityId, actor);
-                    ui.notifications.info(`${actor.name}: Training started. Roll your sets in the rest window.`);
+                    ui.notifications.info(format("IONRIFT.RESPITE.NOTIFY.TrainingStarted", { name: actor.name }));
                     app.render();
                 } else if (actor && app._engine) {
                     const followUpValue = app._gmFollowUps?.get(characterId) ?? app._getFollowUpForCharacter(characterId);
@@ -460,7 +461,7 @@ export class RestRenderBindings {
                             : result.result === "failure_complication" ? "Failed (complication)"
                             : result.result === "failure" ? "Failed" : result.result;
                         const actName = activity?.name ?? activityId;
-                        ui.notifications.info(`${actor.name}: ${actName} - ${tier}`);
+                        ui.notifications.info(format("IONRIFT.RESPITE.NOTIFY.ActivityTier", { name: actor.name, activity: actName, tier }));
                         app.render();
                     });
                 }
@@ -479,7 +480,7 @@ export class RestRenderBindings {
                 );
 
                 const actName = activity?.name ?? activityId;
-                ui.notifications.info(`${game.actors.get(characterId)?.name ?? "Character"} will ${actName}.`);
+                ui.notifications.info(format("IONRIFT.RESPITE.NOTIFY.WillActivity", { name: game.actors.get(characterId)?.name ?? localize("IONRIFT.RESPITE.COMMON.Character"), activity: actName }));
                 if (app._phase === "activity" && isStationLayerActive()) {
                     refreshStationEmptyNoticeFade(this);
                     refreshStationPortraitsFromChoices(app._characterChoices, app._stationCanvasIdByCharacter);

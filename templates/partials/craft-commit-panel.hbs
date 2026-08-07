@@ -1,7 +1,7 @@
 {{!-- Commitment summary + craft button (shared by TotM and station crafting UIs) --}}
 {{#if commitSummary}}
 <div class="craft-commit-panel">
-    <div class="commit-header">Ready to Craft</div>
+    <div class="commit-header">{{localize 'IONRIFT.RESPITE.CRAFT.ReadyToCraft'}}</div>
     <div class="commit-visual-flow">
         <div class="commit-inputs">
             {{#each commitSummary.ingredients}}
@@ -41,13 +41,13 @@
                 </div>
                 {{/if}}
                 {{#if commitSummary.outputPreview.isPartyMeal}}
-                <div class="commit-output-preview-tag"><i class="fas fa-users"></i> Feeds the party</div>
+                <div class="commit-output-preview-tag"><i class="fas fa-users"></i> {{localize 'IONRIFT.RESPITE.CRAFT.FeedsTheParty'}}</div>
                 {{/if}}
                 {{#if commitSummary.outputPreview.isWellFed}}
-                <div class="commit-output-preview-tag"><i class="fas fa-heart"></i> Well Fed meal</div>
+                <div class="commit-output-preview-tag"><i class="fas fa-heart"></i> {{localize 'IONRIFT.RESPITE.CRAFT.WellFedMeal'}}</div>
                 {{/if}}
                 {{#if commitSummary.outputPreview.spoilsAfter}}
-                <div class="commit-output-preview-tag"><i class="fas fa-hourglass-half"></i> Spoils after {{commitSummary.outputPreview.spoilsAfter}} rests</div>
+                <div class="commit-output-preview-tag"><i class="fas fa-hourglass-half"></i> {{localize 'IONRIFT.RESPITE.CRAFT.SpoilsAfter' count=commitSummary.outputPreview.spoilsAfter}}</div>
                 {{/if}}
                 {{#if commitSummary.alternateOutputPreview}}
                 <div class="commit-output-preview-compare">
@@ -64,13 +64,13 @@
     </div>
     <div class="commit-details">
         {{#if commitSummary.noSkillCheck}}
-        <span class="commit-detail commit-no-roll">No roll · no ingredients</span>
+        <span class="commit-detail commit-no-roll">{{localize 'IONRIFT.RESPITE.CRAFT.NoRollNoIngredients'}}</span>
         {{#if commitSummary.outputQuantity}}
-        <span class="commit-detail">Makes {{commitSummary.outputQuantity}} treats</span>
+        <span class="commit-detail">{{localize 'IONRIFT.RESPITE.CRAFT.MakesTreats' count=commitSummary.outputQuantity}}</span>
         {{/if}}
         {{else}}
         <span class="commit-detail">
-            <i class="fas fa-dice-d20"></i> {{commitSummary.skill}} vs DC {{commitSummary.dc}}
+            <i class="fas fa-dice-d20"></i> {{commitSummary.skill}} {{localize 'IONRIFT.RESPITE.UI.VsDC'}} {{commitSummary.dc}}
             {{#if commitSummary.dcBreakdown.hasModifiers}}
             <span class="commit-dc-factors">
                 <span class="commit-dc-base">{{commitSummary.dcBreakdown.base}}</span>
@@ -89,16 +89,16 @@
         {{/if}}
     </div>
     <button type="button" class="btn-hero-craft" data-action="craftCommit">
-        <i class="fas fa-hammer"></i><span>{{#if commitSummary.actionLabel}}{{commitSummary.actionLabel}}{{else}}Craft{{/if}}</span>
+        <i class="fas fa-hammer"></i><span>{{#if commitSummary.actionLabel}}{{commitSummary.actionLabel}}{{else}}{{localize 'IONRIFT.RESPITE.CRAFT.Craft'}}{{/if}}</span>
     </button>
 </div>
 {{else}}
 <div class="craft-commit-panel empty">
     <div class="commit-placeholder">
         {{#if noAvailableRecipes}}
-        <i class="fas fa-box-open"></i> No ingredients for any recipe right now.
+        <i class="fas fa-box-open"></i> {{localize 'IONRIFT.RESPITE.CRAFT.NoIngredientsNow'}}
         {{else}}
-        <i class="fas fa-hand-pointer"></i> Select a recipe to see your crafting plan
+        <i class="fas fa-hand-pointer"></i> {{localize 'IONRIFT.RESPITE.CRAFT.SelectRecipePlan'}}
         {{/if}}
     </div>
 </div>

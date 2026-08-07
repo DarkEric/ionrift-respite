@@ -1,4 +1,5 @@
 import { MODULE_ID } from "../../../../data/moduleId.js";
+import { localize, format } from "../../../../utils/I18n.js";
 import {
     emitSubmissionUpdate,
     emitActivityChoice
@@ -17,7 +18,7 @@ export class TotmActivityDelegate {
         const { activityId, characterId } = expanded;
 
         if (app._lockedCharacters?.has(characterId)) {
-            ui.notifications.warn("This character has already submitted their activity.");
+            ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.ActivityAlreadySubmitted"));
             app._totmFollowUpExpanded = null;
             app.render();
             return;
@@ -50,9 +51,9 @@ export class TotmActivityDelegate {
                     if (equippedArmor) {
                         const confirmFn = game.ionrift?.library?.confirm ?? Dialog.confirm.bind(Dialog);
                         const proceed = await confirmFn({
-                            title: "Sleeping in Armor",
-                            content: `<p><strong>${equippedArmor.name}</strong> is equipped. Sleeping in medium or heavy armor limits recovery to 1/4 Hit Dice and prevents exhaustion reduction (Xanathar's rules).</p><p>Doff the armor before confirming, or proceed and accept the penalty.</p>`,
-                            yesLabel: "Confirm Anyway",
+                            title: localize("IONRIFT.RESPITE.APP.SleepingInArmorTitle"),
+                            content: format("IONRIFT.RESPITE.APP.SleepingInArmorContent", { armor: equippedArmor.name }),
+                            yesLabel: localize("IONRIFT.RESPITE.COMMON.ConfirmAnyway"),
                             noLabel: "Cancel",
                             yesIcon: "fas fa-check",
                             noIcon: "fas fa-times",
@@ -87,11 +88,11 @@ export class TotmActivityDelegate {
         if (!activityId) return;
         const characterId = app._selectedCharacterId;
         if (!characterId) {
-            ui.notifications.warn("Select a character from the roster first.");
+            ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.SelectCharacterFirst"));
             return;
         }
         if (app._lockedCharacters?.has(characterId)) {
-            ui.notifications.warn("This character has already submitted their activity.");
+            ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.ActivityAlreadySubmitted"));
             return;
         }
         const actor = game.actors.get(characterId);
@@ -183,7 +184,7 @@ export class TotmActivityDelegate {
                     app._earlyResults?.size ? Object.fromEntries(app._earlyResults) : null
                 );
                 const actor = game.actors.get(characterId);
-                if (actor) ui.notifications.info(`${actor.name}'s activity submitted.`);
+                if (actor) ui.notifications.info(format("IONRIFT.RESPITE.NOTIFY.ActivitySubmitted", { name: actor.name }));
             }
         }
 
@@ -222,7 +223,7 @@ export class TotmActivityDelegate {
         const expanded = app._totmFollowUpExpanded;
         const cid = expanded?.characterId ?? app._selectedCharacterId;
         if (cid && app._trainingStates?.has(cid) && !app._earlyResults?.has(cid)) {
-            ui.notifications.warn("Finish your training sets before going back.");
+            ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.FinishTrainingFirst"));
             return;
         }
         app._totmFollowUpExpanded = null;

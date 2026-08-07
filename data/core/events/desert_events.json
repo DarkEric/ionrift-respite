@@ -87,7 +87,9 @@
             },
             "tier": "normal",
             "sentiment": "negative",
-            "pack": "base"
+            "pack": "base",
+            "nameKey": "IONRIFT.RESPITE.DATA.EVENT.evt_desert_sandstorm_burial.Name",
+            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_desert_sandstorm_burial.Description"
         },
         {
             "id": "evt_desert_scorpions",
@@ -172,7 +174,9 @@
             },
             "tier": "normal",
             "sentiment": "negative",
-            "pack": "base"
+            "pack": "base",
+            "nameKey": "IONRIFT.RESPITE.DATA.EVENT.evt_desert_scorpions.Name",
+            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_desert_scorpions.Description"
         },
         {
             "id": "evt_desert_dehydration",
@@ -257,7 +261,9 @@
             },
             "tier": "normal",
             "sentiment": "negative",
-            "pack": "base"
+            "pack": "base",
+            "nameKey": "IONRIFT.RESPITE.DATA.EVENT.evt_desert_dehydration.Name",
+            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_desert_dehydration.Description"
         },
         {
             "id": "evt_desert_oasis_cache",
@@ -380,7 +386,9 @@
             },
             "tier": "normal",
             "sentiment": "positive",
-            "pack": "base"
+            "pack": "base",
+            "nameKey": "IONRIFT.RESPITE.DATA.EVENT.evt_desert_oasis_cache.Name",
+            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_desert_oasis_cache.Description"
         },
         {
             "id": "evt_desert_stars",
@@ -403,7 +411,9 @@
             "mechanical": null,
             "tier": "normal",
             "sentiment": "neutral",
-            "pack": "base"
+            "pack": "base",
+            "nameKey": "IONRIFT.RESPITE.DATA.EVENT.evt_desert_stars.Name",
+            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_desert_stars.Description"
         }
     ]
 }

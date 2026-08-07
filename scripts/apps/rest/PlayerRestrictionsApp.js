@@ -8,6 +8,7 @@
 
 /** Player restriction definitions. Order = display order. */
 import { MODULE_ID } from "../../data/moduleId.js";
+import { localize, format } from "../../utils/I18n.js";
 const RESTRICTION_TOGGLES = [
     {
         key: "interceptRests",
@@ -34,7 +35,7 @@ export class PlayerRestrictionsApp extends foundry.applications.api.ApplicationV
     static DEFAULT_OPTIONS = {
         id: "respite-player-restrictions",
         window: {
-            title: "Player Restrictions",
+            title: localize("IONRIFT.RESPITE.APP.PlayerRestrictionsTitle"),
             icon: "fas fa-user-lock",
             resizable: false
         },
@@ -106,7 +107,7 @@ export class PlayerRestrictionsApp extends foundry.applications.api.ApplicationV
         for (const cb of checkboxes) {
             await game.settings.set(MODULE_ID, cb.dataset.key, cb.checked);
         }
-        ui.notifications.info("Player restriction settings saved.");
+        ui.notifications.info(localize("IONRIFT.RESPITE.NOTIFY.PlayerRestrictionsSaved"));
         this.close();
     }
 }

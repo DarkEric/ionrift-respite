@@ -7,6 +7,7 @@ import {
     emitDetectMagicScanCleared
 } from "../../../services/socket/SocketController.js";
 import { getPartyActors } from "../../../services/party/partyActors.js";
+import { localize, format } from "../../../utils/I18n.js";
 
 /** Measured templates from rest-scan casts are removed after this delay (ms). */
 const DETECT_MAGIC_TEMPLATE_CLEANUP_MS = 5000;
@@ -403,8 +404,8 @@ export class DetectMagicDelegate {
             const { detectMagicCasters } = collectPartyIdentifyEmbedData(party);
             ui.notifications.warn(
                 detectMagicCasters.length
-                    ? "You need a party member with Detect Magic who you control to run the scan."
-                    : "Nobody in the party has Detect Magic available to cast."
+                    ? localize("IONRIFT.RESPITE.NOTIFY.DetectMagicNeedControl")
+                    : localize("IONRIFT.RESPITE.NOTIFY.DetectMagicNobodyHas")
             );
             return;
         }
@@ -432,7 +433,7 @@ export class DetectMagicDelegate {
         this._app._magicScanResults = results;
         this._app._magicScanComplete = true;
         if (results.length === 0) {
-            ui.notifications.info("No unidentified magical items detected among the party's gear.");
+            ui.notifications.info(localize("IONRIFT.RESPITE.NOTIFY.NoDetectMagicItems"));
         }
         this._app.render();
         this.broadcastPartyScan(getPartyActors);
@@ -455,12 +456,12 @@ export class DetectMagicDelegate {
                     }
                 }
             }
-            ui.notifications.info(`Identified: ${result.trueName} (${DetectMagicScanner.schoolLabel(result.school)})`);
+            ui.notifications.info(format("IONRIFT.RESPITE.NOTIFY.IdentifiedSchool", { name: result.trueName, school: DetectMagicScanner.schoolLabel(result.school) }));
             this._app.render();
             this.broadcastPartyScan(getPartyActors);
         } catch (e) {
             console.error(`[Respite] Failed to identify item:`, e);
-            ui.notifications.error(`Failed to identify item: ${e.message}`);
+            ui.notifications.error(format("IONRIFT.RESPITE.NOTIFY.IdentifyFailed", { message: e.message }));
         }
     }
 }

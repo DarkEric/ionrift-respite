@@ -1,4 +1,5 @@
 import { Logger } from "../../../../utils/Logger.js";
+import { localize, format, localizeActivityRecord } from "../../../../utils/I18n.js";
 import { MODULE_ID } from "../../../../data/moduleId.js";
 import { STUB_RECIPES } from "../../../../data/stub-content.js";
 import { applyCustomRecipesToEngine } from "../../../../services/crafting/recipes/RecipeCatalog.js";
@@ -36,6 +37,7 @@ import {
 } from "../../../../services/socket/SocketController.js";
 import { getPartyActors } from "../../../../services/party/partyActors.js";
 import { RestSetupApp, _logGmRestSheet } from "../../../rest/RestSetupApp.js";
+import { SHELTER_SPELLS, resolveShelterSpell } from "../../../../data/RestConstants.js";
 
 export class RestSessionDelegate {
     constructor(app) {
@@ -71,15 +73,19 @@ export class RestSessionDelegate {
                 } else {
                     const fallback = await app._spendPartyFirewoodForMakeCamp(pledge.count, null);
                     if (!fallback.ok) {
-                        ui.notifications.warn(`Could not spend firewood for ${pledge.actorName}. Proceeding anyway.`);
+                        ui.notifications.warn(format("IONRIFT.RESPITE.NOTIFY.FirewoodSpendFailed", { name: pledge.actorName }));
                     }
                 }
             }
             if (pledges.length > 0) {
                 const level = app._fireLevel ?? "unlit";
-                const label = level.charAt(0).toUpperCase() + level.slice(1);
+                const label = localize(`IONRIFT.RESPITE.FIRE.LEVEL.${level}`) !== `IONRIFT.RESPITE.FIRE.LEVEL.${level}`
+                    ? localize(`IONRIFT.RESPITE.FIRE.LEVEL.${level}`)
+                    : (level.charAt(0).toUpperCase() + level.slice(1));
                 const names = pledges.map(([, p]) => p.actorName).join(" and ");
-                ui.notifications.info(`${names} ${pledges.length === 1 ? "spends" : "spend"} firewood for ${label}.`);
+                ui.notifications.info(pledges.length === 1
+                    ? format("IONRIFT.RESPITE.NOTIFY.SpendsFirewood", { names, label })
+                    : format("IONRIFT.RESPITE.NOTIFY.SpendFirewood", { names, label }));
             }
         }
         app._campFireWoodSpendUserId = null;
@@ -246,7 +252,7 @@ export class RestSessionDelegate {
 
         const actor = getPartyActors()[0];
         if (!actor) {
-            ui.notifications.warn("No party character found to light the campfire. Add an actor to the party or light the fire from the map.");
+            ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.NoPartyToLight"));
             return;
         }
 
@@ -639,7 +645,7 @@ export class RestSessionDelegate {
 
         try {
             const activityResp = await fetch(`modules/${MODULE_ID}/data/activities/default_activities.json`);
-            const activities = await activityResp.json();
+            const activities = (await activityResp.json()).map(a => localizeActivityRecord({ ...a }));
             app._activities = activities;
             app._activityResolver.load(activities);
 
@@ -872,7 +878,7 @@ export class RestSessionDelegate {
         const terrainCamp = TerrainRegistry.get(terrainTagCamp);
         const shelterKey = (app._engine?.activeShelters ?? []).find(s => s !== "tent" && s !== "none");
         const shelterSpellCamp = shelterKey
-            ? (SHELTER_SPELLS[shelterKey]?.label ?? null)
+            ? (resolveShelterSpell(SHELTER_SPELLS.find(s => s.id === shelterKey))?.label ?? null)
             : null;
         // Local preview (player or GM hovering a tier) overrides the committed level so the
         // comfort header moves before Set/Request, matching the TotM Make Camp picker.
@@ -888,8 +894,8 @@ export class RestSessionDelegate {
             baseTerrainComfort,
             effectiveScanLevel,
             shelterSpellCamp,
-            terrainCamp?.comfortReason ?? "",
-            terrainCamp?.label ?? terrainTagCamp,
+            terrainCamp ? TerrainRegistry.resolveComfortReason(terrainTagCamp, terrainCamp) : "",
+            terrainCamp ? TerrainRegistry.resolveLabel(terrainTagCamp, terrainCamp) : terrainTagCamp,
             encMod,
             !!app._engine?.safeRestSpot
         ) ?? null;
@@ -960,7 +966,7 @@ export class RestSessionDelegate {
         const app = this._app;
 
         if (app._campPitBlocksFireLighting()) {
-            ui.notifications.warn("Place the campfire on the map before lighting.");
+            ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.PlaceCampfireFirst"));
             return;
         }
         const root = target?.closest?.("[data-action=\"campLightFire\"]") ?? target;

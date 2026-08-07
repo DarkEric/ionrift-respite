@@ -1,4 +1,5 @@
 import { Logger } from "../../../../utils/Logger.js";
+import { localize, format } from "../../../../utils/I18n.js";
 import { ResourceSink } from "../../../../services/rest/recovery/ResourceSink.js";
 import { RecoveryHandler } from "../../../../services/rest/recovery/RecoveryHandler.js";
 import { ConditionAdvisory } from "../../../../services/rest/recovery/ConditionAdvisory.js";
@@ -144,7 +145,7 @@ export class RestResolveDelegate {
 
                 try {
                     await ChatMessage.create({
-                        content: `<h3><i class="fas fa-water"></i> ${data.name}'s Disaster Losses</h3>\n${data.lines.join("\n")}`,
+                        content: format("IONRIFT.RESPITE.CHAT.DisasterLosses", { name: data.name, lines: data.lines.join("\n") }),
                         whisper: whisperTargets,
                         speaker: { alias: "Respite" },
                         flags: { [MODULE_ID]: { type: "disasterLoss" } }
@@ -507,14 +508,14 @@ export class RestResolveDelegate {
             const itemSummary = await ItemOutcomeHandler.processAll(app._outcomes);
             const totalItems = itemSummary.reduce((sum, s) => sum + s.items.length, 0);
             if (totalItems > 0) {
-                ui.notifications.info(`Rest complete: ${totalItems} item${totalItems === 1 ? "" : "s"} created.`);
+                ui.notifications.info(format("IONRIFT.RESPITE.NOTIFY.RestCompleteItems", { count: totalItems }));
             } else {
-                ui.notifications.info("Rest complete.");
+                ui.notifications.info(localize("IONRIFT.RESPITE.NOTIFY.RestComplete"));
             }
         } catch (e) {
 
             console.warn(`${MODULE_ID} | Item processing failed:`, e);
-            ui.notifications.info("Rest complete.");
+            ui.notifications.info(localize("IONRIFT.RESPITE.NOTIFY.RestComplete"));
         }
 
         // Write training XP onto the sheet. Runs GM-side where this resolution
@@ -781,7 +782,7 @@ export class RestResolveDelegate {
             function updateTally() {
                 const count = overlay.querySelectorAll(".loss-checkbox:checked").length;
                 const tally = overlay.querySelector(".loss-tally-count");
-                if (tally) tally.textContent = `${count} losses selected`;
+                if (tally) tally.textContent = format("IONRIFT.RESPITE.CHAT.LossesSelected", { count });
             }
 
             overlay.querySelector(".loss-select-all").addEventListener("click", () => {
@@ -1133,7 +1134,7 @@ export class RestResolveDelegate {
         const { clearActiveRestApp } = await import("../../../../module.js");
         clearActiveRestApp();
 
-        ui.notifications.info("Rest abandoned.");
+        ui.notifications.info(localize("IONRIFT.RESPITE.NOTIFY.RestAbandoned"));
         app.close({ resolved: true, abandoned: true });
     
     }

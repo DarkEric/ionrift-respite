@@ -1,9 +1,11 @@
 import { MODULE_ID } from "../../../data/moduleId.js";
+import { localize } from "../../../utils/I18n.js";
 export { MODULE_ID };
 
 /** DnD5e uses "container"; PF2e uses "backpack". */
 export const CONTAINER_ITEM_TYPES = new Set(["container", "backpack"]);
-export const SPOILED_FOOD_BLOCKED_MESSAGE = "Spoiled food cannot be eaten.";
+export const SPOILED_FOOD_BLOCKED_MESSAGE_KEY = "IONRIFT.RESPITE.SHEET.SpoiledFoodBlocked";
+export function getSpoiledFoodBlockedMessage() { return localize(SPOILED_FOOD_BLOCKED_MESSAGE_KEY); }
 
 export const SPOILED_FOOD_TEMPLATE = {
     name: "Spoiled Food",

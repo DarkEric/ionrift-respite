@@ -1,4 +1,5 @@
 import { Logger } from "../../../utils/Logger.js";
+import { localize, format } from "../../../utils/I18n.js";
 import { MODULE_ID } from "../../../data/moduleId.js";
 import { getPartyActors } from "../../party/partyActors.js";
 
@@ -11,7 +12,7 @@ export function showRejoinNotification(app, rejoinFn) {
     removeRejoinNotification();
     const el = document.createElement("div");
     el.id = "respite-rejoin-bar";
-    const phaseLabel = app?._phase ? `Phase: ${app._phase}` : "active";
+    const phaseLabel = app?._phase ? format("IONRIFT.RESPITE.REJOIN.PhaseLabel", { phase: app._phase }) : localize("IONRIFT.RESPITE.REJOIN.PhaseActive");
     const isActivity = app?._phase === "activity";
     const partySize = isActivity ? (getPartyActors().length || 0) : 0;
     const activitiesResolved = isActivity ? (app?._characterChoices?.size ?? 0) : 0;
@@ -102,7 +103,7 @@ export function showPrepNotification() {
     el.id = "respite-prep-bar";
     el.innerHTML = `
         <i class="fas fa-campground"></i>
-        <span>Your GM is preparing a rest...</span>
+        <span>${localize("IONRIFT.RESPITE.REJOIN.GmPreparing")}</span>
     `;
     document.body.appendChild(el);
 }
@@ -124,7 +125,7 @@ export function showGmRestIndicator(app) {
     const el = document.createElement("div");
     el.id = "respite-gm-rest-bar";
     const awaitingCombat = app?._awaitingCombat;
-    const phaseLabel = awaitingCombat ? "Awaiting combat resolution" : `Phase: ${app?._phase ?? "active"}`;
+    const phaseLabel = awaitingCombat ? localize("IONRIFT.RESPITE.REJOIN.AwaitingCombat") : format("IONRIFT.RESPITE.REJOIN.PhaseLabel", { phase: app?._phase ?? localize("IONRIFT.RESPITE.REJOIN.PhaseActive") });
     const isActivity = app?._phase === "activity";
     const partySize = isActivity ? getPartyActors().length : 0;
     const activitiesResolved = isActivity ? (app?._characterChoices?.size ?? 0) : 0;
@@ -190,7 +191,7 @@ export function refreshGmRestIndicator(app) {
         if (hasActivity && hasRations) membersReady++;
     }
     const partySize = actors.length;
-    span.textContent = `${membersReady} / ${partySize} party members ready`;
+    span.textContent = format("IONRIFT.RESPITE.REJOIN.PartyReady", { ready: membersReady, total: partySize });
     const btn = bar.querySelector("#respite-gm-resume-btn");
     if (btn) btn.classList.toggle("respite-resume-ready", partySize > 0 && membersReady >= partySize);
 }

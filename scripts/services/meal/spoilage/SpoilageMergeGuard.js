@@ -4,12 +4,13 @@
  */
 
 import { SpoilageClock } from "./SpoilageClock.js";
+import { localize, format } from "../../../utils/I18n.js";
 import { MODULE_ID } from "../../../data/moduleId.js";
 
 const GUARD_FLAG = "__ionriftRespiteSpoilageGuard";
 
-const MERGE_BLOCKED_MESSAGE =
-    "Cannot merge items with different spoilage freshness. Keep separate stacks.";
+const MERGE_BLOCKED_MESSAGE_KEY = "IONRIFT.RESPITE.SHEET.MergeBlockedFreshness";
+const MERGE_BLOCKED_MESSAGE = () => localize(MERGE_BLOCKED_MESSAGE_KEY);
 
 /**
  * Mirrors daggerheart `itemIsIdentical` so merge targets match core behavior.
@@ -108,7 +109,7 @@ function registerDaggerheartSpoilageMergeGuard() {
                     existingItem
                     && !canMergePerishableStacks(existingItem, item)
                 ) {
-                    ui.notifications.warn(MERGE_BLOCKED_MESSAGE);
+                    ui.notifications.warn(MERGE_BLOCKED_MESSAGE());
                     return;
                 }
 
@@ -163,7 +164,7 @@ function registerDnD5eSpoilageMergeGuard() {
         const similarItem = findDnD5eSimilarConsumable(this, itemData, container);
 
         if (similarItem && !canMergePerishableStacks(similarItem, itemData)) {
-            ui.notifications.warn(MERGE_BLOCKED_MESSAGE);
+            ui.notifications.warn(MERGE_BLOCKED_MESSAGE());
             return null;
         }
 

@@ -30,7 +30,9 @@
             "mechanical": null,
             "tier": "normal",
             "sentiment": "positive",
-            "pack": "base"
+            "pack": "base",
+            "nameKey": "IONRIFT.RESPITE.DATA.EVENT.evt_tavern_bard.Name",
+            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_tavern_bard.Description"
         },
         {
             "id": "evt_tavern_gossip",
@@ -53,7 +55,9 @@
             "mechanical": null,
             "tier": "normal",
             "sentiment": "neutral",
-            "pack": "base"
+            "pack": "base",
+            "nameKey": "IONRIFT.RESPITE.DATA.EVENT.evt_tavern_gossip.Name",
+            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_tavern_gossip.Description"
         },
         {
             "id": "evt_tavern_brawl_rumor",
@@ -76,7 +80,9 @@
             "mechanical": null,
             "tier": "normal",
             "sentiment": "neutral",
-            "pack": "base"
+            "pack": "base",
+            "nameKey": "IONRIFT.RESPITE.DATA.EVENT.evt_tavern_brawl_rumor.Name",
+            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_tavern_brawl_rumor.Description"
         },
         {
             "id": "evt_tavern_merchant",
@@ -99,7 +105,9 @@
             "mechanical": null,
             "tier": "normal",
             "sentiment": "positive",
-            "pack": "base"
+            "pack": "base",
+            "nameKey": "IONRIFT.RESPITE.DATA.EVENT.evt_tavern_merchant.Name",
+            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_tavern_merchant.Description"
         },
         {
             "id": "evt_tavern_cat",
@@ -122,7 +130,9 @@
             "mechanical": null,
             "tier": "normal",
             "sentiment": "positive",
-            "pack": "base"
+            "pack": "base",
+            "nameKey": "IONRIFT.RESPITE.DATA.EVENT.evt_tavern_cat.Name",
+            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_tavern_cat.Description"
         }
     ]
 }

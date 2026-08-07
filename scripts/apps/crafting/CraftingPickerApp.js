@@ -1,4 +1,5 @@
 import { CraftingEngine } from "../../services/crafting/engine/CraftingEngine.js";
+import { localize, format } from "../../utils/I18n.js";
 import { GrantLedger } from "../../services/crafting/outcomes/GrantLedger.js";
 import { buildCraftRecipeListContext } from "../../services/crafting/engine/CraftRecipeListBuilder.js";
 import { MonstrousFeastBridge } from "../../services/meal/provisions/MonstrousFeastBridge.js";
@@ -19,7 +20,7 @@ export class CraftingPickerApp extends HandlebarsApplicationMixin(ApplicationV2)
         id: "ionrift-respite-crafting",
         classes: ["ionrift-window", "glass-ui", "ionrift-crafting-app"],
         window: {
-            title: "Respite: Crafting",
+            title: localize("IONRIFT.RESPITE.APP.CraftingTitle"),
             resizable: true
         },
         position: {
@@ -145,7 +146,7 @@ export class CraftingPickerApp extends HandlebarsApplicationMixin(ApplicationV2)
             ? GrantLedger.craftingSlotKey(this._actor.id, this._professionId, this._selectedRecipeId)
             : null;
         if (this._ledger && slotKey && this._ledger.has(slotKey)) {
-            ui.notifications.warn("That recipe was already crafted this rest.");
+            ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.RecipeAlreadyCrafted"));
             return;
         }
 
@@ -180,7 +181,7 @@ export class CraftingPickerApp extends HandlebarsApplicationMixin(ApplicationV2)
             onCooked: () => { void this._onMonstrousFeastCookCompleted(); }
         });
         if (!opened) {
-            ui.notifications.warn("The Monster Cooking book is not available right now.");
+            ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.MonsterCookingUnavailable"));
         }
         return opened;
     }

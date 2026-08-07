@@ -6,13 +6,45 @@
     "comfort": "rough",
     "comfortReason": "Waterlogged ground, biting insects, and poor visibility. Not a gentle place to rest.",
     "scoutFlavor": {
-        "nat1":    ["A raised hummock, dry and stable. Good sightlines over the water.", "A cluster of old willows with dry ground underneath.", "A fishing platform, abandoned but solid."],
-        "poor":    ["Wet ground everywhere. Nothing is truly dry.", "A muddy bank. The insects are relentless.", "Ankle-deep water. This is the best you found."],
-        "average": ["A raised root platform keeps you above the waterline.", "A fallen tree bridges two dry patches.", "A reed-sheltered hollow, reasonably dry."],
-        "good":    ["A concealed island in the marsh. Only one approach.", "A hunter's blind, elevated and hidden.", "A dry cave behind hanging moss."],
-        "nat20":   ["An ancient stone platform, hidden by mist.", "A druid's grove, warded and dry.", "A hollow cypress trunk, spacious and concealed."]
+        "nat1": [
+            "IONRIFT.RESPITE.DATA.TERRAIN.swamp.ScoutFlavor.nat1.0",
+            "IONRIFT.RESPITE.DATA.TERRAIN.swamp.ScoutFlavor.nat1.1",
+            "IONRIFT.RESPITE.DATA.TERRAIN.swamp.ScoutFlavor.nat1.2"
+        ],
+        "poor": [
+            "IONRIFT.RESPITE.DATA.TERRAIN.swamp.ScoutFlavor.poor.0",
+            "IONRIFT.RESPITE.DATA.TERRAIN.swamp.ScoutFlavor.poor.1",
+            "IONRIFT.RESPITE.DATA.TERRAIN.swamp.ScoutFlavor.poor.2"
+        ],
+        "average": [
+            "IONRIFT.RESPITE.DATA.TERRAIN.swamp.ScoutFlavor.average.0",
+            "IONRIFT.RESPITE.DATA.TERRAIN.swamp.ScoutFlavor.average.1",
+            "IONRIFT.RESPITE.DATA.TERRAIN.swamp.ScoutFlavor.average.2"
+        ],
+        "good": [
+            "IONRIFT.RESPITE.DATA.TERRAIN.swamp.ScoutFlavor.good.0",
+            "IONRIFT.RESPITE.DATA.TERRAIN.swamp.ScoutFlavor.good.1",
+            "IONRIFT.RESPITE.DATA.TERRAIN.swamp.ScoutFlavor.good.2"
+        ],
+        "nat20": [
+            "IONRIFT.RESPITE.DATA.TERRAIN.swamp.ScoutFlavor.nat20.0",
+            "IONRIFT.RESPITE.DATA.TERRAIN.swamp.ScoutFlavor.nat20.1",
+            "IONRIFT.RESPITE.DATA.TERRAIN.swamp.ScoutFlavor.nat20.2"
+        ]
     },
-    "mealRules": { "waterPerDay": 2, "foodPerDay": 1 },
-    "weather": ["clear", "overcast", "fog", "rain", "heavy_rain", "thunderstorm"],
-    "eventsFile": "core/events/swamp_events.json"
+    "mealRules": {
+        "waterPerDay": 2,
+        "foodPerDay": 1
+    },
+    "weather": [
+        "clear",
+        "overcast",
+        "fog",
+        "rain",
+        "heavy_rain",
+        "thunderstorm"
+    ],
+    "eventsFile": "core/events/swamp_events.json",
+    "labelKey": "IONRIFT.LIBRARY.TERRAIN.Swamp",
+    "comfortReasonKey": "IONRIFT.RESPITE.DATA.TERRAIN.swamp.ComfortReason"
 }

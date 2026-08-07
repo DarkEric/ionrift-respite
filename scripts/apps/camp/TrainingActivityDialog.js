@@ -9,6 +9,7 @@
  */
 
 import { MODULE_ID } from "../../data/moduleId.js";
+import { localize, format } from "../../utils/I18n.js";
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 let _openDialog = null;
@@ -19,7 +20,7 @@ export class TrainingActivityDialog extends HandlebarsApplicationMixin(Applicati
         id: "ionrift-training-dialog",
         classes: ["ionrift-window", "glass-ui", "ionrift", "ionrift-training-dialog"],
         window: {
-            title: "Training",
+            title: localize("IONRIFT.RESPITE.APP.TrainingTitle"),
             resizable: false,
             minimizable: false
         },

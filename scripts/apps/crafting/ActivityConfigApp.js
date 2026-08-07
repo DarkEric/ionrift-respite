@@ -24,6 +24,7 @@ import {
     CAMP_FUEL_FIND_MIN_PERCENT
 } from "../../services/travel/settings/TravelSettings.js";
 import { shouldShowBrewingAlcoholSetting } from "../../services/crafting/settings/BrewingAlcoholSettings.js";
+import { localize, format } from "../../utils/I18n.js";
 import { MODULE_ID } from "../../data/moduleId.js";
 
 const TIER_SLIDER_META = {
@@ -165,7 +166,7 @@ export class ActivityConfigApp extends foundry.applications.api.ApplicationV2 {
     static DEFAULT_OPTIONS = {
         id: "respite-activity-config",
         window: {
-            title: "Travel & Activities",
+            title: localize("IONRIFT.RESPITE.APP.TravelActivitiesTitle"),
             icon: "fas fa-campground",
             resizable: false
         },
@@ -447,7 +448,7 @@ export class ActivityConfigApp extends foundry.applications.api.ApplicationV2 {
                 if (range) await game.settings.set(MODULE_ID, row.key, Number(range.value));
             }
         }
-        ui.notifications.info("Travel and activity settings saved.");
+        ui.notifications.info(localize("IONRIFT.RESPITE.NOTIFY.TravelActivitySaved"));
         this.close();
     }
 }

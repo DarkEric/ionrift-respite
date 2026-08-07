@@ -1,4 +1,5 @@
 import { TerrainRegistry } from "../../services/events/resolve/TerrainRegistry.js";
+import { localize, format } from "../../utils/I18n.js";
 import { getEventPoolSelection, loadAllCatalogEvents } from "../../services/events/catalog/EventCatalogLoader.js";
 import {
     buildEventPoolFilterGroups,
@@ -36,7 +37,7 @@ export class EventBrowserApp extends foundry.applications.api.ApplicationV2 {
     static DEFAULT_OPTIONS = {
         id: "respite-event-browser",
         window: {
-            title: "Event Pool",
+            title: localize("IONRIFT.RESPITE.APP.EventPoolTitle"),
             icon: "fas fa-book-open",
             resizable: true
         },
@@ -260,7 +261,7 @@ export class EventBrowserApp extends foundry.applications.api.ApplicationV2 {
         const coreTags = (result.terrainTags?.core ?? []).map(t => t.label).join(", ");
         let terrainHint = "";
         if (legacyBinding) {
-            const parentLabel = TerrainRegistry.get(legacyBinding.parentTerrain)?.label ?? legacyBinding.parentTerrain;
+            const parentLabel = TerrainRegistry.resolveLabel(legacyBinding.parentTerrain);
             terrainHint = ` Curate under ${parentLabel} · ${legacyBinding.label}.`;
         } else if (coreTags) {
             terrainHint = ` Terrain: ${coreTags}.`;
@@ -286,7 +287,7 @@ export class EventBrowserApp extends foundry.applications.api.ApplicationV2 {
                 const terrain = TerrainRegistry.get(t);
                 const isCustom = TerrainRegistry.isCustomTerrain(t);
                 const icon = terrain?.icon ?? "fas fa-map-marker-alt";
-                const label = terrain?.label ?? t;
+                const label = TerrainRegistry.resolveLabel(t, terrain);
                 const customClass = isCustom ? " custom" : "";
                 return `<span class="event-terrain-badge${customClass}" title="${isCustom ? (terrain?.customNote ?? "Custom imported terrain") : ""}"><i class="${icon}"></i> ${label}</span>`;
             }).join("");
@@ -300,7 +301,7 @@ export class EventBrowserApp extends foundry.applications.api.ApplicationV2 {
             return manifest && !manifest.custom && !TerrainRegistry.isCustomTerrain(tag);
         });
         const legacyBindingNote = (isImportedPack && parentTerrain)
-            ? `<p class="event-legacy-pack-note"><i class="fas fa-layer-group"></i> Curate under <strong>${TerrainRegistry.get(parentTerrain)?.label ?? parentTerrain} · ${packLabel}</strong>. Still rolls on ${parentTerrain} rests.</p>`
+            ? `<p class="event-legacy-pack-note"><i class="fas fa-layer-group"></i> Curate under <strong>${TerrainRegistry.resolveLabel(parentTerrain)} · ${packLabel}</strong>. Still rolls on ${parentTerrain} rests.</p>`
             : "";
         const hasCustomTerrain = (evt.terrainTags ?? []).some(t => TerrainRegistry.isCustomTerrain(t));
         const customTerrainNote = hasCustomTerrain
@@ -419,7 +420,7 @@ export class EventBrowserApp extends foundry.applications.api.ApplicationV2 {
     async #savePool() {
         await game.settings.set(MODULE_ID, "eventPoolSelection", { ...this.#pendingSelection });
         this.#dirty = false;
-        ui.notifications.info("Event pool saved.");
+        ui.notifications.info(localize("IONRIFT.RESPITE.NOTIFY.EventPoolSaved"));
 
         const instances = foundry.applications?.instances;
         if (instances) {

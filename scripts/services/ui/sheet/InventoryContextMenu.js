@@ -15,8 +15,9 @@
  */
 
 import { ItemClassifier } from "../../party/ItemClassifier.js";
+import { localize, format } from "../../../utils/I18n.js";
 import { MealPhaseHandler } from "../../meal/phase/MealPhaseHandler.js";
-import { SPOILED_FOOD_BLOCKED_MESSAGE } from "../../meal/inventory/MealConstants.js";
+import { getSpoiledFoodBlockedMessage } from "../../meal/inventory/MealConstants.js";
 import { MODULE_ID } from "../../../data/moduleId.js";
 
 /**
@@ -56,7 +57,7 @@ export function registerInventoryContextMenu() {
 
         if (isDrinkable) {
             menuItems.push({
-                name: "Drink",
+                name: localize("IONRIFT.RESPITE.SHEET.Drink"),
                 icon: `<i class="fas fa-tint respite-context-icon"></i>`,
                 group: "action",
                 condition: hasStock,
@@ -66,7 +67,7 @@ export function registerInventoryContextMenu() {
 
         if (isEdible && !isDrinkable) {
             const flags = item.flags?.[MODULE_ID] ?? {};
-            const eatLabel = flags.chefTreat ? "Eat Treat" : "Eat";
+            const eatLabel = flags.chefTreat ? localize("IONRIFT.RESPITE.SHEET.EatTreat") : localize("IONRIFT.RESPITE.SHEET.Eat");
 
             // Inventory food is eaten through the normal consume path, which
             // applies any Well Fed buff. Monstrous Feast meals are eaten fresh
@@ -97,7 +98,7 @@ export function registerInventoryContextMenu() {
  */
 async function _consumeFromInventory(actor, item, isFood) {
     if (ItemClassifier.isSpoiled(item)) {
-        ui.notifications.warn(SPOILED_FOOD_BLOCKED_MESSAGE);
+        ui.notifications.warn(getSpoiledFoodBlockedMessage());
         return;
     }
 
@@ -109,7 +110,7 @@ async function _consumeFromInventory(actor, item, isFood) {
     const consumed = await MealPhaseHandler._consumeItem(actor, itemId, 1, { wholeUnit: !isFood });
     if (consumed <= 0) {
         ui.notifications.warn(ItemClassifier.isSpoiled(item)
-            ? SPOILED_FOOD_BLOCKED_MESSAGE
+            ? getSpoiledFoodBlockedMessage()
             : `${itemName} could not be consumed.`);
         return;
     }

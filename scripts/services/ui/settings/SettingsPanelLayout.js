@@ -1,6 +1,7 @@
 import { getFletchingTierLabel } from "../../crafting/settings/FletchingSettings.js";
 import { getTrainingTierLabel } from "../../crafting/settings/TrainingSettings.js";
 import { MODULE_ID } from "../../../data/moduleId.js";
+import { localize } from "../../../utils/I18n.js";
 
 const COMPLEXITY_KEYS = [
     "enableComfort",
@@ -29,32 +30,32 @@ const PLAYER_KEYS = [
 const PROFILE_KEYS = [...COMPLEXITY_KEYS, ...PLAYER_KEYS];
 
 const KEY_LABELS = {
-    enableComfort: "Comfort rules",
-    enableCampfireMinigame: "Campfire minigame (TotM)",
-    enableProfessions: "Crafting professions",
-    trainingXpTier: "Training activity",
-    fletchingYieldTier: "Fletching yield",
-    enableEncounters: "Night encounters & watch",
-    enableCopySpell: "Copy Spell activity",
-    enablePrayMeditate: "Pray / Meditate activity",
-    enableScouting: "Travel scouting",
-    enableForaging: "Travel foraging",
-    enableHunting: "Travel hunting",
-    useTravel: "Use travel",
-    trackFood: "Meal tracking",
-    partialSustenance: "Partial sustenance",
-    armorDoffRule: "Armor sleep penalties",
-    interceptRests: "Intercept player rests",
-    lockAttuneOutsideRest: "Lock attunement to rest",
-    lockPlayerQuantity: "Lock player quantities"
+    enableComfort: "IONRIFT.RESPITE.SETTINGS.PANEL.EnableComfortLabel",
+    enableCampfireMinigame: "IONRIFT.RESPITE.SETTINGS.PANEL.EnableCampfireMinigameLabel",
+    enableProfessions: "IONRIFT.RESPITE.SETTINGS.PANEL.EnableProfessionsLabel",
+    trainingXpTier: "IONRIFT.RESPITE.SETTINGS.PANEL.TrainingXpTierLabel",
+    fletchingYieldTier: "IONRIFT.RESPITE.SETTINGS.PANEL.FletchingYieldTierLabel",
+    enableEncounters: "IONRIFT.RESPITE.SETTINGS.PANEL.EnableEncountersLabel",
+    enableCopySpell: "IONRIFT.RESPITE.SETTINGS.PANEL.EnableCopySpellLabel",
+    enablePrayMeditate: "IONRIFT.RESPITE.SETTINGS.PANEL.EnablePrayMeditateLabel",
+    enableScouting: "IONRIFT.RESPITE.SETTINGS.PANEL.EnableScoutingLabel",
+    enableForaging: "IONRIFT.RESPITE.SETTINGS.PANEL.EnableForagingLabel",
+    enableHunting: "IONRIFT.RESPITE.SETTINGS.PANEL.EnableHuntingLabel",
+    useTravel: "IONRIFT.RESPITE.SETTINGS.PANEL.UseTravelLabel",
+    trackFood: "IONRIFT.RESPITE.SETTINGS.PANEL.TrackFoodLabel",
+    partialSustenance: "IONRIFT.RESPITE.SETTINGS.PANEL.PartialSustenanceLabel",
+    armorDoffRule: "IONRIFT.RESPITE.SETTINGS.PANEL.ArmorDoffRuleLabel",
+    interceptRests: "IONRIFT.RESPITE.SETTINGS.PANEL.InterceptRestsLabel",
+    lockAttuneOutsideRest: "IONRIFT.RESPITE.SETTINGS.PANEL.LockAttuneOutsideRestLabel",
+    lockPlayerQuantity: "IONRIFT.RESPITE.SETTINGS.PANEL.LockPlayerQuantityLabel"
 };
 
 const PROFILES = [
     {
         id: "simple",
-        label: "Simple",
+        label: "IONRIFT.RESPITE.SETTINGS.PANEL.ProfileSimpleTitle",
         icon: "fas fa-feather",
-        desc: "Bare-bones rest. No comfort, professions, food, encounters, or extra activities.",
+        desc: "IONRIFT.RESPITE.SETTINGS.PANEL.ProfileSimpleDesc",
         values: {
             enableComfort: false,
             enableCampfireMinigame: false,
@@ -78,9 +79,9 @@ const PROFILES = [
     },
     {
         id: "standard",
-        label: "Standard",
+        label: "IONRIFT.RESPITE.SETTINGS.PANEL.ProfileStandardTitle",
         icon: "fas fa-campground",
-        desc: "Full camp: professions, fletching, and night encounters. No comfort tiers, food, or scouting.",
+        desc: "IONRIFT.RESPITE.SETTINGS.PANEL.ProfileStandardDesc",
         values: {
             enableComfort: false,
             enableCampfireMinigame: true,
@@ -104,9 +105,9 @@ const PROFILES = [
     },
     {
         id: "survival",
-        label: "Survival",
+        label: "IONRIFT.RESPITE.SETTINGS.PANEL.ProfileSurvivalTitle",
         icon: "fas fa-mountain-sun",
-        desc: "Standard plus comfort tiers, food, water, and travel scouting. Strict rations, locked quantities.",
+        desc: "IONRIFT.RESPITE.SETTINGS.PANEL.ProfileSurvivalDesc",
         values: {
             enableComfort: true,
             enableCampfireMinigame: true,
@@ -131,11 +132,11 @@ const PROFILES = [
 ];
 
 const GROUPS = [
-    { title: "Start here", icon: "fas fa-flag", keys: ["restInterfaceMode", "eventBrowser"] },
-    { title: "Rules & activities", icon: "fas fa-scroll", keys: ["recoveryConfig", "activityConfig", "dietConfigMenu"] },
-    { title: "Players", icon: "fas fa-users", keys: ["playerRestrictions"] },
-    { title: "Display", icon: "fas fa-eye", keys: ["ambientAfkHud"] },
-    { title: "Tools", icon: "fas fa-wrench", keys: ["clearRestState"] }
+    { title: "IONRIFT.RESPITE.SETTINGS.PANEL.GroupStartHere", icon: "fas fa-flag", keys: ["restInterfaceMode", "eventBrowser"] },
+    { title: "IONRIFT.RESPITE.SETTINGS.PANEL.GroupRulesAndActivities", icon: "fas fa-scroll", keys: ["recoveryConfig", "activityConfig", "dietConfigMenu"] },
+    { title: "IONRIFT.RESPITE.SETTINGS.PANEL.GroupPlayers", icon: "fas fa-users", keys: ["playerRestrictions"] },
+    { title: "IONRIFT.RESPITE.SETTINGS.PANEL.GroupDisplay", icon: "fas fa-eye", keys: ["ambientAfkHud"] },
+    { title: "IONRIFT.RESPITE.SETTINGS.PANEL.GroupTools", icon: "fas fa-wrench", keys: ["clearRestState"] }
 ];
 
 /**
@@ -154,7 +155,12 @@ function formatProfileCell(key, value) {
         const text = getFletchingTierLabel(tier);
         return { text, cssClass: tier > 0 ? "on" : "off" };
     }
-    return { text: value ? "On" : "Off", cssClass: value ? "on" : "off" };
+    return {
+        text: value
+            ? localize("IONRIFT.RESPITE.SETTINGS.PANEL.On")
+            : localize("IONRIFT.RESPITE.SETTINGS.PANEL.Off"),
+        cssClass: value ? "on" : "off"
+    };
 }
 
 export function registerRespiteSettingsPanel() {
@@ -163,20 +169,29 @@ export function registerRespiteSettingsPanel() {
 
     MCP.register({
         moduleId: MODULE_ID,
-        moduleLabel: "Respite",
+        moduleLabel: localize("IONRIFT.RESPITE.SETTINGS.PANEL.ModuleLabel"),
         anchorKey: "eventBrowser",
         quickSetup: {
-            title: "Quick setup",
-            subtitle: "Pick a starting point for the table. Every option stays adjustable in the panels below.",
-            profiles: PROFILES,
+            title: localize("IONRIFT.RESPITE.SETTINGS.PANEL.QuickSetupTitle"),
+            subtitle: localize("IONRIFT.RESPITE.SETTINGS.PANEL.QuickSetupSubtitle"),
+            profiles: PROFILES.map(p => ({
+                ...p,
+                label: localize(p.label),
+                desc: localize(p.desc)
+            })),
             profileKeys: PROFILE_KEYS,
-            keyLabels: KEY_LABELS,
+            keyLabels: Object.fromEntries(
+                Object.entries(KEY_LABELS).map(([k, v]) => [k, localize(v)])
+            ),
             formatCell: formatProfileCell,
-            confirmNote: "The interface mode, scene token names, and per-character diets are left as they are. Fine-tune anything afterward in the panels below.",
-            confirmRowGroups: [{ beforeKey: PLAYER_KEYS[0], label: "Player rules" }],
-            guideTooltip: "Opens the in-Foundry player guide: rest phases, comfort tiers, and what your nightly camp activity does.",
+            confirmNote: localize("IONRIFT.RESPITE.SETTINGS.PANEL.ConfirmNote"),
+            confirmRowGroups: [{
+                beforeKey: PLAYER_KEYS[0],
+                label: localize("IONRIFT.RESPITE.SETTINGS.PANEL.PlayerRules")
+            }],
+            guideTooltip: localize("IONRIFT.RESPITE.SETTINGS.PANEL.GuideTooltip"),
             onGuide: () => game.ionrift?.respite?.openPlayerGuide?.()
         },
-        groups: GROUPS
+        groups: GROUPS.map(g => ({ ...g, title: localize(g.title) }))
     });
 }

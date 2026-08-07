@@ -31,6 +31,7 @@ import {
     syncResourceTypeFromMealFlags
 } from "../../services/meal/buffs/MealBuffPresets.js";
 import { MealBuffPickerDialog } from "../meal/MealBuffPickerDialog.js";
+import { localize, format } from "../../utils/I18n.js";
 import {
     buildRecipeMissingOutputIndex,
     formatSyncError,
@@ -76,7 +77,7 @@ export class RecipeEditorApp extends foundry.applications.api.ApplicationV2 {
     static DEFAULT_OPTIONS = {
         id: "respite-recipe-editor",
         window: {
-            title: "Custom Recipes",
+            title: localize("IONRIFT.RESPITE.APP.CustomRecipesTitle"),
             icon: "fas fa-mortar-pestle",
             resizable: true
         },
@@ -1026,7 +1027,7 @@ export class RecipeEditorApp extends foundry.applications.api.ApplicationV2 {
         } catch (err) {
             const detail = formatSyncError(err);
             console.error(`${MODULE_ID} | RecipeEditorApp sync outputs`, detail, err);
-            ui.notifications.error(`Could not write output items to Respite Custom compendium. ${detail}`);
+            ui.notifications.error(format("IONRIFT.RESPITE.NOTIFY.CompendiumWriteFailed", { detail }));
             return;
         }
 
@@ -1036,7 +1037,7 @@ export class RecipeEditorApp extends foundry.applications.api.ApplicationV2 {
             savedIndex = this.#selectedIndex;
         } else {
             if (list.length >= CUSTOM_RECIPE_MAX_PER_PROFESSION) {
-                ui.notifications.warn(`Maximum ${CUSTOM_RECIPE_MAX_PER_PROFESSION} custom recipes per profession.`);
+                ui.notifications.warn(format("IONRIFT.RESPITE.NOTIFY.MaxCustomRecipes", { max: CUSTOM_RECIPE_MAX_PER_PROFESSION }));
                 return;
             }
             list.push(draft);
@@ -1050,7 +1051,7 @@ export class RecipeEditorApp extends foundry.applications.api.ApplicationV2 {
         this.#flashSavedIndex = savedIndex;
         this.#selectedIndex = savedIndex;
         this.#draft = null;
-        ui.notifications.info(`Saved "${draft.name}". Output item: ${draft.output?.name ?? draft.name}.`);
+        ui.notifications.info(format("IONRIFT.RESPITE.NOTIFY.RecipeSaved", { name: draft.name, output: draft.output?.name ?? draft.name }));
         await this.render();
         this.#flashSavedIndex = null;
         this._flashSavedListItem(savedIndex);
@@ -1092,7 +1093,7 @@ export class RecipeEditorApp extends foundry.applications.api.ApplicationV2 {
         const compendiumNote = outputName
             ? ` Compendium item "${outputName}" may still be in ${folderLabel}.`
             : "";
-        ui.notifications.info(`Recipe removed.${compendiumNote}`);
+        ui.notifications.info(format("IONRIFT.RESPITE.NOTIFY.RecipeRemoved", { note: compendiumNote }));
         this.render();
     }
 
@@ -1119,13 +1120,13 @@ export class RecipeEditorApp extends foundry.applications.api.ApplicationV2 {
                 const parsed = JSON.parse(text);
                 await game.settings.set(MODULE_ID, "customRecipes", sanitizeCustomRecipes(parsed));
                 applyCustomRecipesToLiveEngines({ render: true });
-                ui.notifications.info("Custom recipes imported.");
+                ui.notifications.info(localize("IONRIFT.RESPITE.NOTIFY.CustomRecipesImported"));
                 this.#selectedIndex = 0;
                 this.#draft = null;
                 this.render();
             } catch (err) {
                 console.error(err);
-                ui.notifications.error("Could not parse recipe JSON.");
+                ui.notifications.error(localize("IONRIFT.RESPITE.NOTIFY.CouldNotParseRecipeJson"));
             }
         });
         input.click();

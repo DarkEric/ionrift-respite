@@ -1,4 +1,5 @@
 import { isStationLayerActive, refreshStationEmptyNoticeFade } from "../../../services/camp/props/StationInteractionLayer.js";
+import { localize, format } from "../../../utils/I18n.js";
 import { GrantLedger } from "../../../services/crafting/outcomes/GrantLedger.js";
 import { MealPhaseHandler } from "../../../services/meal/phase/MealPhaseHandler.js";
 import { getFoodBuffPartyActors, getMealEligiblePartyActors } from "../../../services/party/partyActors.js";
@@ -133,7 +134,7 @@ export class CraftingDelegate {
                         craftingResults: { [characterId]: result }
                     });
                     const actor = game.actors.get(characterId);
-                    if (actor) ui.notifications.info(`${actor.name}'s activity submitted.`);
+                    if (actor) ui.notifications.info(format("IONRIFT.RESPITE.NOTIFY.ActivitySubmitted", { name: actor.name }));
                     if (app._phase === "activity" && isStationLayerActive()) {
                         app._refreshStationOverlayForFocusChange?.();
                     }
@@ -209,14 +210,14 @@ export class CraftingDelegate {
         }
 
         if (restApp.hasCompletedCrafting?.(actor.id, profession)) {
-            ui.notifications.warn(`${actor.name} has already crafted during this rest.`);
+            ui.notifications.warn(format("IONRIFT.RESPITE.NOTIFY.AlreadyCraftedRest", { name: actor.name }));
             return { ok: false, reason: "already-crafted" };
         }
 
         const ledger = restApp._grantLedger;
         const slotKey = GrantLedger.craftingSlotKey(actor.id, profession, recipeId);
         if (ledger?.has(slotKey)) {
-            ui.notifications.warn("That recipe was already crafted this rest.");
+            ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.RecipeAlreadyCrafted"));
             return { ok: false, reason: "slot-taken" };
         }
 
@@ -242,7 +243,7 @@ export class CraftingDelegate {
             && i.flags?.[MODULE_ID]?.partyMeal === true
         );
         if (!item) {
-            ui.notifications.warn("Could not find the feast item in inventory.");
+            ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.FeastItemNotFound"));
             return { ok: false, reason: "no-item" };
         }
 
@@ -269,10 +270,10 @@ export class CraftingDelegate {
 
         const consumed = await MealPhaseHandler._consumeItem(actor, item.id, 1);
         if (consumed < 1) {
-            ui.notifications.error("Serving finished but the feast item could not be removed from inventory.");
+            ui.notifications.error(localize("IONRIFT.RESPITE.NOTIFY.FeastRemoveFailed"));
             return { ok: false, reason: "consume-failed" };
         }
-        ui.notifications.info(`${actor.name} serves ${craftResult.output.name} to the party!`);
+        ui.notifications.info(format("IONRIFT.RESPITE.NOTIFY.ServesFeast", { name: actor.name, item: craftResult.output.name }));
 
         if (restApp) {
             const feastFlags = snapshot.flags?.[MODULE_ID] ?? {};

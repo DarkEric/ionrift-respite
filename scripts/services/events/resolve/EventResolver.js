@@ -1,5 +1,6 @@
 import { Logger } from "../../../utils/Logger.js";
 import { getPartyActors } from "../../party/partyActors.js";
+import { localizeEventRecord } from "../../../utils/I18n.js";
 
 /**
  * EventResolver
@@ -47,7 +48,7 @@ export class EventResolver {
             if (selection && !selection[event.id]) {
                 continue;
             }
-            this.events.set(event.id, event);
+            this.events.set(event.id, localizeEventRecord({ ...event }));
         }
     }
 

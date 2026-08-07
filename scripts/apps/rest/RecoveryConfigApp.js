@@ -9,6 +9,7 @@
 
 /** Recovery sections and settings. Order = display order. */
 import { MODULE_ID } from "../../data/moduleId.js";
+import { localize, format } from "../../utils/I18n.js";
 const RECOVERY_SECTIONS = [
     {
         id: "longRest",
@@ -94,7 +95,7 @@ export class RecoveryConfigApp extends foundry.applications.api.ApplicationV2 {
     static DEFAULT_OPTIONS = {
         id: "respite-recovery-config",
         window: {
-            title: "Recovery Rules",
+            title: localize("IONRIFT.RESPITE.APP.RecoveryRulesTitle"),
             icon: "fas fa-heart-pulse",
             resizable: false
         },
@@ -245,7 +246,7 @@ export class RecoveryConfigApp extends foundry.applications.api.ApplicationV2 {
                 if (range) await game.settings.set(MODULE_ID, setting.key, Number(range.value));
             }
         }
-        ui.notifications.info("Recovery rules saved.");
+        ui.notifications.info(localize("IONRIFT.RESPITE.NOTIFY.RecoveryRulesSaved"));
         this.close();
     }
 }

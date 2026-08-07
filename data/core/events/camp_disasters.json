@@ -49,7 +49,9 @@
                                 },
                                 {
                                     "type": "item_at_risk",
-                                    "filter": ["disaster"],
+                                    "filter": [
+                                        "disaster"
+                                    ],
                                     "severity": 3,
                                     "narrative": "Some gear was swept away before you could reach it."
                                 }
@@ -82,7 +84,9 @@
                                             },
                                             {
                                                 "type": "item_at_risk",
-                                                "filter": ["disaster"],
+                                                "filter": [
+                                                    "disaster"
+                                                ],
                                                 "severity": 4,
                                                 "narrative": "Loose gear battered by the current."
                                             },
@@ -104,7 +108,9 @@
                                             },
                                             {
                                                 "type": "item_at_risk",
-                                                "filter": ["disaster"],
+                                                "filter": [
+                                                    "disaster"
+                                                ],
                                                 "severity": 5,
                                                 "narrative": "The flood tore through everything."
                                             },
@@ -150,7 +156,9 @@
                                             },
                                             {
                                                 "type": "item_at_risk",
-                                                "filter": ["disaster"],
+                                                "filter": [
+                                                    "disaster"
+                                                ],
                                                 "severity": 4,
                                                 "narrative": "Gear torn from your packs as you swam."
                                             },
@@ -172,7 +180,9 @@
                                             },
                                             {
                                                 "type": "item_at_risk",
-                                                "filter": ["disaster"],
+                                                "filter": [
+                                                    "disaster"
+                                                ],
                                                 "severity": 5,
                                                 "narrative": "Everything in your packs lost to the rapids."
                                             },
@@ -250,7 +260,9 @@
                                             },
                                             {
                                                 "type": "item_at_risk",
-                                                "filter": ["disaster"],
+                                                "filter": [
+                                                    "disaster"
+                                                ],
                                                 "severity": 2,
                                                 "narrative": "A few items slipped away before you could grab them."
                                             },
@@ -272,7 +284,9 @@
                                             },
                                             {
                                                 "type": "item_at_risk",
-                                                "filter": ["disaster"],
+                                                "filter": [
+                                                    "disaster"
+                                                ],
                                                 "severity": 5,
                                                 "narrative": "Everything torn from your hands by the current."
                                             },
@@ -308,7 +322,9 @@
                                             },
                                             {
                                                 "type": "item_at_risk",
-                                                "filter": ["disaster"],
+                                                "filter": [
+                                                    "disaster"
+                                                ],
                                                 "severity": 5,
                                                 "narrative": "The gear you left behind is gone for good."
                                             }
@@ -324,7 +340,9 @@
                                             },
                                             {
                                                 "type": "item_at_risk",
-                                                "filter": ["disaster"],
+                                                "filter": [
+                                                    "disaster"
+                                                ],
                                                 "severity": 5,
                                                 "narrative": "Camp gear smashed and scattered by the debris."
                                             },
@@ -350,7 +368,9 @@
             },
             "tier": "disaster",
             "sentiment": "negative",
-            "pack": "base"
+            "pack": "base",
+            "nameKey": "IONRIFT.RESPITE.DATA.EVENT.evt_disaster_flash_flood.Name",
+            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_disaster_flash_flood.Description"
         }
     ]
 }

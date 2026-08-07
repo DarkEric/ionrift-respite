@@ -1,4 +1,5 @@
 import { CampGearScanner } from "../../../services/camp/gear/CampGearScanner.js";
+import { localize, format } from "../../../utils/I18n.js";
 import { CampfireTokenLinker } from "../../../services/camp/fire/CampfireTokenLinker.js";
 import {
     placeCampfire,
@@ -92,7 +93,7 @@ export class CampPlacementDelegate {
             const canvasEl = document.getElementById("board");
             const originalCursor = canvasEl?.style.cursor;
             if (canvasEl) canvasEl.style.cursor = "crosshair";
-            ui.notifications.info("Click the map to place the campfire pit. Right-click or Escape to cancel.");
+            ui.notifications.info(localize("IONRIFT.RESPITE.NOTIFY.PlaceCampfirePitHint"));
 
             const gs = canvas.grid?.size ?? canvas.dimensions?.size ?? 100;
             const snapMode = CONST.GRID_SNAPPING_MODES?.CENTER ?? 1;
@@ -462,7 +463,7 @@ export class CampPlacementDelegate {
                     simpleStations: isSimpleStationsMode()
                 });
                 if (!moved) {
-                    ui.notifications.warn("Could not move the campfire.");
+                    ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.CouldNotMoveCampfire"));
                 } else {
                     await app._saveRestState();
                     if (game.user.isGM) app._broadcastMakeCampPhaseSync();
@@ -570,7 +571,7 @@ export class CampPlacementDelegate {
 
         if (!hasCampfirePlaced()) {
             this._healOrphanCampfirePlacementState();
-            ui.notifications.info("Campfire is not on the map. Click the map to place it again.");
+            ui.notifications.info(localize("IONRIFT.RESPITE.NOTIFY.CampfireNotOnMap"));
             if (!app._isTotM) {
                 app._campPitPlacementCancelled = false;
                 await this._startCampPitCursorFlow();
@@ -591,7 +592,7 @@ export class CampPlacementDelegate {
             simpleStations: isSimpleStationsMode()
         });
         if (!moved) {
-            ui.notifications.warn("Could not move the campfire. Place it again from the map.");
+            ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.CouldNotMoveCampfirePlaceAgain"));
             this._healOrphanCampfirePlacementState();
             if (!app._isTotM) {
                 app._campPitPlacementCancelled = false;
@@ -601,7 +602,7 @@ export class CampPlacementDelegate {
             return;
         }
 
-        ui.notifications.info("Campfire and station markers moved.");
+        ui.notifications.info(localize("IONRIFT.RESPITE.NOTIFY.CampMarkersMoved"));
         await app._saveRestState();
         app._broadcastMakeCampPhaseSync();
         await this._refreshCampPitNoticeLayer();
@@ -616,9 +617,9 @@ export class CampPlacementDelegate {
         if (!game.user.isGM) return;
         const n = await clearCampTokens();
         if (n > 0) {
-            ui.notifications.info(`Removed ${n} camp token(s) from the scene.`);
+            ui.notifications.info(format("IONRIFT.RESPITE.NOTIFY.RemovedCampTokens", { count: n }));
         } else {
-            ui.notifications.info("No camp tokens to remove on app scene.");
+            ui.notifications.info(localize("IONRIFT.RESPITE.NOTIFY.NoCampTokensToRemove"));
         }
         emitCampSceneCleared({
                     resetFireLevel: true
@@ -660,10 +661,10 @@ export class CampPlacementDelegate {
         if (game.user.isGM) {
             const n = await clearPlayerCampGear(actorId, sceneIdGm);
             if (n > 0) {
-                ui.notifications.info(`Removed ${n} camp token(s) for that character.`);
+                ui.notifications.info(format("IONRIFT.RESPITE.NOTIFY.RemovedCampTokensForCharacter", { count: n }));
                 emitCampSceneCleared({ actorId });
             } else {
-                ui.notifications.info("No camp tokens for that character on the scene.");
+                ui.notifications.info(localize("IONRIFT.RESPITE.NOTIFY.NoCampTokensForCharacter"));
             }
             app.render();
             return;
@@ -671,7 +672,7 @@ export class CampPlacementDelegate {
 
         const actor = game.actors.get(actorId);
         if (!actor?.isOwner) {
-            ui.notifications.warn("You can only clear tokens for a character you own.");
+            ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.ClearTokensOwnOnly"));
             return;
         }
 
@@ -698,13 +699,13 @@ export class CampPlacementDelegate {
         if (game.user.isGM) {
             const n = await clearPlayerCampGearType(actorId, gearType, sceneIdGm);
             if (n > 0) {
-                ui.notifications.info("Gear picked up from the scene.");
+                ui.notifications.info(localize("IONRIFT.RESPITE.NOTIFY.GearPickedUp"));
                 emitCampGearPlaced({
                     actorId,
                     gearType
                 });
             } else {
-                ui.notifications.info("Nothing to pick up on the scene for that slot.");
+                ui.notifications.info(localize("IONRIFT.RESPITE.NOTIFY.NothingToPickupSlot"));
             }
             app.render();
             return;
@@ -712,7 +713,7 @@ export class CampPlacementDelegate {
 
         const actor = game.actors.get(actorId);
         if (!actor?.isOwner) {
-            ui.notifications.warn("You can only reclaim gear for a character you own.");
+            ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.ReclaimGearOwnOnly"));
             return;
         }
 
@@ -723,7 +724,7 @@ export class CampPlacementDelegate {
                     userId: game.user.id,
                     sceneId
                 });
-        ui.notifications.info("Pick-up sent to the GM.");
+        ui.notifications.info(localize("IONRIFT.RESPITE.NOTIFY.PickupSentToGm"));
     
     }
 
@@ -739,10 +740,10 @@ export class CampPlacementDelegate {
         if (game.user.isGM) {
             const n = await clearSharedCampStation(stationKey);
             if (n > 0) {
-                ui.notifications.info("Station picked up from the scene.");
+                ui.notifications.info(localize("IONRIFT.RESPITE.NOTIFY.StationPickedUp"));
                 emitCampStationPlaced();
             } else {
-                ui.notifications.info("Nothing to pick up on the scene for that station.");
+                ui.notifications.info(localize("IONRIFT.RESPITE.NOTIFY.NothingToPickupStation"));
             }
             app.render();
             return;
@@ -750,11 +751,11 @@ export class CampPlacementDelegate {
 
         const actor = game.actors.get(actorId);
         if (!actor?.isOwner) {
-            ui.notifications.warn("You can only pick up stations for a character you own.");
+            ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.PickupStationOwnOnly"));
             return;
         }
         if (!canPlaceStation(actor, stationKey)) {
-            ui.notifications.warn("That character cannot pick up app station.");
+            ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.CannotPickupThisStation"));
             return;
         }
 
@@ -763,7 +764,7 @@ export class CampPlacementDelegate {
                     stationKey,
                     userId: game.user.id
                 });
-        ui.notifications.info("Pick-up sent to the GM.");
+        ui.notifications.info(localize("IONRIFT.RESPITE.NOTIFY.PickupSentToGm"));
     
     }
 
@@ -780,7 +781,7 @@ export class CampPlacementDelegate {
                 return n.includes("tinderbox") || n.includes("flint and steel") || n.includes("flint & steel");
             }));
             if (!hasTinderbox) {
-                ui.notifications.warn("No one has a tinderbox or flint & steel to start a fire.");
+                ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.NoTinderboxInParty"));
                 return;
             }
         }
@@ -795,7 +796,7 @@ export class CampPlacementDelegate {
                 return sum + (it?.system?.quantity ?? 0);
             }, 0);
             if (cost > totalFirewood) {
-                ui.notifications.warn("Not enough firewood in the party for that fire size.");
+                ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.NotEnoughFirewoodParty"));
                 return;
             }
         }
@@ -881,7 +882,7 @@ export class CampPlacementDelegate {
         } else if (newCost > curCost) {
             const need = newCost - curCost;
             if (cur === "unlit" && !hasTinderbox) {
-                ui.notifications.warn("No one has a tinderbox or flint and steel to start a fire.");
+                ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.NoTinderboxInParty"));
                 return { ok: false, error: "No tinderbox" };
             }
             // When a player requests the change, only their actors' firewood counts
@@ -897,13 +898,13 @@ export class CampPlacementDelegate {
                 return sum + (it?.system?.quantity ?? 0);
             }, 0);
             if (need > 0 && totalFirewood < need) {
-                ui.notifications.warn("Not enough firewood in the party for that fire size.");
+                ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.NotEnoughFirewoodParty"));
                 return { ok: false, error: "Not enough wood" };
             }
             if (need > 0) {
                 const spend = await app._spendPartyFirewoodForMakeCamp(need, requestingUserId);
                 if (!spend.ok) {
-                    ui.notifications.warn(spend.error ?? "Could not spend firewood.");
+                    ui.notifications.warn(spend.error ?? localize("IONRIFT.RESPITE.NOTIFY.CouldNotSpendFirewood"));
                     return { ok: false, error: spend.error };
                 }
             }
@@ -923,11 +924,11 @@ export class CampPlacementDelegate {
 
         const label = level.charAt(0).toUpperCase() + level.slice(1);
         if (newCost > curCost && (newCost - curCost) > 0) {
-            ui.notifications.info(`${label} set. ${newCost - curCost} firewood spent from party stock.`);
+            ui.notifications.info(format("IONRIFT.RESPITE.NOTIFY.FireLevelSetSpent", { label, spent: newCost - curCost }));
         } else if (newCost < curCost) {
-            ui.notifications.info(`${label} set.`);
+            ui.notifications.info(format("IONRIFT.RESPITE.NOTIFY.FireLevelSet", { label }));
         } else {
-            ui.notifications.info(`${label} set.`);
+            ui.notifications.info(format("IONRIFT.RESPITE.NOTIFY.FireLevelSet", { label }));
         }
 
         emitPhaseChanged("activity", {
@@ -980,7 +981,7 @@ export class CampPlacementDelegate {
         app.render();
         void refreshOpenStationDialog();
         if (!fromPlayer) {
-            ui.notifications.info("Cold camp set.");
+            ui.notifications.info(localize("IONRIFT.RESPITE.NOTIFY.ColdCampSet"));
         }
         return { ok: true };
     

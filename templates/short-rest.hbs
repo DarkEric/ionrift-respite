@@ -4,8 +4,8 @@
     {{!-- Abandon button: top-right, matching long rest placement --}}
     {{#if isGM}}
     <div class="sr-header-bar">
-        <button type="button" class="btn-abandon-rest" data-action="abandonShortRest" data-tooltip="Abandon this short rest">
-            <i class="fas fa-times"></i> Abandon Rest
+        <button type="button" class="btn-abandon-rest" data-action="abandonShortRest" data-tooltip="{{localize 'IONRIFT.RESPITE.SHORT.AbandonTooltip'}}">
+            <i class="fas fa-times"></i> {{localize 'IONRIFT.RESPITE.UI.AbandonRest'}}
         </button>
     </div>
     {{/if}}
@@ -17,13 +17,13 @@
                 <i class="{{shelterBadge.icon}}"></i> {{shelterBadge.name}}
             </span>
             {{#if songOfRest}}
-            <span class="camp-status-chip sr-song-chip" data-tooltip="Song of Rest: {{songOfRest.bardName}} rolls {{songOfRest.songDie}} extra healing for each character who spends at least one Hit Die. {{#if songOfRest.timingEnd}}Applied when the GM completes this rest.{{else}}Applied immediately with each character's first Hit Die.{{/if}}">
-                <i class="fas fa-music"></i> {{songOfRest.bardName}} · {{songOfRest.songDie}} · {{#if songOfRest.timingEnd}}on complete (if you spend HD){{else}}on 1st HD{{/if}}
+            <span class="camp-status-chip sr-song-chip" data-tooltip="{{localize 'IONRIFT.RESPITE.SHORT.SongOfRestTooltip' bard=songOfRest.bardName die=songOfRest.songDie}}{{#if songOfRest.timingEnd}} {{localize 'IONRIFT.RESPITE.SHORT.SongTimingEnd'}}{{else}} {{localize 'IONRIFT.RESPITE.SHORT.SongTimingImmediate'}}{{/if}}">
+                <i class="fas fa-music"></i> {{songOfRest.bardName}} · {{songOfRest.songDie}} · {{#if songOfRest.timingEnd}}{{localize 'IONRIFT.RESPITE.SHORT.SongChipEnd'}}{{else}}{{localize 'IONRIFT.RESPITE.SHORT.SongChipFirst'}}{{/if}}
             </span>
             {{/if}}
             {{#if chefReplenishing}}
-            <span class="camp-status-chip sr-chef-chip" data-tooltip="Replenishing Meal: {{chefReplenishing.chefName}} is cooking. Up to {{chefReplenishing.mealCapacity}} characters who spend Hit Dice regain an extra 1d8 HP ({{chefReplenishing.mealsRemaining}} servings left).">
-                <i class="fas fa-utensils"></i> {{chefReplenishing.chefName}} · +1d8 · {{chefReplenishing.mealsRemaining}} left
+            <span class="camp-status-chip sr-chef-chip" data-tooltip="{{localize 'IONRIFT.RESPITE.SHORT.ChefTooltip' chef=chefReplenishing.chefName capacity=chefReplenishing.mealCapacity remaining=chefReplenishing.mealsRemaining}}">
+                <i class="fas fa-utensils"></i> {{chefReplenishing.chefName}} · +1d8 · {{localize 'IONRIFT.RESPITE.SHORT.ChefLeft' remaining=chefReplenishing.mealsRemaining}}
             </span>
             {{/if}}
         </div>
@@ -40,7 +40,7 @@
             <div class="roster-chip {{#if isAfk}}afk{{/if}} {{#if isFinished}}sr-finished{{/if}} {{#if isWorkbenchFocus}}sr-wb-roster-focus{{/if}} {{#if ../gmWorkbenchRosterPick}}sr-wb-roster-pickable{{/if}}"
                 data-roster-id="{{id}}"
                 {{#if ../gmWorkbenchRosterPick}}data-action="selectWorkbenchRosterActor"{{/if}}
-                data-tooltip="{{fullName}}{{#if ../gmWorkbenchRosterPick}}. GM: click to show this character's workbench.{{/if}}">
+                data-tooltip="{{fullName}}{{#if ../gmWorkbenchRosterPick}}. {{localize 'IONRIFT.RESPITE.SHORT.GmWorkbenchClick'}}{{/if}}">
                 <span class="roster-portrait-wrap">
                     <img class="roster-portrait" src="{{img}}" alt="{{name}}">
                     {{#if isAfk}}<span class="roster-afk-mug" aria-hidden="true"><i class="fas fa-mug-hot"></i></span>{{/if}}
@@ -48,9 +48,9 @@
                 <span class="roster-name">{{name}}</span>
                 <span class="roster-status">
                     {{#if isFinished}}
-                    <i class="fas fa-check-circle" data-tooltip="Finished"></i>
+                    <i class="fas fa-check-circle" data-tooltip="{{localize 'IONRIFT.RESPITE.SHORT.Finished'}}"></i>
                     {{else}}
-                    <i class="fas fa-hourglass-half" data-tooltip="Resting"></i>
+                    <i class="fas fa-hourglass-half" data-tooltip="{{localize 'IONRIFT.RESPITE.SHORT.Resting'}}"></i>
                     {{/if}}
                 </span>
             </div>
@@ -60,14 +60,14 @@
     {{/if}}
 
     {{#unless completionPhase}}
-    <div class="sr-tab-bar" role="tablist" aria-label="Short rest sections">
+    <div class="sr-tab-bar" role="tablist" aria-label="{{localize 'IONRIFT.RESPITE.SHORT.SectionsAria'}}">
         <button type="button" role="tab" class="sr-tab {{#if (eq activeTab "recovery")}}active{{/if}}"
             data-action="switchShortRestTab" data-tab="recovery" {{#if (eq activeTab "recovery")}}aria-selected="true"{{else}}aria-selected="false"{{/if}}>
-            <i class="fas fa-heart"></i> Recovery
+            <i class="fas fa-heart"></i> {{localize 'IONRIFT.RESPITE.SHORT.Recovery'}}
         </button>
         <button type="button" role="tab" class="sr-tab {{#if (eq activeTab "workbench")}}active{{/if}}"
             data-action="switchShortRestTab" data-tab="workbench" {{#if (eq activeTab "workbench")}}aria-selected="true"{{else}}aria-selected="false"{{/if}}>
-            <i class="fas fa-hammer"></i> Workbench
+            <i class="fas fa-hammer"></i> {{localize 'IONRIFT.RESPITE.SHORT.Workbench'}}
         </button>
     </div>
 
@@ -82,7 +82,7 @@
             <div class="sr-card-header">
                 <img src="{{img}}" alt="{{name}}" class="sr-portrait">
                 <div class="sr-identity">
-                    <span class="sr-name">{{name}}{{#if isSelfCard}}<span class="sr-you-pill">You</span>{{/if}}</span>
+                    <span class="sr-name">{{name}}{{#if isSelfCard}}<span class="sr-you-pill">{{localize 'IONRIFT.RESPITE.UI.You'}}</span>{{/if}}</span>
                     <div class="sr-hp-row">
                         <span class="sr-hp {{#if isFullHp}}full{{/if}}">
                             <i class="fas fa-heart"></i> {{currentHp}} / {{maxHp}}
@@ -103,16 +103,16 @@
                 </div>
                 {{#if isOwner}}
                 {{#if isFullHp}}
-                <button type="button" class="sr-spend-btn faded" disabled data-tooltip="Already at full HP.">
-                    <i class="fas fa-dice-d20"></i> Spend HD
+                <button type="button" class="sr-spend-btn faded" disabled data-tooltip="{{localize 'IONRIFT.RESPITE.SHORT.FullHpTooltip'}}">
+                    <i class="fas fa-dice-d20"></i> {{localize 'IONRIFT.RESPITE.SHORT.SpendHd'}}
                 </button>
                 {{else if noHdLeft}}
-                <button type="button" class="sr-spend-btn faded" disabled data-tooltip="No Hit Dice remaining.">
-                    <i class="fas fa-dice-d20"></i> Spend HD
+                <button type="button" class="sr-spend-btn faded" disabled data-tooltip="{{localize 'IONRIFT.RESPITE.SHORT.NoHdTooltip'}}">
+                    <i class="fas fa-dice-d20"></i> {{localize 'IONRIFT.RESPITE.SHORT.SpendHd'}}
                 </button>
                 {{else}}
                 <button type="button" class="sr-spend-btn" data-action="spendHitDie" data-actor-id="{{id}}">
-                    <i class="fas fa-dice-d20"></i> Spend HD
+                    <i class="fas fa-dice-d20"></i> {{localize 'IONRIFT.RESPITE.SHORT.SpendHd'}}
                 </button>
                 {{/if}}
                 {{/if}}
@@ -122,13 +122,13 @@
             {{#if rolls.length}}
             <div class="sr-roll-log">
                 {{#if rollsCompressed}}
-                <span class="sr-roll-hidden-badge" data-tooltip="{{rollsHidden}} earlier rolls">+{{rollsHidden}} more</span>
+                <span class="sr-roll-hidden-badge" data-tooltip="{{localize 'IONRIFT.RESPITE.SHORT.EarlierRolls' count=rollsHidden}}">+{{rollsHidden}} {{localize 'IONRIFT.RESPITE.SHORT.More'}}</span>
                 {{/if}}
                 {{#each rollsToShow}}
                 <span class="sr-roll-entry" data-tooltip="d{{die}} + {{conMod}} CON{{#if annotations.length}} | {{#each annotations}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}{{/if}}">+{{total}}{{#if annotations.length}}<span class="sr-roll-mod-badge">{{#each annotations}}{{this}}{{#unless @last}} · {{/unless}}{{/each}}</span>{{/if}}</span>
                 {{/each}}
                 <span class="sr-roll-total">
-                    <i class="fas fa-plus-circle"></i> {{totalHealed}} HP{{#if songBonusTotal}} <span class="sr-roll-song-addon">+ {{songBonusTotal}} Song</span>{{/if}}{{#if chefMealTotal}} <span class="sr-roll-chef-addon">+ {{chefMealTotal}} Chef</span>{{/if}}
+                    <i class="fas fa-plus-circle"></i> {{totalHealed}} HP{{#if songBonusTotal}} <span class="sr-roll-song-addon">+ {{songBonusTotal}} {{localize 'IONRIFT.RESPITE.SHORT.Song'}}</span>{{/if}}{{#if chefMealTotal}} <span class="sr-roll-chef-addon">+ {{chefMealTotal}} {{localize 'IONRIFT.RESPITE.SHORT.Chef'}}</span>{{/if}}
                 </span>
             </div>
             {{/if}}
@@ -137,11 +137,11 @@
             <div class="sr-song-card-line {{songCard.kind}}">
                 {{#if songCard.isPendingEnd}}
                 <i class="fas fa-hourglass-half"></i>
-                <span class="sr-song-card-text">Song: <strong>{{songCard.die}}</strong> on complete (spent HD)</span>
+                <span class="sr-song-card-text">{{{localize 'IONRIFT.RESPITE.SHORT.SongPending' die=songCard.die}}}</span>
                 {{/if}}
                 {{#if songCard.isAppliedImmediate}}
                 <i class="fas fa-music"></i>
-                <span class="sr-song-card-text">Song: <strong>+{{songCard.total}} HP</strong> <span class="sr-song-formula">({{songCard.formula}})</span></span>
+                <span class="sr-song-card-text">{{{localize 'IONRIFT.RESPITE.SHORT.SongApplied' total=songCard.total formula=songCard.formula}}}</span>
                 {{/if}}
             </div>
             {{/if}}
@@ -151,14 +151,14 @@
             <div class="sr-song-volunteer">
                 {{#if hasVolunteeredSong}}
                 <button type="button" class="sr-volunteer-btn active" data-action="volunteerSong" data-actor-id="{{id}}">
-                    <i class="fas fa-music"></i> Song offered ({{bardSongDie}})
+                    <i class="fas fa-music"></i> {{localize 'IONRIFT.RESPITE.SHORT.SongOffered' die=bardSongDie}}
                 </button>
                 {{else if canVolunteerSong}}
                 <button type="button" class="sr-volunteer-btn" data-action="volunteerSong" data-actor-id="{{id}}">
-                    <i class="fas fa-music"></i> Offer Song of Rest ({{bardSongDie}})
+                    <i class="fas fa-music"></i> {{localize 'IONRIFT.RESPITE.SHORT.OfferSong' die=bardSongDie}}
                 </button>
                 {{else if songVolunteerLocked}}
-                <span class="sr-volunteer-locked"><i class="fas fa-music"></i> Song claimed</span>
+                <span class="sr-volunteer-locked"><i class="fas fa-music"></i> {{localize 'IONRIFT.RESPITE.SHORT.SongClaimed'}}</span>
                 {{/if}}
             </div>
             {{/if}}
@@ -168,14 +168,14 @@
             <div class="sr-chef-volunteer">
                 {{#if hasVolunteeredChef}}
                 <button type="button" class="sr-volunteer-btn active" data-action="volunteerChefMeal" data-actor-id="{{id}}">
-                    <i class="fas fa-utensils"></i> Cooking for rest ({{chefMealCapacity}} servings)
+                    <i class="fas fa-utensils"></i> {{localize 'IONRIFT.RESPITE.SHORT.CookingForRest' servings=chefMealCapacity}}
                 </button>
                 {{else if canVolunteerChef}}
                 <button type="button" class="sr-volunteer-btn" data-action="volunteerChefMeal" data-actor-id="{{id}}">
-                    <i class="fas fa-utensils"></i> Cook Replenishing Meal ({{chefMealCapacity}} servings)
+                    <i class="fas fa-utensils"></i> {{localize 'IONRIFT.RESPITE.SHORT.CookReplenishing' servings=chefMealCapacity}}
                 </button>
                 {{else if chefVolunteerLocked}}
-                <span class="sr-volunteer-locked"><i class="fas fa-utensils"></i> Chef meal claimed</span>
+                <span class="sr-volunteer-locked"><i class="fas fa-utensils"></i> {{localize 'IONRIFT.RESPITE.SHORT.ChefMealClaimed'}}</span>
                 {{/if}}
             </div>
             {{/if}}
@@ -187,34 +187,34 @@
                 <div class="sr-spell-header">
                     <i class="fas fa-moon"></i>
                     <span class="sr-spell-label">{{spellRecovery.featureName}}</span>
-                    <span class="sr-spell-budget sr-spell-budget-muted">0 / {{spellRecovery.maxBudget}} lvls</span>
+                    <span class="sr-spell-budget sr-spell-budget-muted">0 / {{spellRecovery.maxBudget}} {{localize 'IONRIFT.RESPITE.SHORT.Lvls'}}</span>
                 </div>
-                <p class="sr-spell-static-msg">Used. Resets on long rest.</p>
+                <p class="sr-spell-static-msg">{{localize 'IONRIFT.RESPITE.SHORT.SpellUsedLongRest'}}</p>
             </div>
             {{else if spellRecovery.noRecoverableSlots}}
             <div class="sr-spell-recovery sr-spell-recovery-static">
                 <div class="sr-spell-header">
                     <i class="fas fa-hat-wizard"></i>
                     <span class="sr-spell-label">{{spellRecovery.featureName}}</span>
-                    <span class="sr-spell-budget">0 / {{spellRecovery.maxBudget}} lvls</span>
+                    <span class="sr-spell-budget">0 / {{spellRecovery.maxBudget}} {{localize 'IONRIFT.RESPITE.SHORT.Lvls'}}</span>
                 </div>
-                <p class="sr-spell-static-msg">No spent slots to recover.</p>
+                <p class="sr-spell-static-msg">{{localize 'IONRIFT.RESPITE.SHORT.NoSpentSlots'}}</p>
             </div>
             {{else}}
             <div class="sr-spell-recovery {{#if spellRecovery.confirmed}}confirmed{{/if}}">
                 <div class="sr-spell-header">
                     <i class="fas fa-hat-wizard"></i>
                     <span class="sr-spell-label">{{spellRecovery.featureName}}</span>
-                    <span class="sr-spell-budget">{{spellRecovery.currentSpend}} / {{spellRecovery.maxBudget}} lvls</span>
+                    <span class="sr-spell-budget">{{spellRecovery.currentSpend}} / {{spellRecovery.maxBudget}} {{localize 'IONRIFT.RESPITE.SHORT.Lvls'}}</span>
                     {{#if spellRecovery.confirmed}}
-                    <span class="sr-spell-confirmed-badge"><i class="fas fa-check-circle"></i> Confirmed</span>
+                    <span class="sr-spell-confirmed-badge"><i class="fas fa-check-circle"></i> {{localize 'IONRIFT.RESPITE.UI.Confirmed'}}</span>
                     {{/if}}
                 </div>
                 <div class="sr-spell-slots">
                     {{#each spellRecovery.slots}}
                     <div class="sr-spell-slot-row">
-                        <span class="sr-spell-level">Level {{level}}</span>
-                        <span class="sr-spell-count">{{selected}} / {{spent}} spent</span>
+                        <span class="sr-spell-level">{{localize 'IONRIFT.RESPITE.SHORT.Level' level=level}}</span>
+                        <span class="sr-spell-count">{{selected}} / {{spent}} {{localize 'IONRIFT.RESPITE.SHORT.Spent'}}</span>
                         <div class="sr-spell-controls">
                             {{#if canRemove}}
                             <button type="button" class="sr-spell-btn sr-spell-minus" data-action="removeSpellSlot" data-actor-id="{{../spellRecovery.actorId}}" data-level="{{level}}">
@@ -240,11 +240,11 @@
                 </div>
                 {{#if spellRecovery.confirmed}}
                 <button type="button" class="sr-spell-edit-btn" data-action="editRecovery" data-actor-id="{{spellRecovery.actorId}}">
-                    <i class="fas fa-pen"></i> Edit
+                    <i class="fas fa-pen"></i> {{localize 'IONRIFT.RESPITE.UI.Edit'}}
                 </button>
                 {{else if spellRecovery.hasSelections}}
                 <button type="button" class="sr-spell-confirm-btn" data-action="confirmRecovery" data-actor-id="{{spellRecovery.actorId}}">
-                    <i class="fas fa-check"></i> Confirm
+                    <i class="fas fa-check"></i> {{localize 'IONRIFT.RESPITE.UI.Confirm'}}
                 </button>
                 {{/if}}
             </div>
@@ -252,7 +252,7 @@
             {{/if}}
 
             {{#if srRechargeBadges.length}}
-            <div class="sr-recharge-badges" data-tooltip="These class features and items often recharge on a short rest.">
+            <div class="sr-recharge-badges" data-tooltip="{{localize 'IONRIFT.RESPITE.SHORT.RechargeTooltip'}}">
                 {{#each srRechargeBadges}}
                 <span class="sr-recharge-pill">{{this}}</span>
                 {{/each}}
@@ -304,7 +304,7 @@
 
     {{else}}
     <div class="sr-scroll-body sr-completion-body">
-        <h2 class="sr-completion-heading">Short rest summary</h2>
+        <h2 class="sr-completion-heading">{{localize 'IONRIFT.RESPITE.SHORT.SummaryHeading'}}</h2>
         <div class="sr-completion-list">
             {{#each completionSummaryForUser}}
             <div class="sr-completion-card">
@@ -313,10 +313,10 @@
             </div>
             {{/each}}
             {{#if completionSummaryEmpty}}
-            <p class="sr-completion-empty">No party characters are assigned to this user. When the GM applies recovery, this window will close.</p>
+            <p class="sr-completion-empty">{{localize 'IONRIFT.RESPITE.SHORT.SummaryEmpty'}}</p>
             {{/if}}
         </div>
-        <p class="sr-completion-lead">The next step runs Foundry short rest on each sheet (class features, item uses, Wild Shape uses, and similar).</p>
+        <p class="sr-completion-lead">{{localize 'IONRIFT.RESPITE.SHORT.SummaryLead'}}</p>
     </div>
     {{/unless}}
 
@@ -326,27 +326,27 @@
             {{#if completionPhase}}
             {{#if isGM}}
             <button type="button" class="btn-primary sr-complete-btn" data-action="finalizeShortRestRecovery">
-                <i class="fas fa-check"></i> Apply native recovery &amp; close
+                <i class="fas fa-check"></i> {{localize 'IONRIFT.RESPITE.SHORT.ApplyNativeClose'}}
             </button>
             {{else}}
-            <span class="sr-waiting"><i class="fas fa-hourglass-half"></i> Waiting for the GM to apply recovery...</span>
+            <span class="sr-waiting"><i class="fas fa-hourglass-half"></i> {{localize 'IONRIFT.RESPITE.SHORT.WaitingApplyRecovery'}}</span>
             {{/if}}
             {{else}}
             {{#unless isGM}}
             <button type="button" class="sr-finished-toggle {{#if shortRestFooter.myFinished}}active{{/if}}" data-action="toggleShortRestFinished">
                 {{#if shortRestFooter.myFinished}}
-                <i class="fas fa-undo"></i> Still resting
+                <i class="fas fa-undo"></i> {{localize 'IONRIFT.RESPITE.SHORT.StillResting'}}
                 {{else}}
-                <i class="fas fa-flag-checkered"></i> I'm finished
+                <i class="fas fa-flag-checkered"></i> {{localize 'IONRIFT.RESPITE.SHORT.ImFinished'}}
                 {{/if}}
             </button>
             {{/unless}}
             {{#if isGM}}
             <button type="button" class="btn-primary sr-complete-btn" data-action="completeShortRest">
-                <i class="fas fa-check"></i> Complete Short Rest
+                <i class="fas fa-check"></i> {{localize 'IONRIFT.RESPITE.SHORT.CompleteShortRest'}}
             </button>
             {{else}}
-            <span class="sr-waiting"><i class="fas fa-hourglass-half"></i> Waiting for GM...</span>
+            <span class="sr-waiting"><i class="fas fa-hourglass-half"></i> {{localize 'IONRIFT.RESPITE.SHORT.WaitingForGm'}}</span>
             {{/if}}
             {{/if}}
         </div>

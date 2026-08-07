@@ -5,13 +5,55 @@
         "backlog": "v1.1: Expose entries in Convenient Effects UI listing"
     },
     "durationMap": {
-        "next_rest": { "seconds": null, "removal": "respite_cleanup", "daeSpecial": "longRest", "label": "Until next rest" },
-        "end_of_rest": { "seconds": null, "removal": "respite_cleanup", "daeSpecial": "shortRest", "label": "End of current rest" },
-        "4_hours": { "seconds": 14400, "removal": "timer", "daeSpecial": null, "label": "4 hours" },
-        "8_hours": { "seconds": 28800, "removal": "timer", "daeSpecial": null, "label": "8 hours" },
-        "24_hours": { "seconds": 86400, "removal": "timer", "daeSpecial": "newDay", "label": "24 hours" },
-        "permanent": { "seconds": null, "removal": "manual", "daeSpecial": null, "label": "Permanent" },
-        "1_attack": { "seconds": null, "removal": "timer", "daeSpecial": "1Attack", "label": "Next attack" }
+        "next_rest": {
+            "seconds": null,
+            "removal": "respite_cleanup",
+            "daeSpecial": "longRest",
+            "label": "Until next rest",
+            "labelKey": "IONRIFT.RESPITE.DATA.DURATION.next_rest.Label"
+        },
+        "end_of_rest": {
+            "seconds": null,
+            "removal": "respite_cleanup",
+            "daeSpecial": "shortRest",
+            "label": "End of current rest",
+            "labelKey": "IONRIFT.RESPITE.DATA.DURATION.end_of_rest.Label"
+        },
+        "4_hours": {
+            "seconds": 14400,
+            "removal": "timer",
+            "daeSpecial": null,
+            "label": "4 hours",
+            "labelKey": "IONRIFT.RESPITE.DATA.DURATION.4_hours.Label"
+        },
+        "8_hours": {
+            "seconds": 28800,
+            "removal": "timer",
+            "daeSpecial": null,
+            "label": "8 hours",
+            "labelKey": "IONRIFT.RESPITE.DATA.DURATION.8_hours.Label"
+        },
+        "24_hours": {
+            "seconds": 86400,
+            "removal": "timer",
+            "daeSpecial": "newDay",
+            "label": "24 hours",
+            "labelKey": "IONRIFT.RESPITE.DATA.DURATION.24_hours.Label"
+        },
+        "permanent": {
+            "seconds": null,
+            "removal": "manual",
+            "daeSpecial": null,
+            "label": "Permanent",
+            "labelKey": "IONRIFT.RESPITE.DATA.DURATION.permanent.Label"
+        },
+        "1_attack": {
+            "seconds": null,
+            "removal": "timer",
+            "daeSpecial": "1Attack",
+            "label": "Next attack",
+            "labelKey": "IONRIFT.RESPITE.DATA.DURATION.1_attack.Label"
+        }
     },
     "conditions": [
         {
@@ -23,12 +65,16 @@
             "icon": null,
             "description": "Nausea or venom. Disadvantage on attack rolls and ability checks.",
             "defaultDuration": "next_rest",
-            "colorTheme": "green"
+            "colorTheme": "green",
+            "labelKey": "IONRIFT.RESPITE.DATA.CONDITION.respite-poisoned.Label",
+            "descriptionKey": "IONRIFT.RESPITE.DATA.CONDITION.respite-poisoned.Description"
         },
         {
             "id": "respite-disadv-con",
             "condition": "disadvantage",
-            "checks": ["con"],
+            "checks": [
+                "con"
+            ],
             "ceStandard": false,
             "label": "Weakened (CON)",
             "icon": "icons/skills/wounds/blood-drip-droplet-red.webp",
@@ -36,14 +82,26 @@
             "defaultDuration": "next_rest",
             "colorTheme": "red",
             "changes": [
-                { "key": "flags.midi-qol.disadvantage.ability.check.con", "mode": 0, "value": "1" },
-                { "key": "flags.midi-qol.disadvantage.ability.save.con", "mode": 0, "value": "1" }
-            ]
+                {
+                    "key": "flags.midi-qol.disadvantage.ability.check.con",
+                    "mode": 0,
+                    "value": "1"
+                },
+                {
+                    "key": "flags.midi-qol.disadvantage.ability.save.con",
+                    "mode": 0,
+                    "value": "1"
+                }
+            ],
+            "labelKey": "IONRIFT.RESPITE.DATA.CONDITION.respite-disadv-con.Label",
+            "descriptionKey": "IONRIFT.RESPITE.DATA.CONDITION.respite-disadv-con.Description"
         },
         {
             "id": "respite-disadv-prc",
             "condition": "disadvantage",
-            "checks": ["prc"],
+            "checks": [
+                "prc"
+            ],
             "ceStandard": false,
             "label": "Dulled Senses",
             "icon": "icons/skills/social/intimidation-impressing.webp",
@@ -51,13 +109,21 @@
             "defaultDuration": "next_rest",
             "colorTheme": "grey",
             "changes": [
-                { "key": "flags.midi-qol.disadvantage.skill.prc", "mode": 0, "value": "1" }
-            ]
+                {
+                    "key": "flags.midi-qol.disadvantage.skill.prc",
+                    "mode": 0,
+                    "value": "1"
+                }
+            ],
+            "labelKey": "IONRIFT.RESPITE.DATA.CONDITION.respite-disadv-prc.Label",
+            "descriptionKey": "IONRIFT.RESPITE.DATA.CONDITION.respite-disadv-prc.Description"
         },
         {
             "id": "respite-disadv-cha-check",
             "condition": "disadvantage",
-            "checks": ["cha"],
+            "checks": [
+                "cha"
+            ],
             "ceStandard": false,
             "label": "Unclean",
             "icon": "icons/magic/water/dirt-stains-spots.webp",
@@ -65,12 +131,34 @@
             "defaultDuration": "next_rest",
             "colorTheme": "brown",
             "changes": [
-                { "key": "flags.midi-qol.disadvantage.ability.check.cha", "mode": 0, "value": "1" },
-                { "key": "flags.midi-qol.disadvantage.skill.per", "mode": 0, "value": "1" },
-                { "key": "flags.midi-qol.disadvantage.skill.dec", "mode": 0, "value": "1" },
-                { "key": "flags.midi-qol.disadvantage.skill.itm", "mode": 0, "value": "1" },
-                { "key": "flags.midi-qol.disadvantage.skill.prf", "mode": 0, "value": "1" }
-            ]
+                {
+                    "key": "flags.midi-qol.disadvantage.ability.check.cha",
+                    "mode": 0,
+                    "value": "1"
+                },
+                {
+                    "key": "flags.midi-qol.disadvantage.skill.per",
+                    "mode": 0,
+                    "value": "1"
+                },
+                {
+                    "key": "flags.midi-qol.disadvantage.skill.dec",
+                    "mode": 0,
+                    "value": "1"
+                },
+                {
+                    "key": "flags.midi-qol.disadvantage.skill.itm",
+                    "mode": 0,
+                    "value": "1"
+                },
+                {
+                    "key": "flags.midi-qol.disadvantage.skill.prf",
+                    "mode": 0,
+                    "value": "1"
+                }
+            ],
+            "labelKey": "IONRIFT.RESPITE.DATA.CONDITION.respite-disadv-cha-check.Label",
+            "descriptionKey": "IONRIFT.RESPITE.DATA.CONDITION.respite-disadv-cha-check.Description"
         },
         {
             "id": "respite-exhaustion-1",
@@ -82,7 +170,9 @@
             "icon": null,
             "description": "Disadvantage on ability checks.",
             "defaultDuration": "permanent",
-            "colorTheme": "amber"
+            "colorTheme": "amber",
+            "labelKey": "IONRIFT.RESPITE.DATA.CONDITION.respite-exhaustion-1.Label",
+            "descriptionKey": "IONRIFT.RESPITE.DATA.CONDITION.respite-exhaustion-1.Description"
         },
         {
             "id": "respite-exhaustion-2",
@@ -94,7 +184,9 @@
             "icon": null,
             "description": "Speed halved, disadvantage on ability checks.",
             "defaultDuration": "permanent",
-            "colorTheme": "amber"
+            "colorTheme": "amber",
+            "labelKey": "IONRIFT.RESPITE.DATA.CONDITION.respite-exhaustion-2.Label",
+            "descriptionKey": "IONRIFT.RESPITE.DATA.CONDITION.respite-exhaustion-2.Description"
         },
         {
             "id": "respite-diseased",
@@ -106,9 +198,19 @@
             "defaultDuration": "permanent",
             "colorTheme": "green",
             "changes": [
-                { "key": "flags.midi-qol.disadvantage.ability.check.con", "mode": 0, "value": "1" },
-                { "key": "flags.midi-qol.disadvantage.ability.save.con", "mode": 0, "value": "1" }
-            ]
+                {
+                    "key": "flags.midi-qol.disadvantage.ability.check.con",
+                    "mode": 0,
+                    "value": "1"
+                },
+                {
+                    "key": "flags.midi-qol.disadvantage.ability.save.con",
+                    "mode": 0,
+                    "value": "1"
+                }
+            ],
+            "labelKey": "IONRIFT.RESPITE.DATA.CONDITION.respite-diseased.Label",
+            "descriptionKey": "IONRIFT.RESPITE.DATA.CONDITION.respite-diseased.Description"
         },
         {
             "id": "respite-disadvantage-attack-1",
@@ -120,8 +222,14 @@
             "defaultDuration": "1_attack",
             "colorTheme": "grey",
             "changes": [
-                { "key": "flags.midi-qol.disadvantage.attack.all", "mode": 0, "value": "1" }
-            ]
+                {
+                    "key": "flags.midi-qol.disadvantage.attack.all",
+                    "mode": 0,
+                    "value": "1"
+                }
+            ],
+            "labelKey": "IONRIFT.RESPITE.DATA.CONDITION.respite-disadvantage-attack-1.Label",
+            "descriptionKey": "IONRIFT.RESPITE.DATA.CONDITION.respite-disadvantage-attack-1.Description"
         }
     ]
 }

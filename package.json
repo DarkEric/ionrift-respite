@@ -7,7 +7,8 @@
     "lint:hbs": "node ../ionrift-testharness/tools/modules/respite/lint-hbs.mjs",
     "lint:hbs:watch": "node ../ionrift-testharness/tools/modules/respite/lint-hbs.mjs --watch",
     "build:packs": "node ../ionrift-testharness/tools/modules/respite/compile-packs.mjs",
-    "validate:packs": "node ../ionrift-testharness/tools/modules/respite/validate-packs.mjs"
+    "validate:packs": "node ../ionrift-testharness/tools/modules/respite/validate-packs.mjs",
+    "test": "vitest run --config scripts/tests/vitest.config.js"
   },
   "dependencies": {
     "classic-level": "^3.0.0"

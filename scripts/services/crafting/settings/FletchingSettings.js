@@ -1,16 +1,18 @@
 
 /**
  * Discrete fletching yield tiers. Index 0 is Off; indices 1-5 use two dice plus prof.
+ * Labels are i18n keys resolved by {@link getFletchingTierLabel}.
  * @type {Array<{label: string, sides: number, formula: string}|null>}
  */
 import { MODULE_ID } from "../../../data/moduleId.js";
+import { localize, format } from "../../../utils/I18n.js";
 export const FLETCHING_YIELD_TIERS = [
     null,
-    { label: "2d4 + prof", sides: 4, formula: "2d4+prof" },
-    { label: "2d6 + prof", sides: 6, formula: "2d6+prof" },
-    { label: "2d8 + prof", sides: 8, formula: "2d8+prof" },
-    { label: "2d10 + prof", sides: 10, formula: "2d10+prof" },
-    { label: "2d20 + prof", sides: 20, formula: "2d20+prof" }
+    { label: "IONRIFT.RESPITE.SETTINGS.fletchingYieldTierChoices.tier1", sides: 4, formula: "2d4+prof" },
+    { label: "IONRIFT.RESPITE.SETTINGS.fletchingYieldTierChoices.tier2", sides: 6, formula: "2d6+prof" },
+    { label: "IONRIFT.RESPITE.SETTINGS.fletchingYieldTierChoices.tier3", sides: 8, formula: "2d8+prof" },
+    { label: "IONRIFT.RESPITE.SETTINGS.fletchingYieldTierChoices.tier4", sides: 10, formula: "2d10+prof" },
+    { label: "IONRIFT.RESPITE.SETTINGS.fletchingYieldTierChoices.tier5", sides: 20, formula: "2d20+prof" }
 ];
 
 export const FLETCHING_YIELD_TIER_MAX = FLETCHING_YIELD_TIERS.length - 1;
@@ -71,8 +73,9 @@ export function isFletchingEnabled() {
  */
 export function getFletchingTierLabel(tier = getFletchingTier()) {
     const clamped = Math.max(0, Math.min(FLETCHING_YIELD_TIER_MAX, Math.round(tier)));
-    if (clamped === 0) return "Off";
-    return FLETCHING_YIELD_TIERS[clamped]?.label ?? "Off";
+    if (clamped === 0) return localize("IONRIFT.RESPITE.SETTINGS.TIERS.Off");
+    const key = FLETCHING_YIELD_TIERS[clamped]?.label;
+    return key ? localize(key) : localize("IONRIFT.RESPITE.SETTINGS.TIERS.Off");
 }
 
 /**
@@ -94,9 +97,9 @@ export function getFletchingYieldFormula(tier = getFletchingTier()) {
  */
 export function getFletchingYieldHint(tier = getFletchingTier(), prof = 2) {
     const formula = getFletchingYieldFormula(tier);
-    if (!formula) return "Fletching is off for this world";
+    if (!formula) return localize("IONRIFT.RESPITE.SETTINGS.fletchingYieldHintOff");
     const floor = getFletchingYieldFloor(tier, prof);
-    return `${formula} on success (at least ${floor} at +${prof} prof)`;
+    return format("IONRIFT.RESPITE.SETTINGS.fletchingYieldHint", { formula, floor, prof });
 }
 
 /**

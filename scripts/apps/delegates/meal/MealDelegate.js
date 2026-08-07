@@ -1,4 +1,5 @@
 import { Logger } from "../../../utils/Logger.js";
+import { localize, format } from "../../../utils/I18n.js";
 import { MODULE_ID } from "../../../data/moduleId.js";
 import { MealPhaseHandler } from "../../../services/meal/phase/MealPhaseHandler.js";
 import { TerrainRegistry } from "../../../services/events/resolve/TerrainRegistry.js";
@@ -327,7 +328,7 @@ export class MealDelegate {
             refreshStationEmptyNoticeFade(app);
         }
         app.render();
-        ui.notifications.info("Meal choices submitted.");
+        ui.notifications.info(localize("IONRIFT.RESPITE.NOTIFY.MealChoicesSubmitted"));
     }
 
         async onSubmitMealChoices(event, target) {
@@ -377,7 +378,7 @@ export class MealDelegate {
             refreshStationEmptyNoticeFade(app);
         }
         app.render();
-        ui.notifications.info("Meal choices submitted.");
+        ui.notifications.info(localize("IONRIFT.RESPITE.NOTIFY.MealChoicesSubmitted"));
     }
 
         async onProceedFromMeal(event, target) {
@@ -387,7 +388,7 @@ export class MealDelegate {
         if (app._pendingDehydrationSaves?.length > 0) {
             const unresolved = app._pendingDehydrationSaves.filter(s => !s.resolved);
             if (unresolved.length > 0) {
-                ui.notifications.warn(`Still waiting for ${unresolved.length} dehydration save(s).`);
+                ui.notifications.warn(format("IONRIFT.RESPITE.NOTIFY.WaitingDehydration", { count: unresolved.length }));
                 return;
             }
         }
@@ -446,7 +447,7 @@ export class MealDelegate {
         if (procBtn) {
             procBtn.disabled = true;
             procBtn.classList.add("is-processing");
-            procBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Processing...`;
+            procBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${localize("IONRIFT.RESPITE.NOTIFY.Processing")}`;
         }
 
         for (const charId of characterIds) {
@@ -501,7 +502,7 @@ export class MealDelegate {
                         r.mealExhaustionApplied += r.starvationExhaustion;
                         await stampDeprivationExhaustionFloor(actor, newLevel);
                         await ChatMessage.create({
-                                content: `<div class="respite-recovery-chat"><strong>${r.actorName}</strong> gains <strong>${r.starvationExhaustion}</strong> level${r.starvationExhaustion > 1 ? "s" : ""} of exhaustion from starvation.</div>`,
+                                content: format("IONRIFT.RESPITE.CHAT.StarvationExhaustion", { name: r.actorName, count: r.starvationExhaustion }),
                                 speaker: ChatMessage.getSpeaker({ actor })
                             });
                         app._pendingDehydrationSaves.push({
@@ -871,9 +872,9 @@ export class MealDelegate {
         if (!actor) return;
 
         const confirmed = await game.ionrift.library.confirm({
-            title: "Dehydration Check",
+            title: localize("IONRIFT.RESPITE.APP.DehydrationCheckTitle"),
             content: `<p><strong>${actorName}</strong> has gone without water.</p><p>Constitution save DC ${dc} or gain 1 level of exhaustion.</p>`,
-            yesLabel: "Roll CON Save",
+            yesLabel: localize("IONRIFT.RESPITE.COMMON.RollConSave"),
             noLabel: "Cancel",
             yesIcon: "fas fa-dice-d20",
             noIcon: "fas fa-times",
@@ -1079,7 +1080,7 @@ export class MealDelegate {
             // Subtract bonus water from meal credits
             slotsNeeded = Math.max(0, slotsNeeded - bonusWater);
             if (slotsNeeded <= 0) {
-                ui.notifications.info("Water is already sufficient.");
+                ui.notifications.info(localize("IONRIFT.RESPITE.NOTIFY.WaterAlreadySufficient"));
                 return;
             }
 
@@ -1089,7 +1090,7 @@ export class MealDelegate {
             let totalPints = parseInt(trayCard?.dataset?.totalPints ?? trayCard?.dataset?.available ?? "0", 10);
             if (!Number.isFinite(totalPints) || totalPints < 0) totalPints = 0;
             if (totalPints <= 0) {
-                ui.notifications.warn("This water source is empty.");
+                ui.notifications.warn(localize("IONRIFT.RESPITE.NOTIFY.WaterSourceEmpty"));
                 return;
             }
 
