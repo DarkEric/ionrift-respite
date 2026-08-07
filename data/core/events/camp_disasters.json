@@ -364,13 +364,15 @@
                             ]
                         }
                     }
-                ]
+                ],
+                "promptKey": "IONRIFT.RESPITE.DATA.EVENT.evt_disaster_flash_flood.Prompt"
             },
             "tier": "disaster",
             "sentiment": "negative",
             "pack": "base",
             "nameKey": "IONRIFT.RESPITE.DATA.EVENT.evt_disaster_flash_flood.Name",
-            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_disaster_flash_flood.Description"
+            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_disaster_flash_flood.Description",
+            "gmGuidanceKey": "IONRIFT.RESPITE.DATA.EVENT.evt_disaster_flash_flood.GmGuidance"
         }
     ]
 }

@@ -80,11 +80,13 @@
                 "volunteerPolicy": "best_of",
                 "onTriumph": {
                     "narrative": "You caught the ripples early and tracked the movement to three shapes, low in the water, fifty yards out. A sustained torch held at the waterline and a clear, loud warning. They stopped, watched for a long moment, then sank back beneath the surface and did not return.",
-                    "effects": []
+                    "effects": [],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_swamp_stalkers.TriumphNarrative"
                 },
                 "onSuccess": {
                     "narrative": "You caught the movement in time. Weapons drawn and fire stoked, the creatures slip back into the dark water.",
-                    "effects": []
+                    "effects": [],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_swamp_stalkers.SuccessNarrative"
                 },
                 "onMixed": {
                     "narrative": "You spotted them, but only when they reached the shallows. Mud-slicked shapes rising at the waterline, already too close. The camp scrambles awake in the dark. They withdrew when they saw the numbers, but nobody slept after that.",
@@ -95,7 +97,8 @@
                             "scope": "all",
                             "description": "The camp was woken by shapes rising from the water at close range."
                         }
-                    ]
+                    ],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_swamp_stalkers.MixedNarrative"
                 },
                 "onFailure": {
                     "narrative": "They rise from the water at the camp's edge. Mud-covered and silent until now.",
@@ -121,14 +124,18 @@
                                 "loot": "Trophies, salvaged weapons, or a map scratched on hide showing dry paths through the swamp."
                             }
                         }
-                    ]
+                    ],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_swamp_stalkers.FailureNarrative"
                 }
             },
             "tier": "normal",
             "sentiment": "negative",
             "pack": "base",
             "nameKey": "IONRIFT.RESPITE.DATA.EVENT.evt_swamp_stalkers.Name",
-            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_swamp_stalkers.Description"
+            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_swamp_stalkers.Description",
+            "gmGuidanceKey": "IONRIFT.RESPITE.DATA.EVENT.evt_swamp_stalkers.GmGuidance",
+            "gmPromptKey": "IONRIFT.RESPITE.DATA.EVENT.evt_swamp_stalkers.GmPrompt",
+            "checkContextKey": "IONRIFT.RESPITE.DATA.EVENT.evt_swamp_stalkers.CheckContext"
         },
         {
             "id": "evt_swamp_leeches",
@@ -157,11 +164,13 @@
                 "volunteerPolicy": "each",
                 "onTriumph": {
                     "narrative": "Salt from the rations and a heated blade. Every leech removed cleanly, every bite dressed. Nobody lost more than a drop.",
-                    "effects": []
+                    "effects": [],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_swamp_leeches.TriumphNarrative"
                 },
                 "onSuccess": {
                     "narrative": "Salt from the rations and careful inspection. All leeches removed before they cause real harm.",
-                    "effects": []
+                    "effects": [],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_swamp_leeches.SuccessNarrative"
                 },
                 "onMixed": {
                     "narrative": "Most removed, but a few had already gorged and dropped off. Welts and itching, blood-spotted bedrolls. An unpleasant night but nothing serious.",
@@ -172,7 +181,8 @@
                             "scope": "all",
                             "description": "Leech bites and itching disrupted sleep."
                         }
-                    ]
+                    ],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_swamp_leeches.MixedNarrative"
                 },
                 "onFailure": {
                     "narrative": "Blood loss and irritation. Everyone wakes lightheaded and covered in welts.",
@@ -195,14 +205,18 @@
                             "duration": "next_rest",
                             "description": "Leech bites have drained your vitality. Disadvantage on CON checks and saves until your next long rest."
                         }
-                    ]
+                    ],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_swamp_leeches.FailureNarrative"
                 }
             },
             "tier": "normal",
             "sentiment": "negative",
             "pack": "base",
             "nameKey": "IONRIFT.RESPITE.DATA.EVENT.evt_swamp_leeches.Name",
-            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_swamp_leeches.Description"
+            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_swamp_leeches.Description",
+            "gmGuidanceKey": "IONRIFT.RESPITE.DATA.EVENT.evt_swamp_leeches.GmGuidance",
+            "gmPromptKey": "IONRIFT.RESPITE.DATA.EVENT.evt_swamp_leeches.GmPrompt",
+            "checkContextKey": "IONRIFT.RESPITE.DATA.EVENT.evt_swamp_leeches.CheckContext"
         },
         {
             "id": "evt_swamp_miasma",
@@ -231,11 +245,13 @@
                 "volunteerPolicy": "each",
                 "onTriumph": {
                     "narrative": "You smelled it coming on the wind shift and had everyone masked before the worst arrived. Damp cloth, shallow breathing, faces turned from the source. Unpleasant but manageable.",
-                    "effects": []
+                    "effects": [],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_swamp_miasma.TriumphNarrative"
                 },
                 "onSuccess": {
                     "narrative": "Wet cloth over the mouth and nose. Unpleasant but manageable.",
-                    "effects": []
+                    "effects": [],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_swamp_miasma.SuccessNarrative"
                 },
                 "onMixed": {
                     "narrative": "The cloth helped, but the stench seeped through. Everyone woke groggy with a headache and a sour stomach.",
@@ -246,7 +262,8 @@
                             "scope": "all",
                             "description": "Nausea and headache from bog gas exposure."
                         }
-                    ]
+                    ],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_swamp_miasma.MixedNarrative"
                 },
                 "onFailure": {
                     "narrative": "The miasma seeps into everything. Nausea grips the camp.",
@@ -268,14 +285,18 @@
                             "duration": "next_rest",
                             "description": "The stench has overwhelmed your senses."
                         }
-                    ]
+                    ],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_swamp_miasma.FailureNarrative"
                 }
             },
             "tier": "normal",
             "sentiment": "negative",
             "pack": "base",
             "nameKey": "IONRIFT.RESPITE.DATA.EVENT.evt_swamp_miasma.Name",
-            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_swamp_miasma.Description"
+            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_swamp_miasma.Description",
+            "gmGuidanceKey": "IONRIFT.RESPITE.DATA.EVENT.evt_swamp_miasma.GmGuidance",
+            "gmPromptKey": "IONRIFT.RESPITE.DATA.EVENT.evt_swamp_miasma.GmPrompt",
+            "checkContextKey": "IONRIFT.RESPITE.DATA.EVENT.evt_swamp_miasma.CheckContext"
         },
         {
             "id": "evt_swamp_bog_rot",
@@ -304,11 +325,13 @@
                 "volunteerPolicy": "each",
                 "onTriumph": {
                     "narrative": "Clean water, boiled cloth strips, and a steady hand. Every wound cleaned, dried, and wrapped tight. The swamp gets nothing tonight.",
-                    "effects": []
+                    "effects": [],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_swamp_bog_rot.TriumphNarrative"
                 },
                 "onSuccess": {
                     "narrative": "Wounds cleaned and dressed before infection sets in.",
-                    "effects": []
+                    "effects": [],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_swamp_bog_rot.SuccessNarrative"
                 },
                 "onMixed": {
                     "narrative": "Most wounds treated, but a few deeper scratches are already swelling. Uncomfortable, but not dangerous yet.",
@@ -319,7 +342,8 @@
                             "scope": "all",
                             "description": "Minor infections slowed recovery."
                         }
-                    ]
+                    ],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_swamp_bog_rot.MixedNarrative"
                 },
                 "onFailure": {
                     "narrative": "Infected wounds fester. Recovery will be slower.",
@@ -329,14 +353,18 @@
                             "hpMultiplier": 0.5,
                             "description": "Infected wounds reduce healing."
                         }
-                    ]
+                    ],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_swamp_bog_rot.FailureNarrative"
                 }
             },
             "tier": "normal",
             "sentiment": "negative",
             "pack": "base",
             "nameKey": "IONRIFT.RESPITE.DATA.EVENT.evt_swamp_bog_rot.Name",
-            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_swamp_bog_rot.Description"
+            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_swamp_bog_rot.Description",
+            "gmGuidanceKey": "IONRIFT.RESPITE.DATA.EVENT.evt_swamp_bog_rot.GmGuidance",
+            "gmPromptKey": "IONRIFT.RESPITE.DATA.EVENT.evt_swamp_bog_rot.GmPrompt",
+            "checkContextKey": "IONRIFT.RESPITE.DATA.EVENT.evt_swamp_bog_rot.CheckContext"
         },
         {
             "id": "evt_swamp_will_o_wisp",
@@ -361,7 +389,10 @@
             "sentiment": "neutral",
             "pack": "base",
             "nameKey": "IONRIFT.RESPITE.DATA.EVENT.evt_swamp_will_o_wisp.Name",
-            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_swamp_will_o_wisp.Description"
+            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_swamp_will_o_wisp.Description",
+            "gmGuidanceKey": "IONRIFT.RESPITE.DATA.EVENT.evt_swamp_will_o_wisp.GmGuidance",
+            "gmPromptKey": "IONRIFT.RESPITE.DATA.EVENT.evt_swamp_will_o_wisp.GmPrompt",
+            "checkContextKey": "IONRIFT.RESPITE.DATA.EVENT.evt_swamp_will_o_wisp.CheckContext"
         }
     ]
 }

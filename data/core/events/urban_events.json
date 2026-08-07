@@ -36,11 +36,13 @@
                 "volunteerPolicy": "best_of",
                 "onTriumph": {
                     "narrative": "You caught the shadow testing the approach before they even reached the packs. A drawn weapon and a steady look. They backed off and disappeared.",
-                    "effects": []
+                    "effects": [],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_urban_thieves.TriumphNarrative"
                 },
                 "onSuccess": {
                     "narrative": "You spotted the silhouette just as they reached the first pack. A sharp word and steel drawn. They vanished into the side streets before grabbing anything.",
-                    "effects": []
+                    "effects": [],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_urban_thieves.SuccessNarrative"
                 },
                 "onMixed": {
                     "narrative": "You caught them with hands already in the packs. They bolted, but not before pocketing a few things. A potion here, a handful of coin there.",
@@ -58,7 +60,8 @@
                             "severity": 1,
                             "description": "A handful of coin lifted from the packs."
                         }
-                    ]
+                    ],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_urban_thieves.MixedNarrative"
                 },
                 "onFailure": {
                     "narrative": "Quick hands, professional job. By the time anyone wakes, the shadow is long gone. Packs rifled through, potions missing, coin purses lighter.",
@@ -76,14 +79,18 @@
                             "severity": 2,
                             "description": "Coin purses noticeably lighter."
                         }
-                    ]
+                    ],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_urban_thieves.FailureNarrative"
                 }
             },
             "tier": "normal",
             "sentiment": "negative",
             "pack": "base",
             "nameKey": "IONRIFT.RESPITE.DATA.EVENT.evt_urban_thieves.Name",
-            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_urban_thieves.Description"
+            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_urban_thieves.Description",
+            "gmGuidanceKey": "IONRIFT.RESPITE.DATA.EVENT.evt_urban_thieves.GmGuidance",
+            "gmPromptKey": "IONRIFT.RESPITE.DATA.EVENT.evt_urban_thieves.GmPrompt",
+            "checkContextKey": "IONRIFT.RESPITE.DATA.EVENT.evt_urban_thieves.CheckContext"
         },
         {
             "id": "evt_urban_noise",
@@ -112,11 +119,13 @@
                 "volunteerPolicy": "each",
                 "onTriumph": {
                     "narrative": "Out cold within minutes. The city could burn down around you and you would not notice. Best sleep in weeks.",
-                    "effects": []
+                    "effects": [],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_urban_noise.TriumphNarrative"
                 },
                 "onSuccess": {
                     "narrative": "Earplugs, pillow over the head, and sheer exhaustion. You sleep through the worst of it.",
-                    "effects": []
+                    "effects": [],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_urban_noise.SuccessNarrative"
                 },
                 "onMixed": {
                     "narrative": "Woke twice. Managed to get back to sleep both times, but the rest was shallow.",
@@ -126,7 +135,8 @@
                             "hpMultiplier": 0.85,
                             "description": "Shallow sleep from intermittent noise."
                         }
-                    ]
+                    ],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_urban_noise.MixedNarrative"
                 },
                 "onFailure": {
                     "narrative": "The noise continues until an hour before dawn. Tossing and turning all night. Exhausted by morning.",
@@ -136,14 +146,18 @@
                             "hpMultiplier": 0.75,
                             "description": "Disturbed sleep from street noise."
                         }
-                    ]
+                    ],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_urban_noise.FailureNarrative"
                 }
             },
             "tier": "normal",
             "sentiment": "negative",
             "pack": "base",
             "nameKey": "IONRIFT.RESPITE.DATA.EVENT.evt_urban_noise.Name",
-            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_urban_noise.Description"
+            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_urban_noise.Description",
+            "gmGuidanceKey": "IONRIFT.RESPITE.DATA.EVENT.evt_urban_noise.GmGuidance",
+            "gmPromptKey": "IONRIFT.RESPITE.DATA.EVENT.evt_urban_noise.GmPrompt",
+            "checkContextKey": "IONRIFT.RESPITE.DATA.EVENT.evt_urban_noise.CheckContext"
         },
         {
             "id": "evt_urban_street_merchant",
@@ -179,7 +193,8 @@
                             "source": "srd",
                             "description": "Found via late-night peddler."
                         }
-                    ]
+                    ],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_urban_street_merchant.TriumphNarrative"
                 },
                 "onSuccess": {
                     "narrative": "Good enough stock. An antitoxin buried under a pile of trinkets. Worth picking up.",
@@ -191,22 +206,28 @@
                             "source": "srd",
                             "description": "Found via late-night peddler."
                         }
-                    ]
+                    ],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_urban_street_merchant.SuccessNarrative"
                 },
                 "onMixed": {
                     "narrative": "The prices did not add up. You thanked the merchant and closed the door. No deal, no harm.",
-                    "effects": []
+                    "effects": [],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_urban_street_merchant.MixedNarrative"
                 },
                 "onFailure": {
                     "narrative": "Nothing on that cart was worth the risk. A polite decline and a bolted door. Time saved, coin kept.",
-                    "effects": []
+                    "effects": [],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_urban_street_merchant.FailureNarrative"
                 }
             },
             "tier": "normal",
             "sentiment": "positive",
             "pack": "base",
             "nameKey": "IONRIFT.RESPITE.DATA.EVENT.evt_urban_street_merchant.Name",
-            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_urban_street_merchant.Description"
+            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_urban_street_merchant.Description",
+            "gmGuidanceKey": "IONRIFT.RESPITE.DATA.EVENT.evt_urban_street_merchant.GmGuidance",
+            "gmPromptKey": "IONRIFT.RESPITE.DATA.EVENT.evt_urban_street_merchant.GmPrompt",
+            "checkContextKey": "IONRIFT.RESPITE.DATA.EVENT.evt_urban_street_merchant.CheckContext"
         },
         {
             "id": "evt_urban_patrol",
@@ -235,11 +256,13 @@
                 "volunteerPolicy": "best_of",
                 "onTriumph": {
                     "narrative": "A confident greeting and a brief, friendly exchange. The watchmen nod, wish you well, and move on. They might even mention something useful about the neighbourhood.",
-                    "effects": []
+                    "effects": [],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_urban_patrol.TriumphNarrative"
                 },
                 "onSuccess": {
                     "narrative": "Polite greeting, confident explanation. The watchmen seem satisfied and move on without trouble.",
-                    "effects": []
+                    "effects": [],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_urban_patrol.SuccessNarrative"
                 },
                 "onMixed": {
                     "narrative": "They lingered. Papers checked, a few pointed questions, some suspicious glances. Eventually moved on, but the interruption woke half the camp.",
@@ -249,7 +272,8 @@
                             "hpMultiplier": 0.85,
                             "description": "Watch interruption disrupted the camp."
                         }
-                    ]
+                    ],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_urban_patrol.MixedNarrative"
                 },
                 "onFailure": {
                     "narrative": "The patrol is suspicious and thorough. An hour of pointed questions, travel papers scrutinised, packs searched. They leave eventually, but the rest is ruined.",
@@ -259,14 +283,18 @@
                             "hpMultiplier": 0.75,
                             "description": "Interrupted rest from city watch inspection."
                         }
-                    ]
+                    ],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_urban_patrol.FailureNarrative"
                 }
             },
             "tier": "normal",
             "sentiment": "negative",
             "pack": "base",
             "nameKey": "IONRIFT.RESPITE.DATA.EVENT.evt_urban_patrol.Name",
-            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_urban_patrol.Description"
+            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_urban_patrol.Description",
+            "gmGuidanceKey": "IONRIFT.RESPITE.DATA.EVENT.evt_urban_patrol.GmGuidance",
+            "gmPromptKey": "IONRIFT.RESPITE.DATA.EVENT.evt_urban_patrol.GmPrompt",
+            "checkContextKey": "IONRIFT.RESPITE.DATA.EVENT.evt_urban_patrol.CheckContext"
         },
         {
             "id": "evt_urban_nightlife",
@@ -291,7 +319,10 @@
             "sentiment": "neutral",
             "pack": "base",
             "nameKey": "IONRIFT.RESPITE.DATA.EVENT.evt_urban_nightlife.Name",
-            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_urban_nightlife.Description"
+            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_urban_nightlife.Description",
+            "gmGuidanceKey": "IONRIFT.RESPITE.DATA.EVENT.evt_urban_nightlife.GmGuidance",
+            "gmPromptKey": "IONRIFT.RESPITE.DATA.EVENT.evt_urban_nightlife.GmPrompt",
+            "checkContextKey": "IONRIFT.RESPITE.DATA.EVENT.evt_urban_nightlife.CheckContext"
         }
     ]
 }

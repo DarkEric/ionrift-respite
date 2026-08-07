@@ -1,5 +1,5 @@
 import { TerrainRegistry } from "../../services/events/resolve/TerrainRegistry.js";
-import { localize, format } from "../../utils/I18n.js";
+import { localize, format, localizeData } from "../../utils/I18n.js";
 import { getEventPoolSelection, loadAllCatalogEvents } from "../../services/events/catalog/EventCatalogLoader.js";
 import {
     buildEventPoolFilterGroups,
@@ -290,8 +290,19 @@ export class EventBrowserApp extends foundry.applications.api.ApplicationV2 {
         const sentiment = evt.sentiment ?? "neutral";
         const isDisaster = evt.tier === "disaster";
         const badgeClass = isDisaster ? "disaster" : sentiment;
-        const badgeLabel = isDisaster ? "Disaster" : sentiment.replace(/^\w/, c => c.toUpperCase());
+        const sentimentKey = isDisaster
+            ? "IONRIFT.RESPITE.EVENTPOOL.SentimentDisaster"
+            : ({
+                negative: "IONRIFT.RESPITE.EVENTPOOL.SentimentNegative",
+                positive: "IONRIFT.RESPITE.EVENTPOOL.SentimentPositive",
+                neutral: "IONRIFT.RESPITE.EVENTPOOL.SentimentNeutral"
+            }[sentiment] ?? "IONRIFT.RESPITE.EVENTPOOL.SentimentNeutral");
+        const badgeLabel = localize(sentimentKey);
         const categoryIcon = this.#getCategoryIcon(evt.category);
+        const categoryLabel = localizeData(
+            evt.category ? `IONRIFT.RESPITE.EVENTPOOL.Category.${evt.category}` : null,
+            evt.category ?? "general"
+        );
         const terrainBadges = (evt.terrainTags ?? [])
             .map(t => {
                 const terrain = TerrainRegistry.get(t);
@@ -299,32 +310,38 @@ export class EventBrowserApp extends foundry.applications.api.ApplicationV2 {
                 const icon = terrain?.icon ?? "fas fa-map-marker-alt";
                 const label = TerrainRegistry.resolveLabel(t, terrain);
                 const customClass = isCustom ? " custom" : "";
-                return `<span class="event-terrain-badge${customClass}" title="${isCustom ? (terrain?.customNote ?? "Custom imported terrain") : ""}"><i class="${icon}"></i> ${label}</span>`;
+                const customTitle = isCustom
+                    ? (terrain?.customNote ?? localize("IONRIFT.RESPITE.EVENTPOOL.CustomImportedTerrain"))
+                    : "";
+                return `<span class="event-terrain-badge${customClass}" title="${customTitle}"><i class="${icon}"></i> ${label}</span>`;
             }).join("");
 
-        const packLabel = evt.pack
+        const packLabel = evt.pack && evt.pack !== "base"
             ? evt.pack.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase())
-            : "Base Pack";
+            : localize("IONRIFT.RESPITE.EVENTPOOL.BasePack");
         const isImportedPack = evt.pack && evt.pack !== "base";
         const parentTerrain = (evt.terrainTags ?? []).find(tag => {
             const manifest = TerrainRegistry.get(tag);
             return manifest && !manifest.custom && !TerrainRegistry.isCustomTerrain(tag);
         });
         const legacyBindingNote = (isImportedPack && parentTerrain)
-            ? `<p class="event-legacy-pack-note"><i class="fas fa-layer-group"></i> Curate under <strong>${TerrainRegistry.resolveLabel(parentTerrain)} · ${packLabel}</strong>. Still rolls on ${parentTerrain} rests.</p>`
+            ? `<p class="event-legacy-pack-note"><i class="fas fa-layer-group"></i> ${format("IONRIFT.RESPITE.EVENTPOOL.LegacyPackNote", {
+                pack: `${TerrainRegistry.resolveLabel(parentTerrain)} · ${packLabel}`,
+                terrain: TerrainRegistry.resolveLabel(parentTerrain)
+            })}</p>`
             : "";
         const hasCustomTerrain = (evt.terrainTags ?? []).some(t => TerrainRegistry.isCustomTerrain(t));
         const customTerrainNote = hasCustomTerrain
-            ? `<p class="event-custom-terrain-note"><i class="fas fa-puzzle-piece"></i> Uses a custom terrain tag. Travel and forage stay off unless a full terrain pack is installed.</p>`
+            ? `<p class="event-custom-terrain-note"><i class="fas fa-puzzle-piece"></i> ${localize("IONRIFT.RESPITE.EVENTPOOL.CustomTerrainNote")}</p>`
             : "";
 
         const mech = evt.mechanical ?? {};
         let outcomesHtml = "";
         const tiers = [
-            { key: "onTriumph", label: "Triumph", cls: "triumph" },
-            { key: "onSuccess", label: "Success", cls: "success" },
-            { key: "onMixed", label: "Mixed", cls: "mixed" },
-            { key: "onFailure", label: "Failure", cls: "failure" }
+            { key: "onTriumph", labelKey: "IONRIFT.RESPITE.EVENTPOOL.TierTriumph", cls: "triumph" },
+            { key: "onSuccess", labelKey: "IONRIFT.RESPITE.EVENTPOOL.TierSuccess", cls: "success" },
+            { key: "onMixed", labelKey: "IONRIFT.RESPITE.EVENTPOOL.TierMixed", cls: "mixed" },
+            { key: "onFailure", labelKey: "IONRIFT.RESPITE.EVENTPOOL.TierFailure", cls: "failure" }
         ];
         const hasTiers = tiers.some(t => mech[t.key]);
         if (hasTiers) {
@@ -335,7 +352,7 @@ export class EventBrowserApp extends foundry.applications.api.ApplicationV2 {
                 const narrative = data.narrative ?? data.description ?? "";
                 outcomesHtml += `
                     <div class="event-outcome-row ${tier.cls}">
-                        <span class="outcome-label">${tier.label}</span>
+                        <span class="outcome-label">${localize(tier.labelKey)}</span>
                         <span class="outcome-text">${narrative}</span>
                     </div>`;
             }
@@ -345,10 +362,13 @@ export class EventBrowserApp extends foundry.applications.api.ApplicationV2 {
         }
 
         const guidanceHtml = evt.gmGuidance
-            ? `<div class="event-gm-guidance"><span class="event-gm-guidance-label"><i class="fas fa-user-secret"></i> GM notes</span><p>${evt.gmGuidance}</p></div>`
+            ? `<div class="event-gm-guidance"><span class="event-gm-guidance-label"><i class="fas fa-user-secret"></i> ${localize("IONRIFT.RESPITE.EVENTPOOL.GmNotes")}</span><p>${evt.gmGuidance}</p></div>`
             : "";
 
         const checked = inPool ? "checked" : "";
+        const dcHtml = mech.groupCheck
+            ? `<span class="event-dc"><i class="fas fa-dice-d20"></i> ${format("IONRIFT.RESPITE.EVENT.DcBadge", { dc: mech.groupCheck.dc ?? "?" })} ${mech.groupCheck.skill ?? ""}</span>`
+            : "";
 
         return `
         <div class="event-card">
@@ -358,7 +378,7 @@ export class EventBrowserApp extends foundry.applications.api.ApplicationV2 {
             </div>
             <label class="event-pool-card-toggle-row">
                 <input type="checkbox" class="event-pool-card-toggle" data-event-id="${evt.id}" ${checked} />
-                <span>In roll pool</span>
+                <span>${localize("IONRIFT.RESPITE.EVENTPOOL.InRollPool")}</span>
             </label>
             <div class="event-card-meta">
                 <div class="event-terrain-list">${terrainBadges}</div>
@@ -372,8 +392,8 @@ export class EventBrowserApp extends foundry.applications.api.ApplicationV2 {
                 ${guidanceHtml}
             </div>
             <div class="event-card-footer">
-                <span class="event-category"><i class="${categoryIcon}"></i> ${evt.category ?? "general"}</span>
-                ${mech.groupCheck ? `<span class="event-dc"><i class="fas fa-dice-d20"></i> DC ${mech.groupCheck.dc ?? "?"} ${mech.groupCheck.skill ?? ""}</span>` : ""}
+                <span class="event-category"><i class="${categoryIcon}"></i> ${categoryLabel}</span>
+                ${dcHtml}
             </div>
         </div>`;
     }
@@ -399,18 +419,18 @@ export class EventBrowserApp extends foundry.applications.api.ApplicationV2 {
                 ? check.skills.join(" / ")
                 : (check.skill ?? "");
             const dcHtml = check.dc != null
-                ? `<span class="event-decision-dc"><i class="fas fa-dice-d20"></i> ${skills ? skills.toUpperCase() + " " : ""}DC ${check.dc}</span>`
+                ? `<span class="event-decision-dc"><i class="fas fa-dice-d20"></i> ${skills ? skills.toUpperCase() + " " : ""}${format("IONRIFT.RESPITE.EVENT.DcBadge", { dc: check.dc })}</span>`
                 : "";
             const descHtml = opt.description
                 ? `<span class="event-decision-option-desc">${opt.description}</span>`
                 : "";
             const branchHtml = opt.onFailure?.options?.length
-                ? `<span class="event-decision-branch"><i class="fas fa-code-branch"></i> Failure leads to a follow-up choice.</span>`
+                ? `<span class="event-decision-branch"><i class="fas fa-code-branch"></i> ${localize("IONRIFT.RESPITE.EVENTPOOL.FailureFollowUp")}</span>`
                 : "";
             return `
                 <div class="event-decision-option">
                     <div class="event-decision-option-head">
-                        <span class="event-decision-option-label">${opt.label ?? opt.id ?? "Option"}</span>
+                        <span class="event-decision-option-label">${opt.label ?? opt.id ?? localize("IONRIFT.RESPITE.EVENTPOOL.Option")}</span>
                         ${dcHtml}
                     </div>
                     ${descHtml}
@@ -420,7 +440,7 @@ export class EventBrowserApp extends foundry.applications.api.ApplicationV2 {
 
         return `
             <div class="event-decision-tree">
-                <div class="event-decision-header"><i class="fas fa-code-branch"></i> Decision</div>
+                <div class="event-decision-header"><i class="fas fa-code-branch"></i> ${localize("IONRIFT.RESPITE.EVENTPOOL.Decision")}</div>
                 ${promptHtml}
                 <div class="event-decision-options">${optionRows}</div>
             </div>`;

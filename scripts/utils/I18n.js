@@ -63,7 +63,27 @@ export function localizeActivityRecord(activity) {
 
 /** @param {object} event */
 export function localizeEventRecord(event) {
-  return applyDataKeys(event, { name: "nameKey", description: "descriptionKey" });
+  applyDataKeys(event, {
+    name: "nameKey",
+    description: "descriptionKey",
+    gmGuidance: "gmGuidanceKey",
+    gmPrompt: "gmPromptKey",
+    checkContext: "checkContextKey",
+    readAloud: "readAloudKey"
+  });
+  const mech = event?.mechanical;
+  if (mech && typeof mech === "object") {
+    applyDataKeys(mech, { prompt: "promptKey" });
+    for (const tier of ["onTriumph", "onSuccess", "onMixed", "onFailure"]) {
+      if (mech[tier] && typeof mech[tier] === "object") {
+        applyDataKeys(mech[tier], { narrative: "narrativeKey", description: "descriptionKey" });
+      }
+    }
+    for (const opt of (mech.options ?? [])) {
+      applyDataKeys(opt, { label: "labelKey", description: "descriptionKey" });
+    }
+  }
+  return event;
 }
 
 /** @param {object} entry - condition_registry condition */

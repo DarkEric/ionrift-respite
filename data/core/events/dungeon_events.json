@@ -36,11 +36,13 @@
                 "volunteerPolicy": "best_of",
                 "onTriumph": {
                     "narrative": "You spotted them well in advance. Fire smothered, bodies still, weapons ready but not needed. They passed close enough to touch and never broke stride.",
-                    "effects": []
+                    "effects": [],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_dungeon_wandering_monster.TriumphNarrative"
                 },
                 "onSuccess": {
                     "narrative": "Lights doused, mouths shut. They pass without noticing the camp.",
-                    "effects": []
+                    "effects": [],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_dungeon_wandering_monster.SuccessNarrative"
                 },
                 "onMixed": {
                     "narrative": "They paused outside the door. One of them muttered something. A long silence. Then footsteps, moving on. Nobody sleeps well after that.",
@@ -50,7 +52,8 @@
                             "hpMultiplier": 0.85,
                             "description": "The near-miss kept everyone on edge."
                         }
-                    ]
+                    ],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_dungeon_wandering_monster.MixedNarrative"
                 },
                 "onFailure": {
                     "narrative": "They heard something. The door rattles. A voice calls out in the dark. Combat is inevitable.",
@@ -76,14 +79,18 @@
                                 "loot": "Patrol supplies, a crude map of the level, or a key to a nearby door."
                             }
                         }
-                    ]
+                    ],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_dungeon_wandering_monster.FailureNarrative"
                 }
             },
             "tier": "normal",
             "sentiment": "negative",
             "pack": "base",
             "nameKey": "IONRIFT.RESPITE.DATA.EVENT.evt_dungeon_wandering_monster.Name",
-            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_dungeon_wandering_monster.Description"
+            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_dungeon_wandering_monster.Description",
+            "gmGuidanceKey": "IONRIFT.RESPITE.DATA.EVENT.evt_dungeon_wandering_monster.GmGuidance",
+            "gmPromptKey": "IONRIFT.RESPITE.DATA.EVENT.evt_dungeon_wandering_monster.GmPrompt",
+            "checkContextKey": "IONRIFT.RESPITE.DATA.EVENT.evt_dungeon_wandering_monster.CheckContext"
         },
         {
             "id": "evt_dungeon_vermin_nest",
@@ -112,11 +119,13 @@
                 "volunteerPolicy": "best_of",
                 "onTriumph": {
                     "narrative": "You spotted the first scouts and traced them to the nest entrance. A torch held to the crack and some smoke drove them deep. They did not come back.",
-                    "effects": []
+                    "effects": [],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_dungeon_vermin_nest.TriumphNarrative"
                 },
                 "onSuccess": {
                     "narrative": "Boots and torchlight kept them at bay. An unpleasant hour, but the supplies are intact.",
-                    "effects": []
+                    "effects": [],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_dungeon_vermin_nest.SuccessNarrative"
                 },
                 "onMixed": {
                     "narrative": "You drove most of them off, but they got into the ration packs first. Nibbled, contaminated, ruined. Nobody slept well with the scratching.",
@@ -137,7 +146,8 @@
                             "hpMultiplier": 0.85,
                             "description": "Constant scratching and crawling disrupted sleep."
                         }
-                    ]
+                    ],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_dungeon_vermin_nest.MixedNarrative"
                 },
                 "onFailure": {
                     "narrative": "They swarmed. Everything on the ground is covered. Ration packs chewed through, waterskins gnawed, bedrolls fouled. A wretched night.",
@@ -158,14 +168,18 @@
                             "hpMultiplier": 0.5,
                             "description": "No rest possible under a blanket of vermin."
                         }
-                    ]
+                    ],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_dungeon_vermin_nest.FailureNarrative"
                 }
             },
             "tier": "normal",
             "sentiment": "negative",
             "pack": "base",
             "nameKey": "IONRIFT.RESPITE.DATA.EVENT.evt_dungeon_vermin_nest.Name",
-            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_dungeon_vermin_nest.Description"
+            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_dungeon_vermin_nest.Description",
+            "gmGuidanceKey": "IONRIFT.RESPITE.DATA.EVENT.evt_dungeon_vermin_nest.GmGuidance",
+            "gmPromptKey": "IONRIFT.RESPITE.DATA.EVENT.evt_dungeon_vermin_nest.GmPrompt",
+            "checkContextKey": "IONRIFT.RESPITE.DATA.EVENT.evt_dungeon_vermin_nest.CheckContext"
         },
         {
             "id": "evt_dungeon_bad_air",
@@ -194,11 +208,13 @@
                 "volunteerPolicy": "best_of",
                 "onTriumph": {
                     "narrative": "You noticed the fire dimming early and traced the problem to a blocked vent. A few minutes with a crowbar opened a draft from the corridor above. Fresh air, relatively speaking.",
-                    "effects": []
+                    "effects": [],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_dungeon_bad_air.TriumphNarrative"
                 },
                 "onSuccess": {
                     "narrative": "You crack a vent and keep the fire low. Breathable, barely.",
-                    "effects": []
+                    "effects": [],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_dungeon_bad_air.SuccessNarrative"
                 },
                 "onMixed": {
                     "narrative": "You managed it, but not before the headaches started. The fire stayed out for the rest of the night. Cold and unpleasant.",
@@ -208,7 +224,8 @@
                             "hpMultiplier": 0.85,
                             "description": "Mild headaches from poor air quality."
                         }
-                    ]
+                    ],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_dungeon_bad_air.MixedNarrative"
                 },
                 "onFailure": {
                     "narrative": "Headaches and dizziness. The fire dies. A grim night in the dark, breathing thin air. Everyone wakes sluggish.",
@@ -219,14 +236,18 @@
                             "level": 1,
                             "scope": "all"
                         }
-                    ]
+                    ],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_dungeon_bad_air.FailureNarrative"
                 }
             },
             "tier": "normal",
             "sentiment": "negative",
             "pack": "base",
             "nameKey": "IONRIFT.RESPITE.DATA.EVENT.evt_dungeon_bad_air.Name",
-            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_dungeon_bad_air.Description"
+            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_dungeon_bad_air.Description",
+            "gmGuidanceKey": "IONRIFT.RESPITE.DATA.EVENT.evt_dungeon_bad_air.GmGuidance",
+            "gmPromptKey": "IONRIFT.RESPITE.DATA.EVENT.evt_dungeon_bad_air.GmPrompt",
+            "checkContextKey": "IONRIFT.RESPITE.DATA.EVENT.evt_dungeon_bad_air.CheckContext"
         },
         {
             "id": "evt_dungeon_salvage",
@@ -269,7 +290,8 @@
                             "quantity": "1",
                             "source": "srd"
                         }
-                    ]
+                    ],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_dungeon_salvage.TriumphNarrative"
                 },
                 "onSuccess": {
                     "narrative": "Iron spikes and some dry crate wood. Useful. The rest is rusted or rotted through.",
@@ -283,22 +305,28 @@
                             "itemRef": "crate_wood",
                             "quantity": "1d2"
                         }
-                    ]
+                    ],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_dungeon_salvage.SuccessNarrative"
                 },
                 "onMixed": {
                     "narrative": "Some useful bits. Chalk and a couple of iron spikes. The rest is ruined or rusted through.",
-                    "effects": []
+                    "effects": [],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_dungeon_salvage.MixedNarrative"
                 },
                 "onFailure": {
                     "narrative": "The pack is trapped. A small glass vial shatters. Alchemist fire, thankfully spent. Nothing salvageable.",
-                    "effects": []
+                    "effects": [],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_dungeon_salvage.FailureNarrative"
                 }
             },
             "tier": "normal",
             "sentiment": "positive",
             "pack": "base",
             "nameKey": "IONRIFT.RESPITE.DATA.EVENT.evt_dungeon_salvage.Name",
-            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_dungeon_salvage.Description"
+            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_dungeon_salvage.Description",
+            "gmGuidanceKey": "IONRIFT.RESPITE.DATA.EVENT.evt_dungeon_salvage.GmGuidance",
+            "gmPromptKey": "IONRIFT.RESPITE.DATA.EVENT.evt_dungeon_salvage.GmPrompt",
+            "checkContextKey": "IONRIFT.RESPITE.DATA.EVENT.evt_dungeon_salvage.CheckContext"
         },
         {
             "id": "evt_dungeon_claw_marks",
@@ -323,7 +351,10 @@
             "sentiment": "neutral",
             "pack": "base",
             "nameKey": "IONRIFT.RESPITE.DATA.EVENT.evt_dungeon_claw_marks.Name",
-            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_dungeon_claw_marks.Description"
+            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_dungeon_claw_marks.Description",
+            "gmGuidanceKey": "IONRIFT.RESPITE.DATA.EVENT.evt_dungeon_claw_marks.GmGuidance",
+            "gmPromptKey": "IONRIFT.RESPITE.DATA.EVENT.evt_dungeon_claw_marks.GmPrompt",
+            "checkContextKey": "IONRIFT.RESPITE.DATA.EVENT.evt_dungeon_claw_marks.CheckContext"
         }
     ]
 }

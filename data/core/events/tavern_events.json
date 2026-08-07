@@ -32,7 +32,10 @@
             "sentiment": "positive",
             "pack": "base",
             "nameKey": "IONRIFT.RESPITE.DATA.EVENT.evt_tavern_bard.Name",
-            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_tavern_bard.Description"
+            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_tavern_bard.Description",
+            "gmGuidanceKey": "IONRIFT.RESPITE.DATA.EVENT.evt_tavern_bard.GmGuidance",
+            "gmPromptKey": "IONRIFT.RESPITE.DATA.EVENT.evt_tavern_bard.GmPrompt",
+            "checkContextKey": "IONRIFT.RESPITE.DATA.EVENT.evt_tavern_bard.CheckContext"
         },
         {
             "id": "evt_tavern_gossip",
@@ -57,7 +60,10 @@
             "sentiment": "neutral",
             "pack": "base",
             "nameKey": "IONRIFT.RESPITE.DATA.EVENT.evt_tavern_gossip.Name",
-            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_tavern_gossip.Description"
+            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_tavern_gossip.Description",
+            "gmGuidanceKey": "IONRIFT.RESPITE.DATA.EVENT.evt_tavern_gossip.GmGuidance",
+            "gmPromptKey": "IONRIFT.RESPITE.DATA.EVENT.evt_tavern_gossip.GmPrompt",
+            "checkContextKey": "IONRIFT.RESPITE.DATA.EVENT.evt_tavern_gossip.CheckContext"
         },
         {
             "id": "evt_tavern_brawl_rumor",
@@ -82,7 +88,10 @@
             "sentiment": "neutral",
             "pack": "base",
             "nameKey": "IONRIFT.RESPITE.DATA.EVENT.evt_tavern_brawl_rumor.Name",
-            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_tavern_brawl_rumor.Description"
+            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_tavern_brawl_rumor.Description",
+            "gmGuidanceKey": "IONRIFT.RESPITE.DATA.EVENT.evt_tavern_brawl_rumor.GmGuidance",
+            "gmPromptKey": "IONRIFT.RESPITE.DATA.EVENT.evt_tavern_brawl_rumor.GmPrompt",
+            "checkContextKey": "IONRIFT.RESPITE.DATA.EVENT.evt_tavern_brawl_rumor.CheckContext"
         },
         {
             "id": "evt_tavern_merchant",
@@ -107,7 +116,10 @@
             "sentiment": "positive",
             "pack": "base",
             "nameKey": "IONRIFT.RESPITE.DATA.EVENT.evt_tavern_merchant.Name",
-            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_tavern_merchant.Description"
+            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_tavern_merchant.Description",
+            "gmGuidanceKey": "IONRIFT.RESPITE.DATA.EVENT.evt_tavern_merchant.GmGuidance",
+            "gmPromptKey": "IONRIFT.RESPITE.DATA.EVENT.evt_tavern_merchant.GmPrompt",
+            "checkContextKey": "IONRIFT.RESPITE.DATA.EVENT.evt_tavern_merchant.CheckContext"
         },
         {
             "id": "evt_tavern_cat",
@@ -132,7 +144,10 @@
             "sentiment": "positive",
             "pack": "base",
             "nameKey": "IONRIFT.RESPITE.DATA.EVENT.evt_tavern_cat.Name",
-            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_tavern_cat.Description"
+            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_tavern_cat.Description",
+            "gmGuidanceKey": "IONRIFT.RESPITE.DATA.EVENT.evt_tavern_cat.GmGuidance",
+            "gmPromptKey": "IONRIFT.RESPITE.DATA.EVENT.evt_tavern_cat.GmPrompt",
+            "checkContextKey": "IONRIFT.RESPITE.DATA.EVENT.evt_tavern_cat.CheckContext"
         }
     ]
 }

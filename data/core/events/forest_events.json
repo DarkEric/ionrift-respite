@@ -36,11 +36,13 @@
                 "volunteerPolicy": "best_of",
                 "onTriumph": {
                     "narrative": "You lock eyes with the alpha, feed the fire until it roars, and hold absolutely still. The alpha breaks first. The pack vanishes into the dark without a sound.",
-                    "effects": []
+                    "effects": [],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_forest_wolves.TriumphNarrative"
                 },
                 "onSuccess": {
                     "narrative": "You hold your ground, keep the fire high, and stare them down. The pack circles twice more, then moves on.",
-                    "effects": []
+                    "effects": [],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_forest_wolves.SuccessNarrative"
                 },
                 "onMixed": {
                     "narrative": "The pack rushes camp but the watchers drive them back quickly. A ration bag torn open in the chaos, but the response kept the damage contained.",
@@ -56,7 +58,8 @@
                             "severity": "normal",
                             "timing": "immediate"
                         }
-                    ]
+                    ],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_forest_wolves.MixedNarrative"
                 },
                 "onFailure": {
                     "narrative": "The pack walks straight through camp and takes everything edible. Ration packs torn apart, a waterskin dragged into the brush.",
@@ -72,14 +75,18 @@
                             "severity": "normal",
                             "timing": "immediate"
                         }
-                    ]
+                    ],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_forest_wolves.FailureNarrative"
                 }
             },
             "tier": "normal",
             "sentiment": "negative",
             "pack": "base",
             "nameKey": "IONRIFT.RESPITE.DATA.EVENT.evt_forest_wolves.Name",
-            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_forest_wolves.Description"
+            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_forest_wolves.Description",
+            "gmGuidanceKey": "IONRIFT.RESPITE.DATA.EVENT.evt_forest_wolves.GmGuidance",
+            "gmPromptKey": "IONRIFT.RESPITE.DATA.EVENT.evt_forest_wolves.GmPrompt",
+            "checkContextKey": "IONRIFT.RESPITE.DATA.EVENT.evt_forest_wolves.CheckContext"
         },
         {
             "id": "evt_forest_deadfall",
@@ -134,7 +141,8 @@
                                 }
                             }
                         }
-                    ]
+                    ],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_forest_deadfall.TriumphNarrative"
                 },
                 "onSuccess": {
                     "narrative": "Sleepers rolled clear just as the branch hammers into empty bedrolls. Close call, no injuries. Some of the dry wood is worth keeping.",
@@ -160,7 +168,8 @@
                                 }
                             }
                         }
-                    ]
+                    ],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_forest_deadfall.SuccessNarrative"
                 },
                 "onMixed": {
                     "narrative": "You see it too late to move everyone clear. The branch clips a shoulder on the way down. Painful but not serious.",
@@ -177,7 +186,8 @@
                             "timing": "post_rest",
                             "description": "Glancing blow from a falling branch."
                         }
-                    ]
+                    ],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_forest_deadfall.MixedNarrative"
                 },
                 "onFailure": {
                     "narrative": "The branch catches a sleeper full across the back.",
@@ -194,14 +204,18 @@
                             "timing": "post_rest",
                             "description": "A heavy branch falls on a sleeping character."
                         }
-                    ]
+                    ],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_forest_deadfall.FailureNarrative"
                 }
             },
             "tier": "normal",
             "sentiment": "negative",
             "pack": "base",
             "nameKey": "IONRIFT.RESPITE.DATA.EVENT.evt_forest_deadfall.Name",
-            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_forest_deadfall.Description"
+            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_forest_deadfall.Description",
+            "gmGuidanceKey": "IONRIFT.RESPITE.DATA.EVENT.evt_forest_deadfall.GmGuidance",
+            "gmPromptKey": "IONRIFT.RESPITE.DATA.EVENT.evt_forest_deadfall.GmPrompt",
+            "checkContextKey": "IONRIFT.RESPITE.DATA.EVENT.evt_forest_deadfall.CheckContext"
         },
         {
             "id": "evt_forest_mist",
@@ -230,11 +244,13 @@
                 "volunteerPolicy": "best_of",
                 "onTriumph": {
                     "narrative": "You smelled the damp before it arrived. Fire stoked, landmarks called out, gear pulled close. The fog came and went. Dawn came without incident.",
-                    "effects": []
+                    "effects": [],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_forest_mist.TriumphNarrative"
                 },
                 "onSuccess": {
                     "narrative": "Tight watch rotations. Fog burns off at dawn. Camp intact. A tense but uneventful night.",
-                    "effects": []
+                    "effects": [],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_forest_mist.SuccessNarrative"
                 },
                 "onMixed": {
                     "narrative": "Fog rolled in heavier than expected. Camp held together but packing up at dawn was slow. Some small items misplaced in the murk.",
@@ -250,7 +266,8 @@
                             "severity": "normal",
                             "timing": "immediate"
                         }
-                    ]
+                    ],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_forest_mist.MixedNarrative"
                 },
                 "onFailure": {
                     "narrative": "Something used the fog as cover. The party wakes to tracks circling camp and supplies disturbed.",
@@ -266,14 +283,18 @@
                             "severity": "normal",
                             "timing": "immediate"
                         }
-                    ]
+                    ],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_forest_mist.FailureNarrative"
                 }
             },
             "tier": "normal",
             "sentiment": "negative",
             "pack": "base",
             "nameKey": "IONRIFT.RESPITE.DATA.EVENT.evt_forest_mist.Name",
-            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_forest_mist.Description"
+            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_forest_mist.Description",
+            "gmGuidanceKey": "IONRIFT.RESPITE.DATA.EVENT.evt_forest_mist.GmGuidance",
+            "gmPromptKey": "IONRIFT.RESPITE.DATA.EVENT.evt_forest_mist.GmPrompt",
+            "checkContextKey": "IONRIFT.RESPITE.DATA.EVENT.evt_forest_mist.CheckContext"
         },
         {
             "id": "evt_forest_clearing",
@@ -327,7 +348,8 @@
                                 }
                             }
                         }
-                    ]
+                    ],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_forest_clearing.TriumphNarrative"
                 },
                 "onSuccess": {
                     "narrative": "Edible mushrooms and a few useful herbs. A good find.",
@@ -357,7 +379,8 @@
                                 }
                             }
                         }
-                    ]
+                    ],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_forest_clearing.SuccessNarrative"
                 },
                 "onMixed": {
                     "narrative": "You pick a few mushrooms but are not confident enough to harvest the rest in the dark. Better safe than sorry.",
@@ -387,18 +410,23 @@
                                 }
                             }
                         }
-                    ]
+                    ],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_forest_clearing.MixedNarrative"
                 },
                 "onFailure": {
                     "narrative": "Beautiful to look at, but you are not confident enough to pick anything in the dark. The risk of grabbing something toxic is too high.",
-                    "effects": []
+                    "effects": [],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_forest_clearing.FailureNarrative"
                 }
             },
             "tier": "normal",
             "sentiment": "positive",
             "pack": "base",
             "nameKey": "IONRIFT.RESPITE.DATA.EVENT.evt_forest_clearing.Name",
-            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_forest_clearing.Description"
+            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_forest_clearing.Description",
+            "gmGuidanceKey": "IONRIFT.RESPITE.DATA.EVENT.evt_forest_clearing.GmGuidance",
+            "gmPromptKey": "IONRIFT.RESPITE.DATA.EVENT.evt_forest_clearing.GmPrompt",
+            "checkContextKey": "IONRIFT.RESPITE.DATA.EVENT.evt_forest_clearing.CheckContext"
         },
         {
             "id": "evt_forest_birdsong",
@@ -423,7 +451,10 @@
             "sentiment": "neutral",
             "pack": "base",
             "nameKey": "IONRIFT.RESPITE.DATA.EVENT.evt_forest_birdsong.Name",
-            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_forest_birdsong.Description"
+            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_forest_birdsong.Description",
+            "gmGuidanceKey": "IONRIFT.RESPITE.DATA.EVENT.evt_forest_birdsong.GmGuidance",
+            "gmPromptKey": "IONRIFT.RESPITE.DATA.EVENT.evt_forest_birdsong.GmPrompt",
+            "checkContextKey": "IONRIFT.RESPITE.DATA.EVENT.evt_forest_birdsong.CheckContext"
         }
     ]
 }

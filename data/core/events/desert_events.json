@@ -36,11 +36,13 @@
                 "volunteerPolicy": "best_of",
                 "onTriumph": {
                     "narrative": "You read the wind shift early. By the time the storm hit, every stake was double-deep, every pack was under a weighted tarp. The party slept through it.",
-                    "effects": []
+                    "effects": [],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_desert_sandstorm_burial.TriumphNarrative"
                 },
                 "onSuccess": {
                     "narrative": "You raised the alarm just in time. Tents staked, gear secured. The worst of the storm rages harmlessly overhead. Some grit in everything, but nothing lost.",
-                    "effects": []
+                    "effects": [],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_desert_sandstorm_burial.SuccessNarrative"
                 },
                 "onMixed": {
                     "narrative": "You caught the storm late. Most of the gear is secured, but the sand got into the food packs and one tent collapsed. A gritty, miserable night.",
@@ -61,7 +63,8 @@
                             "hpMultiplier": 0.85,
                             "description": "Grit, noise, and collapsed shelter disrupted rest."
                         }
-                    ]
+                    ],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_desert_sandstorm_burial.MixedNarrative"
                 },
                 "onFailure": {
                     "narrative": "The storm catches the camp unprepared. By morning, the camp is half-buried beneath dunes. Packs are full of grit. Some critical supplies have been scoured away or buried beyond recovery.",
@@ -82,14 +85,18 @@
                             "hpMultiplier": 0.75,
                             "description": "Poor rest quality from sand-buried camp."
                         }
-                    ]
+                    ],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_desert_sandstorm_burial.FailureNarrative"
                 }
             },
             "tier": "normal",
             "sentiment": "negative",
             "pack": "base",
             "nameKey": "IONRIFT.RESPITE.DATA.EVENT.evt_desert_sandstorm_burial.Name",
-            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_desert_sandstorm_burial.Description"
+            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_desert_sandstorm_burial.Description",
+            "gmGuidanceKey": "IONRIFT.RESPITE.DATA.EVENT.evt_desert_sandstorm_burial.GmGuidance",
+            "gmPromptKey": "IONRIFT.RESPITE.DATA.EVENT.evt_desert_sandstorm_burial.GmPrompt",
+            "checkContextKey": "IONRIFT.RESPITE.DATA.EVENT.evt_desert_sandstorm_burial.CheckContext"
         },
         {
             "id": "evt_desert_scorpions",
@@ -118,11 +125,13 @@
                 "volunteerPolicy": "best_of",
                 "onTriumph": {
                     "narrative": "You noticed the first pale shape well before the main swarm surfaced. Everyone up, gear off the ground, camp relocated thirty yards upwind. Done before anyone got stung.",
-                    "effects": []
+                    "effects": [],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_desert_scorpions.TriumphNarrative"
                 },
                 "onSuccess": {
                     "narrative": "You spot the swelling swarm before anyone rolls onto them. The party relocates quickly. An unsettling hour, but no stings.",
-                    "effects": []
+                    "effects": [],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_desert_scorpions.SuccessNarrative"
                 },
                 "onMixed": {
                     "narrative": "You caught it, but not before one got into a boot. A painful sting, a panicked relocation, and a nervous night checking every fold of fabric.",
@@ -145,7 +154,8 @@
                             "scope": "all",
                             "description": "Nobody slept soundly after the scorpion scare."
                         }
-                    ]
+                    ],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_desert_scorpions.MixedNarrative"
                 },
                 "onFailure": {
                     "narrative": "A sudden, sharp cry breaks the night. Stings and panic as the camp scrambles awake in the dark, shaking out blankets and boots. The venom burns.",
@@ -169,14 +179,18 @@
                             "scope": "stung",
                             "description": "Venom from a scorpion sting."
                         }
-                    ]
+                    ],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_desert_scorpions.FailureNarrative"
                 }
             },
             "tier": "normal",
             "sentiment": "negative",
             "pack": "base",
             "nameKey": "IONRIFT.RESPITE.DATA.EVENT.evt_desert_scorpions.Name",
-            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_desert_scorpions.Description"
+            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_desert_scorpions.Description",
+            "gmGuidanceKey": "IONRIFT.RESPITE.DATA.EVENT.evt_desert_scorpions.GmGuidance",
+            "gmPromptKey": "IONRIFT.RESPITE.DATA.EVENT.evt_desert_scorpions.GmPrompt",
+            "checkContextKey": "IONRIFT.RESPITE.DATA.EVENT.evt_desert_scorpions.CheckContext"
         },
         {
             "id": "evt_desert_dehydration",
@@ -211,11 +225,13 @@
                 "volunteerPolicy": "each",
                 "onTriumph": {
                     "narrative": "You repositioned the shelter to block the radiant rock face, dug a shallow trench for cooler ground contact, and kept everyone resting low. The heat was brutal, but the camp rode it out.",
-                    "effects": []
+                    "effects": [],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_desert_dehydration.TriumphNarrative"
                 },
                 "onSuccess": {
                     "narrative": "Shelter angled away from the hot rock. Damp cloths where they counted. The heat was bad but the camp held together.",
-                    "effects": []
+                    "effects": [],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_desert_dehydration.SuccessNarrative"
                 },
                 "onMixed": {
                     "narrative": "The heat wins the argument. Extra water consumed to keep everyone functional. Tomorrow's supply will be tighter.",
@@ -232,7 +248,8 @@
                             },
                             "description": "Extra water consumed to manage the heat."
                         }
-                    ]
+                    ],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_desert_dehydration.MixedNarrative"
                 },
                 "onFailure": {
                     "narrative": "The heat is unrelenting. Extra water consumed and it still was not enough. Everyone wakes parched and sluggish. Facing the morning sun will be brutal.",
@@ -256,14 +273,18 @@
                             "scope": "failed",
                             "description": "The heat broke the characters who could not manage their exposure."
                         }
-                    ]
+                    ],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_desert_dehydration.FailureNarrative"
                 }
             },
             "tier": "normal",
             "sentiment": "negative",
             "pack": "base",
             "nameKey": "IONRIFT.RESPITE.DATA.EVENT.evt_desert_dehydration.Name",
-            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_desert_dehydration.Description"
+            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_desert_dehydration.Description",
+            "gmGuidanceKey": "IONRIFT.RESPITE.DATA.EVENT.evt_desert_dehydration.GmGuidance",
+            "gmPromptKey": "IONRIFT.RESPITE.DATA.EVENT.evt_desert_dehydration.GmPrompt",
+            "checkContextKey": "IONRIFT.RESPITE.DATA.EVENT.evt_desert_dehydration.CheckContext"
         },
         {
             "id": "evt_desert_oasis_cache",
@@ -317,7 +338,8 @@
                                 }
                             }
                         }
-                    ]
+                    ],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_desert_oasis_cache.TriumphNarrative"
                 },
                 "onSuccess": {
                     "narrative": "Carefully digging it out, you uncover several intact sealed clay jars holding preserved exotic spices.",
@@ -347,7 +369,8 @@
                                 }
                             }
                         }
-                    ]
+                    ],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_desert_oasis_cache.SuccessNarrative"
                 },
                 "onMixed": {
                     "narrative": "You pulled one jar free intact, but the rest crumbled. A single jar of spices, better than nothing.",
@@ -377,18 +400,23 @@
                                 }
                             }
                         }
-                    ]
+                    ],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_desert_oasis_cache.MixedNarrative"
                 },
                 "onFailure": {
                     "narrative": "In your excitement, you pull too hard. The ancient clay jars crumble to dust in your hands, their contents blowing away in the night breeze. Nothing salvageable.",
-                    "effects": []
+                    "effects": [],
+                    "narrativeKey": "IONRIFT.RESPITE.DATA.EVENT.evt_desert_oasis_cache.FailureNarrative"
                 }
             },
             "tier": "normal",
             "sentiment": "positive",
             "pack": "base",
             "nameKey": "IONRIFT.RESPITE.DATA.EVENT.evt_desert_oasis_cache.Name",
-            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_desert_oasis_cache.Description"
+            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_desert_oasis_cache.Description",
+            "gmGuidanceKey": "IONRIFT.RESPITE.DATA.EVENT.evt_desert_oasis_cache.GmGuidance",
+            "gmPromptKey": "IONRIFT.RESPITE.DATA.EVENT.evt_desert_oasis_cache.GmPrompt",
+            "checkContextKey": "IONRIFT.RESPITE.DATA.EVENT.evt_desert_oasis_cache.CheckContext"
         },
         {
             "id": "evt_desert_stars",
@@ -413,7 +441,10 @@
             "sentiment": "neutral",
             "pack": "base",
             "nameKey": "IONRIFT.RESPITE.DATA.EVENT.evt_desert_stars.Name",
-            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_desert_stars.Description"
+            "descriptionKey": "IONRIFT.RESPITE.DATA.EVENT.evt_desert_stars.Description",
+            "gmGuidanceKey": "IONRIFT.RESPITE.DATA.EVENT.evt_desert_stars.GmGuidance",
+            "gmPromptKey": "IONRIFT.RESPITE.DATA.EVENT.evt_desert_stars.GmPrompt",
+            "checkContextKey": "IONRIFT.RESPITE.DATA.EVENT.evt_desert_stars.CheckContext"
         }
     ]
 }
