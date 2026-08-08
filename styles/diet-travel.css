@@ -512,6 +512,8 @@
    TRAVEL RESOLUTION PHASE
    ═══════════════════════════════════════════════════════════ */
 
+/* Fill remaining form height under banner/roster so window-content max-height
+   can clip; overflow-y scrolls the phase instead of cutting off resolve actions. */
 .respite-travel-phase {
     display: flex;
     flex-direction: column;
@@ -522,6 +524,10 @@
     margin-right: auto;
     width: 100%;
     box-sizing: border-box;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 .travel-header {
@@ -1303,11 +1309,10 @@
     border-left-color: rgba(100, 180, 255, 0.2);
 }
 
-/* ── Responsive scrolling for tall content ── */
-
+/* Character list scrolls with .respite-travel-phase (single scroll surface). */
 .travel-character-list {
-    max-height: 20rem;
-    overflow-y: auto;
+    max-height: none;
+    overflow: visible;
 }
 
 .travel-no-options {

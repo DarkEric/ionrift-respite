@@ -225,20 +225,23 @@ export async function loadTravelProvisionBatches() {
 export async function resolveProvisionPoolEntry(entry) {
     if (!entry) return null;
 
+    if (entry.itemData?.name) return entry.itemData;
+
     const docId = compendiumIndexDocumentId(entry);
     const itemRef = entry.itemRef ?? null;
     if (!docId && !itemRef) return null;
 
     const homebrewOnly = isHomebrewProvisionOnly();
+    const registered = getRegisteredProvisionPackIds();
     const packIds = entry.packId
         ? [
             entry.packId,
-            ...(homebrewOnly ? [] : [MODULE_PACK_ID]),
+            ...(homebrewOnly ? [] : [MODULE_PACK_ID, ...registered]),
             PROVISIONS_CUSTOM_PACK_ID
         ]
         : homebrewOnly
             ? [PROVISIONS_CUSTOM_PACK_ID]
-            : [PROVISIONS_CUSTOM_PACK_ID, MODULE_PACK_ID];
+            : [PROVISIONS_CUSTOM_PACK_ID, MODULE_PACK_ID, ...registered];
 
     for (const packId of packIds) {
         const pack = game.packs.get(packId);
@@ -357,6 +360,19 @@ export async function applyTravelProvisionBatches(resolver) {
             packId: batch.packId
         });
     }
+
+    try {
+        const { applyOverlayProvisionItems } = await import(
+            "../../packs/overlays/OverlayProvisionItemLoader.js"
+        );
+        const overlayCount = await applyOverlayProvisionItems(resolver);
+        if (overlayCount) {
+            console.log(`${MODULE_ID} | Overlay provision items: ${overlayCount} row(s)`);
+        }
+    } catch (e) {
+        console.warn(`${MODULE_ID} | Overlay provision item load failed:`, e);
+    }
+
     await syncBasePoolsIntoResourcePools(resolver);
     return loaded;
 }

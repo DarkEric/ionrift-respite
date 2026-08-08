@@ -71,8 +71,7 @@ import {
     emitRestResolved,
     emitPhaseChanged,
     emitCampFirewoodPledge,
-    emitCampFirewoodReclaim,
-    emitTravelIndividualDebrief
+    emitCampFirewoodReclaim
 } from "../../services/socket/SocketController.js";
 import { MODULE_ID } from "../../data/moduleId.js";
 
@@ -640,6 +639,7 @@ _isTavernTerrain() {
 async _onSetupTerrainChanged(prevTerrain, nextTerrain) {
         this._selectedTerrain = nextTerrain;
         this._selectedWeather = this._resolveSetupWeather(nextTerrain);
+        this._travel?.syncTerrainDCs?.(nextTerrain, { resetOverrides: true });
         if (prevTerrain === "tavern" && nextTerrain !== "tavern") {
             this._safeRestPulseAlert = true;
             try {
@@ -1844,21 +1844,6 @@ receiveTravelLootRollPrompt(data) {
             activity: data.activity
         };
         this.render();
-    }
-
-async #emitTravelIndividualDebriefForRow(row, actorId) {
-        const actor = game.actors.get(actorId);
-        if (!actor) return;
-        const ownerIds = Object.entries(actor.ownership ?? {})
-            .filter(([id, level]) => id !== "default" && level >= 3)
-            .map(([id]) => id);
-        for (const uid of ownerIds) {
-            emitTravelIndividualDebrief({
-                targetUserId: uid,
-                result: row,
-                playerTravel: this._buildPlayerTravelRestore(uid)
-            });
-        }
     }
 
     static async #onRollTravelLoot(event, target) { return this._travel.onRollTravelLoot(event, target); }

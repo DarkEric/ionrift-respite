@@ -320,8 +320,10 @@ Hooks.once("init", async () => {
         }
     });
 
-    // Register Respite-specific item enrichments with the shared library engine.
-    registerItemEnrichments();
+    // Enrichments need i18n strings — register on ready, not init.
+    Hooks.once("ready", () => {
+        registerItemEnrichments();
+    });
 
 });
 

@@ -7,10 +7,18 @@
     min-width: 500px;
 }
 
+/* Cap the frame so Foundry height:auto cannot push past the viewport;
+   scroll happens inside phase bodies (travel, events, camp shell). */
+.application.ionrift-respite-app {
+    max-height: min(90vh, calc(100dvh - 2rem));
+}
+
 .ionrift-respite-app .window-content {
     padding: 0;
     display: flex;
     flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
     max-height: min(80vh, calc(100dvh - 3rem));
     overflow: hidden;
 }
@@ -192,6 +200,7 @@
     border-bottom: 1px solid rgba(255, 255, 255, 0.06);
     flex-wrap: wrap;
     align-items: center;
+    flex-shrink: 0;
 }
 
 .camp-status-chip {

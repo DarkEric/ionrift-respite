@@ -1438,8 +1438,8 @@ export class RestPrepareContext {
                             ?? app._syncedTravelAwaitingLoot?.[day]?.[a.id];
                         const awaitingLoot = !!awaitingLootInfo;
                         const lootDraws = awaitingLootInfo?.lootDraws ?? 1;
-                        const forageDC = app._travelForageDC ?? 12;
-                        const huntDC = app._travelHuntDC ?? 14;
+                        const forageDC = app._travelForageDC ?? terrain?.forageDC ?? 12;
+                        const huntDC = app._travelHuntDC ?? terrain?.huntDC ?? 14;
                         return {
                             id: a.id,
                             name: a.name,
@@ -1532,8 +1532,8 @@ export class RestPrepareContext {
                     terrainTag,
                     terrainLabel: TerrainRegistry.resolveLabel(terrainTag, terrain),
                     hasOwnedCharacters: partyActors.some(a => a.isOwner),
-                    forageDC: app._travelForageDC ?? 12,
-                    huntDC: app._travelHuntDC ?? 14,
+                    forageDC: app._travelForageDC ?? terrain?.forageDC ?? 12,
+                    huntDC: app._travelHuntDC ?? terrain?.huntDC ?? 14,
                     forageDisabled,
                     forageDisabledReasonKey,
                     forageDisabledTooltip: forageDisabledReasonKey

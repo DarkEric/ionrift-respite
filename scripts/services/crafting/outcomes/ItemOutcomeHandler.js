@@ -55,6 +55,64 @@ const FALLBACK_ITEMS = {
         type: "consumable",
         img: "icons/consumables/potions/potion-tube-corked-glowing-green.webp",
         system: { quantity: 1, type: { value: "potion" } }
+    },
+    fresh_meat: {
+        name: "Fresh Meat",
+        type: "consumable",
+        img: "icons/consumables/meat/steak-raw-red-pink.webp",
+        system: {
+            quantity: 1,
+            description: { value: "<p>Game meat. Needs cooking.</p>" },
+            rarity: "common",
+            type: { value: "food", subtype: "" }
+        },
+        flags: { [MODULE_ID]: { itemRef: "fresh_meat", foodTag: "meat", spoilsAfter: 1, category: "hunt" } }
+    },
+    fresh_fish: {
+        name: "Fresh Fish",
+        type: "consumable",
+        img: "icons/consumables/meat/fish-whole-blue.webp",
+        system: {
+            quantity: 1,
+            description: { value: "<p>Freshwater catch. Needs cooking.</p>" },
+            rarity: "common",
+            type: { value: "food", subtype: "" }
+        },
+        flags: { [MODULE_ID]: { itemRef: "fresh_fish", foodTag: "meat", spoilsAfter: 1, category: "hunt" } }
+    },
+    choice_cut: {
+        name: "Choice Cut",
+        type: "consumable",
+        img: "icons/consumables/meat/steak-marbled.webp",
+        system: {
+            quantity: 1,
+            description: { value: "<p>A premium cut of game meat.</p>" },
+            rarity: "uncommon",
+            type: { value: "food", subtype: "" }
+        },
+        flags: { [MODULE_ID]: { itemRef: "choice_cut", foodTag: "meat", spoilsAfter: 1, category: "hunt" } }
+    },
+    animal_fat: {
+        name: "Animal Fat",
+        type: "loot",
+        img: "icons/commodities/biological/shell-tan.webp",
+        system: {
+            quantity: 1,
+            description: { value: "<p>Rendered fat. Burns long and hot.</p>" },
+            rarity: "common"
+        },
+        flags: { [MODULE_ID]: { itemRef: "animal_fat", category: "hunt" } }
+    },
+    venom_sac: {
+        name: "Venom Sac",
+        type: "loot",
+        img: "icons/consumables/potions/bottle-round-corked-red.webp",
+        system: {
+            quantity: 1,
+            description: { value: "<p>A gland from a venomous predator.</p>" },
+            rarity: "uncommon"
+        },
+        flags: { [MODULE_ID]: { itemRef: "venom_sac", category: "hunt" } }
     }
 };
 

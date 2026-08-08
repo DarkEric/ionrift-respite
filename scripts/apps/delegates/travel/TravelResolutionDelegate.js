@@ -14,7 +14,8 @@ import { getPartyActors } from "../../../services/party/partyActors.js";
 import {
     executePlayerRoll,
     waitForDiceSoNice,
-    postRollToChat
+    postRollToChat,
+    rollForPlayer
 } from "../../../services/ui/rollRequest/RollRequestManager.js";
 import {
     emitTravelDeclaration,
@@ -24,10 +25,12 @@ import {
     emitTravelLootRollPrompt,
     emitTravelLootRollResult,
     emitTravelDebrief,
+    emitTravelIndividualDebrief,
     emitPhaseChanged
 } from "../../../services/socket/SocketController.js";
 import { applyPlayerTravelDeclarationToGm } from "../../../services/travel/settings/travelDeclarationSync.js";
-import { localize } from "../../../utils/I18n.js";
+import { localize, format } from "../../../utils/I18n.js";
+import { COMFORT_RANK, RANK_TO_KEY } from "../../../data/RestConstants.js";
 
 const FORAGE_REQUIRES_PACK_KEY = "IONRIFT.RESPITE.TRAVEL.ForageRequiresPack";
 const HUNT_REQUIRES_PROVISION_KEY = "IONRIFT.RESPITE.TRAVEL.HuntRequiresProvision";
@@ -67,6 +70,11 @@ export class TravelResolutionDelegate {
 
     #forageDCOverride = null;
     #huntDCOverride = null;
+
+    /** Terrain-pack forage DC when set; else global FORAGE_DC. */
+    #terrainForageDC = null;
+    /** Terrain-pack hunt DC when set; else global HUNT_DC. */
+    #terrainHuntDC = null;
 
     #scoutingAllowed = true;
 
@@ -155,12 +163,35 @@ export class TravelResolutionDelegate {
         });
     }
 
+    get #forageBase() {
+        return this.#terrainForageDC ?? TravelResolver.FORAGE_DC;
+    }
+
+    get #huntBase() {
+        return this.#terrainHuntDC ?? TravelResolver.HUNT_DC;
+    }
+
     get forageDC() {
-        return this.#forageDCOverride ?? TravelResolver.FORAGE_DC;
+        return this.#forageDCOverride ?? this.#forageBase;
     }
 
     get huntDC() {
-        return this.#huntDCOverride ?? TravelResolver.HUNT_DC;
+        return this.#huntDCOverride ?? this.#huntBase;
+    }
+
+    /**
+     * Apply terrain.json forageDC / huntDC as session bases.
+     * @param {string} terrainTag
+     * @param {{ resetOverrides?: boolean }} [options]
+     */
+    syncTerrainDCs(terrainTag, { resetOverrides = false } = {}) {
+        const terrain = TerrainRegistry.get(terrainTag);
+        this.#terrainForageDC = typeof terrain?.forageDC === "number" ? terrain.forageDC : null;
+        this.#terrainHuntDC = typeof terrain?.huntDC === "number" ? terrain.huntDC : null;
+        if (resetOverrides) {
+            this.#forageDCOverride = null;
+            this.#huntDCOverride = null;
+        }
     }
 
     adjustGlobalDC(activity, delta) {
@@ -205,6 +236,11 @@ export class TravelResolutionDelegate {
     loadHuntYieldsFromData(yieldData) {
         if (!yieldData || typeof yieldData !== "object") return;
         this.#resolver.loadHuntYields(yieldData);
+    }
+
+    /** Mark travel provision pools as ready (e.g. after overlay inline load). */
+    markPoolsLoaded() {
+        this.#poolsLoaded = true;
     }
 
     get resourcePoolsFromPack() {
@@ -534,6 +570,7 @@ export class TravelResolutionDelegate {
     }
 
     buildContext(partyActors, terrainTag) {
+        this.syncTerrainDCs(terrainTag);
         const terrain = TerrainRegistry.get(terrainTag);
         const allowed = terrain?.travelActivities ?? ["forage", "hunt", "scout"];
         const { canForage, canHunt } = getTravelGatherAvailability(terrain?.travelActivities);
@@ -676,10 +713,10 @@ export class TravelResolutionDelegate {
                 ? localize(huntDisabledReasonKey)
                 : null,
             forageGMAdj: this.#forageDCOverride !== null
-                ? ((this.forageDC - TravelResolver.FORAGE_DC >= 0 ? "+" : "") + (this.forageDC - TravelResolver.FORAGE_DC))
+                ? ((this.forageDC - this.#forageBase >= 0 ? "+" : "") + (this.forageDC - this.#forageBase))
                 : null,
             huntGMAdj: this.#huntDCOverride !== null
-                ? ((this.huntDC - TravelResolver.HUNT_DC >= 0 ? "+" : "") + (this.huntDC - TravelResolver.HUNT_DC))
+                ? ((this.huntDC - this.#huntBase >= 0 ? "+" : "") + (this.huntDC - this.#huntBase))
                 : null
         };
     }
@@ -695,6 +732,23 @@ export class TravelResolutionDelegate {
             const { applyTravelProvisionBatches } = await import("../../../services/travel/resolve/TravelProvisionIndex.js");
             await applyTravelProvisionBatches(this.#resolver);
             this.#poolsLoaded = this.#resolver.resourcePoolRoller.pools.size > 0;
+        } else {
+            // Overlay forage/hunt JSON → base pools (works when world materialiser pack is empty).
+            try {
+                const { applyOverlayProvisionItems } = await import(
+                    "../../../services/packs/overlays/OverlayProvisionItemLoader.js"
+                );
+                const { syncBasePoolsIntoResourcePools } = await import(
+                    "../../../services/travel/resolve/TravelProvisionIndex.js"
+                );
+                const n = await applyOverlayProvisionItems(this.#resolver);
+                if (n) {
+                    await syncBasePoolsIntoResourcePools(this.#resolver);
+                    this.#poolsLoaded = true;
+                }
+            } catch (e) {
+                console.warn("[Respite:TravelDelegate] Overlay provision refresh failed:", e);
+            }
         }
 
         if (!this.#poolsLoaded) {
@@ -979,6 +1033,8 @@ export class TravelResolutionDelegate {
             dayResolved: Object.fromEntries(this.#dayResolved),
             forageDCOverride: this.#forageDCOverride,
             huntDCOverride: this.#huntDCOverride,
+            terrainForageDC: this.#terrainForageDC,
+            terrainHuntDC: this.#terrainHuntDC,
             scoutingAllowed: this.#scoutingAllowed,
             scoutingResult: this.#scoutingResult,
             scoutRolls: this.#scoutRolls,
@@ -998,6 +1054,8 @@ export class TravelResolutionDelegate {
         }
         if (data.forageDCOverride !== null) this.#forageDCOverride = data.forageDCOverride;
         if (data.huntDCOverride !== null) this.#huntDCOverride = data.huntDCOverride;
+        if (data.terrainForageDC !== undefined) this.#terrainForageDC = data.terrainForageDC;
+        if (data.terrainHuntDC !== undefined) this.#terrainHuntDC = data.terrainHuntDC;
         if (data.scoutingAllowed !== null) this.#scoutingAllowed = data.scoutingAllowed;
         if (data.scoutingResult !== null) this.#scoutingResult = data.scoutingResult;
         if (data.scoutRolls) this.#scoutRolls = data.scoutRolls;
@@ -1613,6 +1671,27 @@ export class TravelResolutionDelegate {
             }
         })();
     
+    }
+
+    /**
+     * Whisper one forage/hunt outcome to the owning player(s).
+     * @param {{ day: number, activity: string, result: object }} row
+     * @param {string} actorId
+     */
+    async emitTravelIndividualDebriefForRow(row, actorId) {
+        const app = this._app;
+        const actor = game.actors.get(actorId);
+        if (!actor || !row) return;
+        const ownerIds = Object.entries(actor.ownership ?? {})
+            .filter(([id, level]) => id !== "default" && level >= 3)
+            .map(([id]) => id);
+        for (const uid of ownerIds) {
+            emitTravelIndividualDebrief({
+                targetUserId: uid,
+                result: row,
+                playerTravel: app._buildPlayerTravelRestore?.(uid) ?? null
+            });
+        }
     }
 
     async onRollTravelLootForPlayer(event, target) {

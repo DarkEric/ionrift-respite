@@ -10,6 +10,19 @@ const FORAGE_DC = 12;
 const HUNT_DC = 14;
 
 /**
+ * Surface terrains that may share the generic wilderness forage/hunt staple pool.
+ * Campaign terrains (e.g. underdark) must NOT fall back — wrong-biome loot is worse
+ * than an empty draw while their overlay pack loads.
+ */
+const SURFACE_WILDERNESS_FALLBACK = new Set([
+    "forest", "swamp", "desert", "mountain", "arctic", "wilderness"
+]);
+
+function allowWildernessPoolFallback(terrainTag) {
+    return SURFACE_WILDERNESS_FALLBACK.has(String(terrainTag ?? ""));
+}
+
+/**
  * TravelResolver
  * Resolves foraging and hunting rolls during the Travel Resolution phase.
  * Each character declares a travel activity; this service handles the
@@ -110,6 +123,39 @@ export class TravelResolver {
                     _id: docId,
                     quantity: 1,
                     packId: defaultPackId
+                });
+            }
+        }
+    }
+
+    /**
+     * Inject provision rows that already carry grantable itemData (overlay JSON).
+     * Used when world-compendium materialisation is empty or unavailable.
+     * @param {Array<{ itemRef: string, category: string, terrains: string[], itemData: object, quantity?: number, packId?: string }>} rows
+     * @param {{ overrideRefs?: boolean }} [options]
+     */
+    loadInlineProvisionItems(rows, { overrideRefs = true } = {}) {
+        if (!Array.isArray(rows) || !rows.length) return;
+        for (const row of rows) {
+            const category = row.category;
+            if (!category || !["forage", "hunt"].includes(category)) continue;
+            const itemRef = row.itemRef;
+            const itemData = row.itemData;
+            if (!itemRef || !itemData?.name) continue;
+            const terrains = Array.isArray(row.terrains) ? row.terrains : [];
+            for (const terrain of terrains) {
+                if (!terrain) continue;
+                const key = `${terrain}_${category}`;
+                this.#basePools[key] ??= [];
+                if (overrideRefs) {
+                    this.#basePools[key] = this.#basePools[key].filter(pool => pool.itemRef !== itemRef);
+                }
+                this.#basePools[key].push({
+                    itemRef,
+                    _id: itemRef,
+                    quantity: row.quantity ?? 1,
+                    packId: row.packId ?? null,
+                    itemData
                 });
             }
         }
@@ -288,10 +334,22 @@ export class TravelResolver {
         if (!actor || !items?.length) return;
 
         const performGrant = async () => {
+            const { resolveProvisionPoolEntry } = await import("./TravelProvisionIndex.js");
             const harvestedDate = CalendarHandler.getCurrentDate() ?? String(game.time.worldTime);
+            let granted = 0;
             for (const entry of items) {
-                if (!entry.itemData) continue;
-                const data = foundry.utils.deepClone(entry.itemData);
+                let itemData = entry.itemData;
+                // Incomplete stubs (itemRef-only or name-less) must be resolved before grant.
+                if ((!itemData?.name || !itemData?.type) && entry.itemRef) {
+                    itemData = await resolveProvisionPoolEntry({ itemRef: entry.itemRef })
+                        ?? this._builtinYieldForRef(entry.itemRef, entry.quantity ?? 1)?.itemData
+                        ?? null;
+                }
+                if (!itemData?.name) {
+                    console.warn(`${MODULE_ID} | grantItems skipped (no itemData): ${entry.itemRef ?? "?"}`);
+                    continue;
+                }
+                const data = foundry.utils.deepClone(itemData);
                 data.system = data.system ?? {};
                 data.system.quantity = entry.quantity ?? 1;
 
@@ -310,7 +368,9 @@ export class TravelResolver {
                     system: data.system,
                     flags: data.flags ?? {}
                 }]);
+                granted += 1;
             }
+            return granted;
         };
 
         if (ledger && slotKey) {
@@ -526,7 +586,9 @@ export class TravelResolver {
      */
     async _drawFromBasePool(terrainTag, category, count = 1) {
         const key = `${terrainTag}_${category}`;
-        const pool = this.#basePools[key] ?? this.#basePools[`wilderness_${category}`] ?? [];
+        const pool = this.#basePools[key]
+            ?? (allowWildernessPoolFallback(terrainTag) ? this.#basePools[`wilderness_${category}`] : null)
+            ?? [];
         if (!pool.length) return [];
 
         const shuffled = [...pool].sort(() => Math.random() - 0.5);
@@ -554,7 +616,9 @@ export class TravelResolver {
      */
     async _drawFromBasePoolWithRoll(terrainTag, category, rollValue) {
         const key = `${terrainTag}_${category}`;
-        const pool = this.#basePools[key] ?? this.#basePools[`wilderness_${category}`] ?? [];
+        const pool = this.#basePools[key]
+            ?? (allowWildernessPoolFallback(terrainTag) ? this.#basePools[`wilderness_${category}`] : null)
+            ?? [];
         if (!pool.length) return [];
 
         const clamped = Math.max(1, Math.min(100, Math.floor(Number(rollValue) || 0)));
@@ -596,11 +660,16 @@ export class TravelResolver {
     _yieldEntryToItem(entry) {
         const qty = entry.qty ?? 1;
         if (entry.itemRef) {
-            const resolved = { itemRef: entry.itemRef, quantity: qty };
-            if (entry.desc) {
-                resolved.itemData = { system: { description: { value: entry.desc } } };
+            const builtin = this._builtinYieldForRef(entry.itemRef, qty);
+            if (builtin) {
+                if (entry.desc && builtin.itemData?.system) {
+                    builtin.itemData.system.description = {
+                        value: entry.desc
+                    };
+                }
+                return builtin;
             }
-            return resolved;
+            return { itemRef: entry.itemRef, quantity: qty };
         }
         switch (entry.type) {
             case "meat":
@@ -615,6 +684,29 @@ export class TravelResolver {
                 return this._makeVenomSac(qty);
             default:
                 return this._makeMeat(qty, entry.desc);
+        }
+    }
+
+    /**
+     * Built-in hunt yield for a known itemRef (used when pack resolve is unavailable).
+     * @param {string} itemRef
+     * @param {number} quantity
+     * @returns {{ itemRef: string, quantity: number, itemData: object }|null}
+     */
+    _builtinYieldForRef(itemRef, quantity = 1) {
+        switch (itemRef) {
+            case "fresh_meat":
+                return this._makeMeat(quantity);
+            case "fresh_fish":
+                return this._makeFish(quantity);
+            case "choice_cut":
+                return this._makeChoiceCut(quantity);
+            case "animal_fat":
+                return this._makeAnimalFat(quantity);
+            case "venom_sac":
+                return this._makeVenomSac(quantity);
+            default:
+                return null;
         }
     }
 
@@ -706,6 +798,7 @@ export class TravelResolver {
 
     /**
      * Hunt yields with compendium fallback when tables are empty.
+     * Prefer pack itemData when available so grants carry spoilsAfter / foodTag.
      * @param {string} terrainTag
      * @param {boolean} exceptional
      */
@@ -714,7 +807,39 @@ export class TravelResolver {
         if (!items.length) {
             items = await this._drawFromBasePool(terrainTag, "hunt", exceptional ? 2 : 1);
         }
-        return items;
+        return await this._ensureYieldItemData(items);
+    }
+
+    /**
+     * Ensure hunt yield rows have grantable itemData (pack resolve, then builtin).
+     * @param {Array<{ itemRef?: string, quantity?: number, itemData?: object }>} items
+     * @returns {Promise<Array<{ itemRef: string, quantity: number, itemData: object }>>}
+     */
+    async _ensureYieldItemData(items) {
+        if (!items?.length) return [];
+        const { resolveProvisionPoolEntry } = await import("./TravelProvisionIndex.js");
+        const out = [];
+        for (const entry of items) {
+            const quantity = entry.quantity ?? 1;
+            let itemData = entry.itemData;
+            if (entry.itemRef) {
+                const fromPack = await resolveProvisionPoolEntry({ itemRef: entry.itemRef });
+                if (fromPack?.name) itemData = fromPack;
+            }
+            if (!itemData?.name) {
+                itemData = this._builtinYieldForRef(entry.itemRef, quantity)?.itemData ?? null;
+            }
+            if (!itemData?.name) {
+                console.warn(`${MODULE_ID} | Hunt yield has no itemData for ${entry.itemRef ?? "?"}`);
+                continue;
+            }
+            out.push({
+                itemRef: entry.itemRef ?? String(itemData.name).toLowerCase().replace(/\s+/g, "_"),
+                quantity,
+                itemData
+            });
+        }
+        return out;
     }
 
     /**

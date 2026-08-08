@@ -42,15 +42,17 @@ export class ResourcePoolRoller {
     getEffectiveForagePool(terrainTag) {
         const poolId = `resource_pool_${terrainTag}`;
         let pool = this.pools.get(poolId);
-        if (!pool) pool = this.pools.get("resource_pool_wilderness");
+        if (!pool && this.#allowWildernessFallback(terrainTag)) {
+            pool = this.pools.get("resource_pool_wilderness");
+        }
         return pool ?? null;
     }
 
     async roll(poolId, rolls = 1) {
         let pool = this.pools.get(poolId);
 
-        // Fallback to generic wilderness pool if terrain-specific pool missing
-        if (!pool) {
+        // Fallback to generic wilderness pool only for surface staple terrains.
+        if (!pool && this.#wildernessFallbackAllowedForPoolId(poolId)) {
             pool = this.pools.get("resource_pool_wilderness");
         }
         if (!pool) return [];
@@ -103,7 +105,9 @@ export class ResourcePoolRoller {
      */
     pickWithPercentileRoll(poolId, rollValue) {
         let pool = this.pools.get(poolId);
-        if (!pool) pool = this.pools.get("resource_pool_wilderness");
+        if (!pool && this.#wildernessFallbackAllowedForPoolId(poolId)) {
+            pool = this.pools.get("resource_pool_wilderness");
+        }
         if (!pool?.entries?.length) return null;
 
         const totalWeight = pool.entries.reduce((sum, entry) => sum + (entry.weight ?? 1), 0);
@@ -121,4 +125,20 @@ export class ResourcePoolRoller {
         }
         return selected;
     }
+
+    #allowWildernessFallback(terrainTag) {
+        return SURFACE_WILDERNESS_FALLBACK.has(String(terrainTag ?? ""));
+    }
+
+    #wildernessFallbackAllowedForPoolId(poolId) {
+        const id = String(poolId ?? "");
+        if (!id.startsWith("resource_pool_")) return false;
+        let tag = id.slice("resource_pool_".length);
+        if (tag.endsWith("_rare")) tag = tag.slice(0, -"_rare".length);
+        return this.#allowWildernessFallback(tag);
+    }
 }
+
+const SURFACE_WILDERNESS_FALLBACK = new Set([
+    "forest", "swamp", "desert", "mountain", "arctic", "wilderness"
+]);

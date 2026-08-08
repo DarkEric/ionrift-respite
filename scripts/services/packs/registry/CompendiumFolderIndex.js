@@ -8,7 +8,8 @@ const TERRAIN_ALIASES = {
     desert: "desert",
     mountain: "mountain",
     arctic: "arctic",
-    wilderness: "wilderness"
+    wilderness: "wilderness",
+    underdark: "underdark"
 };
 
 /**

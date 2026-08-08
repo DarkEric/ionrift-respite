@@ -240,7 +240,8 @@ export class ConditionAdvisory {
                         try {
                             const before = new Set(actor.effects.map(e => e.id));
                             await ceApi.addEffect({ effectId: ceId, uuid: actor.uuid });
-                            const created = actor.effects.find(e => !before.has(e.id)) ?? null;
+                            let created = actor.effects.find(e => !before.has(e.id)) ?? null;
+                            if (created?.id && !actor.effects.has(created.id)) created = null;
                             await this._stampRestExpiry(created, entry, effect, fx);
                             applied.add(key);
                             Logger.log(`CE auto-applied "${effect.condition}" to ${actor.name}`);
@@ -361,7 +362,8 @@ export class ConditionAdvisory {
             name: effect.label ?? entry.label,
             img: entry.icon,
             origin: actor.uuid,
-            statuses: new Set([entry.id]),
+            // Foundry ActiveEffect create data expects an array, not a Set.
+            statuses: [entry.id],
             changes: (entry.changes ?? []).map(c => ({
                 key: c.key,
                 mode: c.mode ?? CONST.ACTIVE_EFFECT_MODES.CUSTOM,
@@ -525,20 +527,39 @@ export class ConditionAdvisory {
         }
 
         const statusId = this._resolveStatusId(condition);
-        if (statusId && typeof actor.toggleStatusEffect === "function") {
-            if (actor.statuses?.has?.(statusId)) {
-                // Already present (likely a manual GM/player toggle). Treat as
-                // applied but do not hijack it with our auto-expiry tagging.
-                return { applied: true, effect: null };
-            }
-            const before = new Set(actor.effects.map(e => e.id));
-            await actor.toggleStatusEffect(statusId, { active: true });
-            const created = actor.effects.find(e => !before.has(e.id) && e.statuses?.has?.(statusId))
-                ?? actor.effects.find(e => e.statuses?.has?.(statusId))
-                ?? null;
-            return { applied: true, effect: created };
+        if (!statusId || typeof actor.toggleStatusEffect !== "function") {
+            return { applied: false, effect: null };
         }
-        return { applied: false, effect: null };
+
+        // dnd5e status effects use a static embedded id (e.g. dnd5epoisoned000).
+        const statusCfg = CONFIG.statusEffects?.[statusId]
+            ?? (Array.isArray(CONFIG.statusEffects)
+                ? CONFIG.statusEffects.find(e => e?.id === statusId)
+                : null);
+        const staticEffectId = statusCfg?._id ?? null;
+
+        if ((staticEffectId && actor.effects.get(staticEffectId))
+            || actor.statuses?.has?.(statusId)) {
+            // Already present — do not hijack with auto-expiry tagging.
+            return { applied: true, effect: null };
+        }
+
+        const result = await actor.toggleStatusEffect(statusId, { active: true });
+        let created = (result && typeof result === "object" && result.documentName === "ActiveEffect")
+            ? result
+            : null;
+        if (!created && staticEffectId) {
+            created = actor.effects.get(staticEffectId) ?? null;
+        }
+        if (!created) {
+            created = actor.effects.find(e => e.statuses?.has?.(statusId)) ?? null;
+        }
+        // Only stamp effects that are actually in the actor's embedded collection.
+        // Orphaned/temp docs cause: "undefined id [dnd5epoisoned000] does not exist…"
+        if (created?.id && !actor.effects.has(created.id)) {
+            created = null;
+        }
+        return { applied: true, effect: created };
     }
 
     /**
@@ -552,11 +573,15 @@ export class ConditionAdvisory {
      * @param {Object|null} fx - Shared effect-automation helper.
      */
     static async _stampRestExpiry(ae, entry, effect, fx = null) {
-        if (!ae?.update) return;
+        if (!ae?.id) return;
+        const parent = ae.parent;
+        if (!parent?.effects?.has?.(ae.id)) return;
+
         const duration = effect.duration ?? entry?.defaultDuration ?? "next_rest";
         const durationConfig = this._durationMap?.[duration] ?? {};
 
         const updates = {
+            _id: ae.id,
             [`flags.${MODULE_ID}.conditionId`]: entry?.id ?? effect.condition,
             [`flags.${MODULE_ID}.expiresAt`]: duration,
             [`flags.${MODULE_ID}.autoApplied`]: true,
@@ -569,9 +594,9 @@ export class ConditionAdvisory {
         }
 
         try {
-            await ae.update(updates);
+            await parent.updateEmbeddedDocuments("ActiveEffect", [updates]);
         } catch (e) {
-            console.warn(`${MODULE_ID} | Failed to stamp rest expiry on ${ae.name}:`, e);
+            console.warn(`${MODULE_ID} | Failed to stamp rest expiry on ${ae.name ?? ae.id}:`, e);
         }
     }
 

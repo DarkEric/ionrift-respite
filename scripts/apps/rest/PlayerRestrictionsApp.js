@@ -10,6 +10,8 @@
 import { MODULE_ID } from "../../data/moduleId.js";
 import { localize } from "../../utils/I18n.js";
 
+const LIB_ID = "ionrift-library";
+
 const RESTRICTION_TOGGLES = [
     {
         key: "interceptRests",
@@ -28,8 +30,21 @@ const RESTRICTION_TOGGLES = [
         labelKey: "IONRIFT.RESPITE.SETTINGS.lockAttuneOutsideRestName",
         icon: "fas fa-gem",
         hintKey: "IONRIFT.RESPITE.PLAYER_RESTRICTIONS.LockAttuneHint"
+    },
+    {
+        // Library world setting — Primary Party GM-owned PCs (Foundry v14+ only).
+        key: "includeGmOwnedPartyMembers",
+        moduleId: LIB_ID,
+        v14Only: true,
+        labelKey: "IONRIFT.LIBRARY.SETTINGS.IncludeGmOwnedPartyMembersName",
+        icon: "fas fa-user-shield",
+        hintKey: "IONRIFT.LIBRARY.SETTINGS.IncludeGmOwnedPartyMembersHint"
     }
 ];
+
+function isV14() {
+    return (game.release?.generation ?? 0) >= 14;
+}
 
 export class PlayerRestrictionsApp extends foundry.applications.api.ApplicationV2 {
 
@@ -46,15 +61,24 @@ export class PlayerRestrictionsApp extends foundry.applications.api.ApplicationV
 
     /** @override */
     async _prepareContext() {
-        return {
-            toggles: RESTRICTION_TOGGLES.map(t => ({
+        const toggles = [];
+        for (const t of RESTRICTION_TOGGLES) {
+            if (t.v14Only && !isV14()) continue;
+            const scope = t.moduleId ?? MODULE_ID;
+            let value = false;
+            try {
+                value = !!game.settings.get(scope, t.key);
+            } catch { /* setting missing */ }
+            toggles.push({
                 key: t.key,
+                moduleId: scope,
                 icon: t.icon,
                 label: localize(t.labelKey),
                 hint: localize(t.hintKey),
-                value: game.settings.get(MODULE_ID, t.key)
-            }))
-        };
+                value
+            });
+        }
+        return { toggles };
     }
 
     /** @override */
@@ -79,6 +103,7 @@ export class PlayerRestrictionsApp extends foundry.applications.api.ApplicationV
                 <label class="settings-config-toggle">
                     <input type="checkbox" class="settings-config-cb"
                            data-key="${toggle.key}"
+                           data-module="${toggle.moduleId}"
                            ${toggle.value ? "checked" : ""} />
                     <span class="settings-config-slider"></span>
                 </label>
@@ -109,7 +134,8 @@ export class PlayerRestrictionsApp extends foundry.applications.api.ApplicationV
     async _onSave(el) {
         const checkboxes = el.querySelectorAll(".settings-config-cb");
         for (const cb of checkboxes) {
-            await game.settings.set(MODULE_ID, cb.dataset.key, cb.checked);
+            const scope = cb.dataset.module || MODULE_ID;
+            await game.settings.set(scope, cb.dataset.key, cb.checked);
         }
         ui.notifications.info(localize("IONRIFT.RESPITE.NOTIFY.PlayerRestrictionsSaved"));
         this.close();

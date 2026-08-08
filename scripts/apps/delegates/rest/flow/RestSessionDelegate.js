@@ -492,6 +492,24 @@ export class RestSessionDelegate {
                 app._travel.loadHuntYieldsFromData(huntYields);
                 Logger.log(`${MODULE_ID} | Overlay hunt yields: ${Object.keys(huntYields).length} terrain(s)`);
             }
+
+            if (app._travel) {
+                const { applyOverlayProvisionItems } = await import(
+                    "../../../../services/packs/overlays/OverlayProvisionItemLoader.js"
+                );
+                const resolver = app._travel.getTravelResolver?.() ?? null;
+                if (resolver) {
+                    const n = await applyOverlayProvisionItems(resolver);
+                    if (n) {
+                        const { syncBasePoolsIntoResourcePools } = await import(
+                            "../../../../services/travel/resolve/TravelProvisionIndex.js"
+                        );
+                        await syncBasePoolsIntoResourcePools(resolver);
+                        app._travel.markPoolsLoaded?.();
+                        Logger.log(`${MODULE_ID} | Overlay provision items: ${n} row(s)`);
+                    }
+                }
+            }
         } catch (e) {
             console.warn(`${MODULE_ID} | Overlay profession load failed:`, e);
         }

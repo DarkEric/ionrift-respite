@@ -1,0 +1,31 @@
+{
+    "_key": "!items!a1b2c3d4e5f60010",
+    "_id": "a1b2c3d4e5f60010",
+    "name": "Venom Sac",
+    "type": "loot",
+    "img": "icons/consumables/potions/bottle-round-corked-red.webp",
+    "system": {
+        "description": {
+            "value": "<p>A gland harvested from a venomous predator. Valuable to alchemists and herbalists.</p>"
+        },
+        "rarity": "uncommon",
+        "weight": 0.2,
+        "price": {
+            "value": 25,
+            "denomination": "cp"
+        }
+    },
+    "folder": "hun71n6000000001",
+    "flags": {
+        "ionrift-respite": {
+            "itemRef": "venom_sac",
+            "terrain": "desert,swamp",
+            "category": "hunt"
+        }
+    },
+    "effects": [],
+    "ownership": {
+        "default": 0
+    },
+    "sort": 750
+}
