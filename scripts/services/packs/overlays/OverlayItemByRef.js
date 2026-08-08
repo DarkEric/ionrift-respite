@@ -46,6 +46,5 @@ export async function loadOverlayItemDataByRef(itemRef, moduleId = MODULE_ID) {
   } catch (e) {
     console.warn(`${MODULE_ID} | loadOverlayItemDataByRef failed:`, e);
   }
-  cache.set(itemRef, null);
   return null;
 }
