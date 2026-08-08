@@ -67,7 +67,8 @@
         "combatModifiers": {
             "initiativeDisadvantage": true,
             "surpriseDisadvantage": true,
-            "description": "Disadvantage on initiative and surprise saves. Deep sleep."
+            "description": "Disadvantage on initiative and surprise saves. Deep sleep.",
+            "descriptionKey": "IONRIFT.RESPITE.DATA.ACTIVITY.act_rest_fully.CombatModifiers"
         },
         "category": "active",
         "nameKey": "IONRIFT.RESPITE.DATA.ACTIVITY.act_rest_fully.Name",

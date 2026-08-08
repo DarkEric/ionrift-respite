@@ -1,4 +1,5 @@
 import { Logger } from "../../../utils/Logger.js";
+import { localize, format } from "../../../utils/I18n.js";
 import { getPartyActors } from "../../party/partyActors.js";
 import { boostComfort, getHdPenalty, getExhaustionDC, HP_FRACTION, isComfortEnabled } from "../../camp/gear/ComfortCalculator.js";
 
@@ -473,15 +474,22 @@ export class RestFlowEngine {
             const lines = [];
 
             if (mods.initiative) {
-                const sign = mods.initiative > 0 ? "+" : "";
-                lines.push(`${sign}${mods.initiative} initiative`);
+                lines.push(format("IONRIFT.RESPITE.COMBAT.InitiativeBonus", {
+                    sign: mods.initiative > 0 ? "+" : "",
+                    value: mods.initiative
+                }));
             }
-            if (mods.initiativeDisadvantage) lines.push("Disadvantage on initiative");
-            if (mods.surpriseImmune) lines.push("Cannot be surprised");
-            if (mods.surpriseDisadvantage) lines.push("Disadvantage on surprise saves");
+            if (mods.initiativeDisadvantage) lines.push(localize("IONRIFT.RESPITE.COMBAT.InitiativeDisadvantage"));
+            if (mods.initiativeAdvantage) lines.push(localize("IONRIFT.RESPITE.COMBAT.InitiativeAdvantage"));
+            if (mods.surpriseImmune) lines.push(localize("IONRIFT.RESPITE.COMBAT.SurpriseImmune"));
+            if (mods.surpriseDisadvantage) lines.push(localize("IONRIFT.RESPITE.COMBAT.SurpriseDisadvantage"));
+            if (mods.surpriseAdvantage) lines.push(localize("IONRIFT.RESPITE.COMBAT.SurpriseAdvantage"));
             if (mods.partyInitiative) {
                 partyInitiativeTotal += mods.partyInitiative;
-                partyEffects.push(`${actor.name}: +${mods.partyInitiative} party initiative`);
+                partyEffects.push(format("IONRIFT.RESPITE.COMBAT.PartyInitiativeFrom", {
+                    name: actor.name,
+                    value: mods.partyInitiative
+                }));
             }
 
             if (lines.length > 0) {
@@ -501,7 +509,7 @@ export class RestFlowEngine {
                 initiativeBonus: partyInitiativeTotal,
                 effects: partyEffects,
                 summary: partyInitiativeTotal > 0
-                    ? `Party: +${partyInitiativeTotal} initiative from camp setup`
+                    ? format("IONRIFT.RESPITE.COMBAT.PartyInitiativeTotal", { value: partyInitiativeTotal })
                     : null
             }
         };
