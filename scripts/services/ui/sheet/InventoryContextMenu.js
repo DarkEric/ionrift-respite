@@ -43,6 +43,22 @@ export function registerInventoryContextMenu() {
 
         if (!ItemClassifier.participatesInSustenance(actor)) return;
 
+        const butcherYields = item.flags?.[MODULE_ID]?.butcher?.yields;
+        if (Array.isArray(butcherYields) && butcherYields.length) {
+            menuItems.push({
+                name: localize("IONRIFT.RESPITE.SHEET.Butcher"),
+                icon: `<i class="fas fa-knife-kitchen respite-context-icon"></i>`,
+                group: "action",
+                condition: () => (item.system?.quantity ?? 0) > 0,
+                callback: async () => {
+                    const { butcherInventoryItem } = await import(
+                        "../../inventory/ButcherService.js"
+                    );
+                    await butcherInventoryItem(actor, item);
+                }
+            });
+        }
+
         const isEdible = ItemClassifier.isFood(item, actor);
         const isDrinkable = ItemClassifier.isWater(item, actor);
         if (!isEdible && !isDrinkable) return;

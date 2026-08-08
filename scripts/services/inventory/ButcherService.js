@@ -15,6 +15,8 @@ export async function butcherInventoryItem(actor, item) {
   const qty = Number(item.system?.quantity ?? 0);
   if (qty < 1) return { ok: false };
 
+  const fungusName = item.name;
+
   const rolled = await rollButcherYields(yields);
   if (!rolled.length) {
     ui.notifications?.warn(localize("IONRIFT.RESPITE.SHEET.ButcherEmptyRoll"));
@@ -33,9 +35,14 @@ export async function butcherInventoryItem(actor, item) {
     let data = await loadOverlayItemDataByRef(row.itemRef);
     if (!data?.name) data = await resolveProvisionPoolEntry({ itemRef: row.itemRef });
     if (!data?.name) {
-      ui.notifications?.error(format("IONRIFT.RESPITE.SHEET.ButcherMissingTemplate", {
+      const missingMsg = format("IONRIFT.RESPITE.SHEET.ButcherMissingTemplate", {
         ref: row.itemRef
-      }));
+      });
+      ui.notifications?.error(missingMsg);
+      await ChatMessage.create({
+        content: `<div class="respite-recovery-chat"><p><i class="fas fa-knife-kitchen"></i> ${missingMsg}</p></div>`,
+        speaker: ChatMessage.getSpeaker({ actor })
+      });
       return { ok: false };
     }
     grants.push({
@@ -60,7 +67,7 @@ export async function butcherInventoryItem(actor, item) {
     content: `<div class="respite-recovery-chat"><p><i class="fas fa-knife-kitchen"></i> ${
       format("IONRIFT.RESPITE.SHEET.ButcherChat", {
         actor: actor.name,
-        fungus: item.name,
+        fungus: fungusName,
         summary
       })
     }</p></div>`,
