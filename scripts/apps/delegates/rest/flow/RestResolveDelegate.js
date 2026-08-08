@@ -590,10 +590,10 @@ export class RestResolveDelegate {
                     lines.push(`<p><i class="fas fa-arrow-right" style="color:#f9d77e;"></i> <span style="color:#f9d77e;">Failed CON save DC ${recovery.exhaustionDC} (+1 exhaustion, offset by rest recovery -1)</span></p>`);
                 }
                 if (recovery.comfortLevel === "hostile") {
-                    lines.push(`<p style="font-size:0.85em;color:#f9d77e;"><i class="fas fa-skull"></i> Hostile conditions prevent natural exhaustion recovery</p>`);
+                    lines.push(`<p style="font-size:0.85em;color:#f9d77e;"><i class="fas fa-skull"></i> ${localize("IONRIFT.RESPITE.RESOLVE.HostileBlocksRecovery")}</p>`);
                 }
                 if (recovery.noFoodOrWater) {
-                    lines.push(`<p style="font-size:0.85em;color:#f9d77e;"><i class="fas fa-tint-slash"></i> Lack of food or water prevents exhaustion recovery</p>`);
+                    lines.push(`<p style="font-size:0.85em;color:#f9d77e;"><i class="fas fa-tint-slash"></i> ${localize("IONRIFT.RESPITE.RESOLVE.FoodBlocksExhaustion")}</p>`);
                 }
                 // Surface gear contributions so the player sees their inventory mattered
                 if (recovery.gearDescriptors?.length) {
@@ -832,20 +832,20 @@ export class RestResolveDelegate {
 
         const classifyActivity = (result) => {
             switch (result) {
-                case "exceptional": return { valence: "positive", label: "Exceptional", icon: "fas fa-star" };
-                case "success": return { valence: "positive", label: "Success", icon: "fas fa-check" };
+                case "exceptional": return { valence: "positive", label: localize("IONRIFT.RESPITE.RESOLVE.VerdictExceptional"), icon: "fas fa-star" };
+                case "success": return { valence: "positive", label: localize("IONRIFT.RESPITE.RESOLVE.VerdictSuccess"), icon: "fas fa-check" };
                 case "failure":
-                case "failure_complication": return { valence: "negative", label: "Failed", icon: "fas fa-times" };
+                case "failure_complication": return { valence: "negative", label: localize("IONRIFT.RESPITE.RESOLVE.VerdictFailed"), icon: "fas fa-times" };
                 default: return { valence: "neutral", label: null, icon: "fas fa-circle" };
             }
         };
         const classifyEvent = (resolvedOutcome) => {
             switch (resolvedOutcome) {
-                case "triumph": return { valence: "positive", label: "Triumph", icon: "fas fa-star" };
-                case "success": return { valence: "positive", label: "Passed", icon: "fas fa-check" };
-                case "partial": return { valence: "partial", label: "Partial", icon: "fas fa-exclamation-triangle" };
+                case "triumph": return { valence: "positive", label: localize("IONRIFT.RESPITE.RESOLVE.VerdictTriumph"), icon: "fas fa-star" };
+                case "success": return { valence: "positive", label: localize("IONRIFT.RESPITE.RESOLVE.VerdictPassed"), icon: "fas fa-check" };
+                case "partial": return { valence: "partial", label: localize("IONRIFT.RESPITE.RESOLVE.VerdictPartial"), icon: "fas fa-exclamation-triangle" };
                 case "failure":
-                case "failure_complication": return { valence: "negative", label: "Failed", icon: "fas fa-times" };
+                case "failure_complication": return { valence: "negative", label: localize("IONRIFT.RESPITE.RESOLVE.VerdictFailed"), icon: "fas fa-times" };
                 default: return { valence: "neutral", label: null, icon: "fas fa-moon" };
             }
         };
@@ -966,7 +966,12 @@ export class RestResolveDelegate {
                 hdAtMax = totalHdSpent <= 0;
             }
 
-            const exhaustionConditionLabel = recovery.comfortLevel === "hostile" ? "Hostile" : "Rough";
+            const exhaustionConditionLabel = recovery.comfortLevel === "hostile"
+                ? localize("IONRIFT.RESPITE.COMFORT.LABEL.hostile")
+                : localize("IONRIFT.RESPITE.COMFORT.LABEL.rough");
+            const comfortLabel = recovery.comfortLevel
+                ? localize(`IONRIFT.RESPITE.COMFORT.LABEL.${recovery.comfortLevel}`)
+                : null;
 
             const mealExhaustion = recovery.mealExhaustion ?? 0;
 
@@ -979,6 +984,7 @@ export class RestResolveDelegate {
                 characterId: o.characterId,
                 characterName: o.characterName,
                 comfortLevel: recovery.comfortLevel ?? null,
+                comfortLabel,
                 eventDisrupted: !!o.eventDisrupted,
                 gearDescriptors: recovery.gearDescriptors ?? [],
                 neutrals,

@@ -3471,7 +3471,7 @@
     <div class="respite-outcome-card">
         <div class="outcome-header">
             <strong>{{characterName}}</strong>
-            {{#if comfortLevel}}<span class="comfort-indicator {{comfortLevel}}" data-tooltip="{{comfortHint comfortLevel}}">{{comfortLevel}}</span>{{/if}}
+            {{#if comfortLevel}}<span class="comfort-indicator {{comfortLevel}}" data-tooltip="{{comfortHint comfortLevel}}">{{#if comfortLabel}}{{comfortLabel}}{{else}}{{comfortLevel}}{{/if}}</span>{{/if}}
         </div>
         {{#if neutrals.length}}
         <div class="outcome-neutral">
@@ -3485,45 +3485,45 @@
         {{/if}}
         {{#if hasRecovered}}
         <div class="outcome-group outcome-group--recovered">
-            <div class="outcome-group-header"><i class="fas fa-leaf"></i> Recovered</div>
+            <div class="outcome-group-header"><i class="fas fa-leaf"></i> {{localize 'IONRIFT.RESPITE.RESOLVE.Recovered'}}</div>
             {{#if hasGain}}
             <div class="outcome-effect-line outcome-gain{{#unless hpAtMax}}{{#unless hdAtMax}} outcome-partial{{/unless}}{{/unless}}">
                 <i class="fas fa-heart"></i>
-                {{#if hpAtMax}}Max HP{{else}}<span class="recovery-partial">+{{hpRestored}} HP</span>{{/if}}, {{#if hdAtMax}}Max HD{{else}}<span class="recovery-partial">+{{hdRestored}} HD</span>{{/if}}{{#if gearBonusBedroll}} <span class="gear-annotation">(+1 bedroll)</span>{{/if}}
+                {{#if hpAtMax}}{{localize 'IONRIFT.RESPITE.RESOLVE.MaxHp'}}{{else}}<span class="recovery-partial">{{localize 'IONRIFT.RESPITE.RESOLVE.HpRestored' hp=hpRestored}}</span>{{/if}}, {{#if hdAtMax}}{{localize 'IONRIFT.RESPITE.RESOLVE.MaxHd'}}{{else}}<span class="recovery-partial">{{localize 'IONRIFT.RESPITE.RESOLVE.HdRestored' hd=hdRestored}}</span>{{/if}}{{#if gearBonusBedroll}} <span class="gear-annotation">{{localize 'IONRIFT.RESPITE.RESOLVE.BedrollBonus'}}</span>{{/if}}
             </div>
             {{/if}}
             {{#if exhaustionSavePassed}}
-            <div class="outcome-effect-line outcome-gain"><i class="fas fa-bed"></i> CON save DC {{exhaustionDC}}{{#if exhaustionAdvantage}} <span class="gear-annotation">(mess kit gives advantage)</span>{{/if}} <span class="exhaustion-recovered">Passed (no exhaustion gained)</span></div>
+            <div class="outcome-effect-line outcome-gain"><i class="fas fa-bed"></i> {{localize 'IONRIFT.RESPITE.RESOLVE.ConSaveDc' dc=exhaustionDC}}{{#if exhaustionAdvantage}} <span class="gear-annotation">{{localize 'IONRIFT.RESPITE.RESOLVE.MessKitAdvantage'}}</span>{{/if}} <span class="exhaustion-recovered">{{localize 'IONRIFT.RESPITE.RESOLVE.ConSavePassed'}}</span></div>
             {{/if}}
             {{#each positives}}{{> resolutionSub}}{{/each}}
         </div>
         {{/if}}
         {{#if hasSetback}}
         <div class="outcome-group outcome-group--setback">
-            <div class="outcome-group-header"><i class="fas fa-triangle-exclamation"></i> Setbacks</div>
+            <div class="outcome-group-header"><i class="fas fa-triangle-exclamation"></i> {{localize 'IONRIFT.RESPITE.RESOLVE.Setbacks'}}</div>
             {{#if eventDisrupted}}
-            <div class="outcome-effect-line outcome-loss"><i class="fas fa-exclamation-triangle"></i> Complications during rest</div>
+            <div class="outcome-effect-line outcome-loss"><i class="fas fa-exclamation-triangle"></i> {{localize 'IONRIFT.RESPITE.RESOLVE.ComplicationsDuringRest'}}</div>
             {{/if}}
             {{#each setbacks}}{{> resolutionSub}}{{/each}}
             {{#if exhaustionSaveFailed}}
-            <div class="outcome-effect-line outcome-loss"><i class="fas fa-bed"></i> CON save DC {{exhaustionDC}}{{#if exhaustionAdvantage}} <span class="gear-annotation">(mess kit gives advantage)</span>{{/if}} {{#if (gt exhaustionDelta 0)}}<span class="exhaustion-gained">Failed (+1 Exhaustion)</span>{{else}}<span class="exhaustion-offset">Failed (+1 exhaustion, offset by rest recovery -1)</span>{{/if}}</div>
+            <div class="outcome-effect-line outcome-loss"><i class="fas fa-bed"></i> {{localize 'IONRIFT.RESPITE.RESOLVE.ConSaveDc' dc=exhaustionDC}}{{#if exhaustionAdvantage}} <span class="gear-annotation">{{localize 'IONRIFT.RESPITE.RESOLVE.MessKitAdvantage'}}</span>{{/if}} {{#if (gt exhaustionDelta 0)}}<span class="exhaustion-gained">{{localize 'IONRIFT.RESPITE.RESOLVE.ConSaveFailed'}}</span>{{else}}<span class="exhaustion-offset">{{localize 'IONRIFT.RESPITE.RESOLVE.ConSaveFailedOffset'}}</span>{{/if}}</div>
             {{/if}}
             {{#if hostileBlocksRecovery}}
-            <div class="outcome-effect-line outcome-loss"><i class="fas fa-skull"></i> Hostile conditions block recovery of existing exhaustion</div>
+            <div class="outcome-effect-line outcome-loss"><i class="fas fa-skull"></i> {{localize 'IONRIFT.RESPITE.RESOLVE.HostileBlocksRecovery'}}</div>
             {{/if}}
             {{#if deprivationBlocksRecovery}}
-            <div class="outcome-effect-line outcome-loss"><i class="fas fa-tint-slash"></i> Lack of food or water blocks exhaustion recovery</div>
+            <div class="outcome-effect-line outcome-loss"><i class="fas fa-tint-slash"></i> {{localize 'IONRIFT.RESPITE.RESOLVE.FoodBlocksExhaustion'}}</div>
             {{/if}}
             {{#if mealExhaustion}}
-            <div class="outcome-effect-line outcome-loss"><i class="fas fa-tired"></i> Retained +{{mealExhaustion}} exhaustion from deprivation</div>
+            <div class="outcome-effect-line outcome-loss"><i class="fas fa-tired"></i> {{localize 'IONRIFT.RESPITE.RESOLVE.RetainedDeprivation' levels=mealExhaustion}}</div>
             {{/if}}
             {{#if eventDamage}}
-            <div class="outcome-effect-line outcome-loss"><i class="fas fa-tint"></i> Took {{eventDamage}} damage</div>
+            <div class="outcome-effect-line outcome-loss"><i class="fas fa-tint"></i> {{localize 'IONRIFT.RESPITE.RESOLVE.TookDamage' damage=eventDamage}}</div>
             {{/if}}
         </div>
         {{/if}}
         {{#if exhaustionDC}}
-        <div class="outcome-save-context">{{exhaustionConditionLabel}} rest conditions require a Constitution save to avoid exhaustion.</div>
+        <div class="outcome-save-context">{{localize 'IONRIFT.RESPITE.RESOLVE.ExhaustionSaveContext' comfort=exhaustionConditionLabel}}</div>
         {{/if}}
     </div>
     {{/inline}}
@@ -3567,7 +3567,7 @@
         {{#if recoverySummary.length}}
         <div class="recovery-preview">
             {{#each recoverySummary}}
-            <span class="recovery-chip{{#if eventDamage}} has-damage{{/if}}{{#unless hpAtMax}}{{#unless hdAtMax}} recovery-partial{{/unless}}{{/unless}}">{{name}}: {{#if hpAtMax}}Max HP{{else}}+{{hp}} HP{{/if}}, {{#if hdAtMax}}Max HD{{else}}+{{hd}} HD{{/if}}{{#if gearBonuses.hd}} <span class="gear-annotation">(+1 bedroll)</span>{{/if}}{{#if eventDamage}}, <span class="event-damage">-{{eventDamage}} dmg</span>{{/if}}{{#if exhaustionDC}}{{#if exhaustionDelta}}{{#if (gt exhaustionDelta 0)}}, <span class="exhaustion-gained">+{{exhaustionDelta}} Exhaustion</span>{{else}}, <span class="exhaustion-recovered">exhaustion save: passed{{#if gearBonuses.exhaustionAdvantage}} (advantage){{/if}}</span>{{/if}}{{else}}{{#if (eq exhaustionSaveResult "failed")}}, <span class="exhaustion-gained">exhaustion save: failed (+1, offset by rest -1)</span>{{else}} <span class="gear-annotation">(CON DC {{exhaustionDC}}{{#if gearBonuses.exhaustionAdvantage}}, advantage{{/if}})</span>{{/if}}{{/if}}{{/if}}{{#unless exhaustionDC}}{{#if exhaustionDelta}}{{#if (gt exhaustionDelta 0)}}, <span class="exhaustion-gained">+{{exhaustionDelta}} Exhaustion</span>{{else}}, <span class="exhaustion-recovered">{{exhaustionDelta}} Exhaustion</span>{{/if}}{{/if}}{{/unless}}</span>
+            <span class="recovery-chip{{#if eventDamage}} has-damage{{/if}}{{#unless hpAtMax}}{{#unless hdAtMax}} recovery-partial{{/unless}}{{/unless}}">{{name}}: {{#if hpAtMax}}{{localize 'IONRIFT.RESPITE.RESOLVE.MaxHp'}}{{else}}{{localize 'IONRIFT.RESPITE.RESOLVE.HpRestored' hp=hp}}{{/if}}, {{#if hdAtMax}}{{localize 'IONRIFT.RESPITE.RESOLVE.MaxHd'}}{{else}}{{localize 'IONRIFT.RESPITE.RESOLVE.HdRestored' hd=hd}}{{/if}}{{#if gearBonuses.hd}} <span class="gear-annotation">{{localize 'IONRIFT.RESPITE.RESOLVE.BedrollBonus'}}</span>{{/if}}{{#if eventDamage}}, <span class="event-damage">{{localize 'IONRIFT.RESPITE.RESOLVE.EventDamage' damage=eventDamage}}</span>{{/if}}{{#if exhaustionDC}}{{#if exhaustionDelta}}{{#if (gt exhaustionDelta 0)}}, <span class="exhaustion-gained">{{localize 'IONRIFT.RESPITE.RESOLVE.ExhaustionGained' levels=exhaustionDelta}}</span>{{else}}, <span class="exhaustion-recovered">{{localize 'IONRIFT.RESPITE.RESOLVE.ExhaustionSavePassedChip'}}{{#if gearBonuses.exhaustionAdvantage}} {{localize 'IONRIFT.RESPITE.RESOLVE.AdvantageParen'}}{{/if}}</span>{{/if}}{{else}}{{#if (eq exhaustionSaveResult "failed")}}, <span class="exhaustion-gained">{{localize 'IONRIFT.RESPITE.RESOLVE.ExhaustionSaveFailedOffsetChip'}}</span>{{else}} <span class="gear-annotation">{{#if gearBonuses.exhaustionAdvantage}}{{localize 'IONRIFT.RESPITE.RESOLVE.ConDcAdvantage' dc=exhaustionDC}}{{else}}{{localize 'IONRIFT.RESPITE.RESOLVE.ConDcParen' dc=exhaustionDC}}{{/if}}</span>{{/if}}{{/if}}{{/if}}{{#unless exhaustionDC}}{{#if exhaustionDelta}}{{#if (gt exhaustionDelta 0)}}, <span class="exhaustion-gained">{{localize 'IONRIFT.RESPITE.RESOLVE.ExhaustionGained' levels=exhaustionDelta}}</span>{{else}}, <span class="exhaustion-recovered">{{localize 'IONRIFT.RESPITE.RESOLVE.ExhaustionDelta' levels=exhaustionDelta}}</span>{{/if}}{{/if}}{{/unless}}</span>
             {{/each}}
             {{#each activitySummary}}
             <span class="recovery-chip {{#if (eq result 'failure')}}failure{{/if}}{{#if (eq result 'failure_complication')}}failure{{/if}}">
@@ -3578,7 +3578,7 @@
         </div>
         {{/if}}
         <button type="button" class="btn-primary" data-action="finalize" style="white-space: nowrap;">
-            <i class="fas fa-times"></i> Close
+            <i class="fas fa-times"></i> {{localize 'IONRIFT.RESPITE.UI.Close'}}
         </button>
     </div>
     {{else}}
@@ -3602,7 +3602,7 @@
         {{#if recoverySummary.length}}
         <div class="recovery-preview">
             {{#each recoverySummary}}
-            <span class="recovery-chip{{#if eventDamage}} has-damage{{/if}}">{{name}}: +{{hp}} HP, +{{hd}} HD{{#if gearBonuses.hd}} <span class="gear-annotation">(+1 bedroll)</span>{{/if}}{{#if eventDamage}}, <span class="event-damage">-{{eventDamage}} dmg</span>{{/if}}{{#if exhaustionDC}}{{#if exhaustionDelta}}{{#if (gt exhaustionDelta 0)}}, <span class="exhaustion-gained">+{{exhaustionDelta}} Exhaustion</span>{{else}}, <span class="exhaustion-recovered">exhaustion save: passed{{#if gearBonuses.exhaustionAdvantage}} (advantage){{/if}}</span>{{/if}}{{else}}{{#if (eq exhaustionSaveResult "failed")}}, <span class="exhaustion-gained">exhaustion save: failed (+1, offset by rest -1)</span>{{else}} <span class="gear-annotation">(CON DC {{exhaustionDC}}{{#if gearBonuses.exhaustionAdvantage}}, advantage{{/if}})</span>{{/if}}{{/if}}{{/if}}{{#unless exhaustionDC}}{{#if exhaustionDelta}}{{#if (gt exhaustionDelta 0)}}, <span class="exhaustion-gained">+{{exhaustionDelta}} Exhaustion</span>{{else}}, <span class="exhaustion-recovered">{{exhaustionDelta}} Exhaustion</span>{{/if}}{{/if}}{{/unless}}</span>
+            <span class="recovery-chip{{#if eventDamage}} has-damage{{/if}}">{{name}}: {{localize 'IONRIFT.RESPITE.RESOLVE.HpRestored' hp=hp}}, {{localize 'IONRIFT.RESPITE.RESOLVE.HdRestored' hd=hd}}{{#if gearBonuses.hd}} <span class="gear-annotation">{{localize 'IONRIFT.RESPITE.RESOLVE.BedrollBonus'}}</span>{{/if}}{{#if eventDamage}}, <span class="event-damage">{{localize 'IONRIFT.RESPITE.RESOLVE.EventDamage' damage=eventDamage}}</span>{{/if}}{{#if exhaustionDC}}{{#if exhaustionDelta}}{{#if (gt exhaustionDelta 0)}}, <span class="exhaustion-gained">{{localize 'IONRIFT.RESPITE.RESOLVE.ExhaustionGained' levels=exhaustionDelta}}</span>{{else}}, <span class="exhaustion-recovered">{{localize 'IONRIFT.RESPITE.RESOLVE.ExhaustionSavePassedChip'}}{{#if gearBonuses.exhaustionAdvantage}} {{localize 'IONRIFT.RESPITE.RESOLVE.AdvantageParen'}}{{/if}}</span>{{/if}}{{else}}{{#if (eq exhaustionSaveResult "failed")}}, <span class="exhaustion-gained">{{localize 'IONRIFT.RESPITE.RESOLVE.ExhaustionSaveFailedOffsetChip'}}</span>{{else}} <span class="gear-annotation">{{#if gearBonuses.exhaustionAdvantage}}{{localize 'IONRIFT.RESPITE.RESOLVE.ConDcAdvantage' dc=exhaustionDC}}{{else}}{{localize 'IONRIFT.RESPITE.RESOLVE.ConDcParen' dc=exhaustionDC}}{{/if}}</span>{{/if}}{{/if}}{{/if}}{{#unless exhaustionDC}}{{#if exhaustionDelta}}{{#if (gt exhaustionDelta 0)}}, <span class="exhaustion-gained">{{localize 'IONRIFT.RESPITE.RESOLVE.ExhaustionGained' levels=exhaustionDelta}}</span>{{else}}, <span class="exhaustion-recovered">{{localize 'IONRIFT.RESPITE.RESOLVE.ExhaustionDelta' levels=exhaustionDelta}}</span>{{/if}}{{/if}}{{/unless}}</span>
             {{/each}}
             {{#each activitySummary}}
             <span class="recovery-chip {{#if (eq result 'failure')}}failure{{/if}}{{#if (eq result 'failure_complication')}}failure{{/if}}">
@@ -3716,7 +3716,7 @@
                 {{encounterBar.totalLabel}}
             </span>
             <div class="encounter-bar-tooltip" role="tooltip">
-                Base threshold: {{encounterBar.terrainLabel}} ({{encounterBar.baseDC}}). Roll a d20; meet or beat the final DC for a quiet night. Shelter, fire, defenses, and scouting shift this number.
+                {{localize 'IONRIFT.RESPITE.EVENT.EncounterBarTooltip' terrain=encounterBar.terrainLabel dc=encounterBar.baseDC}}
             </div>
         </span>
         {{#if encounterBar.chips.length}}

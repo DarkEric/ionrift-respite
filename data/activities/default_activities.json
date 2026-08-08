@@ -833,12 +833,14 @@
         "outcomes": {
             "success": {
                 "narrative": "A quiet evening, spent on your own terms.",
+                "narrativeKey": "IONRIFT.RESPITE.DATA.ACTIVITY.act_other.SuccessNarrative",
                 "items": [],
                 "effects": []
             }
         },
         "combatModifiers": {
-            "description": "Normal readiness. Present and aware."
+            "description": "Normal readiness. Present and aware.",
+            "descriptionKey": "IONRIFT.RESPITE.DATA.ACTIVITY.act_other.CombatModifiers"
         },
         "category": "active",
         "nameKey": "IONRIFT.RESPITE.DATA.ACTIVITY.act_other.Name",
