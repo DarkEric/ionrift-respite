@@ -79,3 +79,6 @@ ionrift-respite.lock
 # Internal brand/workspace content - must never be committed to public module repos
 ionrift-brand/
 
+
+packs/.ci-build/
+
