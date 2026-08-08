@@ -3729,13 +3729,13 @@
         </span>
         {{/if}}
         <span class="encounter-gm-adj">
-            <button type="button" class="encounter-adj-btn" data-action="encounterAdjDown" data-tooltip="Reduce DC">−</button>
-            <button type="button" class="encounter-adj-btn" data-action="encounterAdjUp" data-tooltip="Increase DC">+</button>
+            <button type="button" class="encounter-adj-btn" data-action="encounterAdjDown" data-tooltip="{{localize 'IONRIFT.RESPITE.EVENT.ReduceDc'}}">−</button>
+            <button type="button" class="encounter-adj-btn" data-action="encounterAdjUp" data-tooltip="{{localize 'IONRIFT.RESPITE.EVENT.IncreaseDc'}}">+</button>
         </span>
         {{else}}
         <span class="encounter-bar-label-wrap">
-            <span class="encounter-bar-label" data-tooltip="Exposure factors for tonight. The GM runs the night check; exact numbers stay on their screen.">
-                <i class="fas fa-moon"></i> Camp exposure
+            <span class="encounter-bar-label" data-tooltip="{{localize 'IONRIFT.RESPITE.EVENT.CampExposureTooltip'}}">
+                <i class="fas fa-moon"></i> {{localize 'IONRIFT.RESPITE.EVENT.CampExposure'}}
             </span>
         </span>
         {{#if encounterBar.playerFactors.length}}
