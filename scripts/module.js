@@ -258,27 +258,26 @@ Hooks.once("init", async () => {
     Handlebars.registerHelper("join", (arr, sep) => Array.isArray(arr) ? arr.join(sep) : "");
     Handlebars.registerHelper("upper", (str) => typeof str === "string" ? str.toUpperCase() : str);
     Handlebars.registerHelper("humanDuration", (d) => {
-        const map = { next_rest: "until next rest", end_of_rest: "end of rest", "1_hour": "1 hour", "8_hours": "8 hours", permanent: "permanent" };
-        return typeof d === "string" ? (map[d] ?? d.replace(/_/g, " ")) : d;
+        if (typeof d !== "string") return d;
+        const key = `IONRIFT.RESPITE.DURATION.${d}`;
+        const out = localize(key);
+        return out === key ? d.replace(/_/g, " ") : out;
     });
     // Shared comfort-tier explanation. Used as a tooltip wherever a comfort badge
     // renders, so the mechanical meaning travels with the label.
     Handlebars.registerHelper("comfortHint", (tier) => {
-        const map = {
-            safe: "Safe: full HP and Hit Dice back. No risk of a night event.",
-            sheltered: "Sheltered: full HP and Hit Dice back. A normal night.",
-            rough: "Rough: full HP, 1 fewer Hit Die back. CON save DC 10 or +1 exhaustion.",
-            hostile: "Hostile: regain 75% of max HP from the rest, 2 fewer Hit Dice back. Existing exhaustion sticks. CON save DC 15 or +1 exhaustion."
-        };
-        return map[typeof tier === "string" ? tier.toLowerCase() : tier] ?? "Rest comfort affects HP and Hit Dice recovery.";
+        const key = typeof tier === "string"
+            ? `IONRIFT.RESPITE.COMFORT.TIP.${tier.toLowerCase()}`
+            : null;
+        if (!key) return localize("IONRIFT.RESPITE.COMFORT.TIP.Fallback");
+        const out = localize(key);
+        return out === key ? localize("IONRIFT.RESPITE.COMFORT.TIP.Fallback") : out;
     });
     Handlebars.registerHelper("fireTierPlain", (id) => {
-        const map = {
-            embers: "No cooking. No comfort change.",
-            campfire: "Cooking and warmth. Easier for enemies to spot (higher encounter chance).",
-            bonfire: "+1 camp comfort. Visible from far off; enemies spot the camp easily."
-        };
-        return map[typeof id === "string" ? id : ""] ?? "";
+        if (typeof id !== "string" || !id) return "";
+        const key = `IONRIFT.RESPITE.FIRE.PLAIN.${id}`;
+        const out = localize(key);
+        return out === key ? "" : out;
     });
 
     // Register partials

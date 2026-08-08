@@ -1,5 +1,5 @@
 import { isGearDeployed } from "../services/camp/props/CompoundCampPlacer.js";
-import { localize, format } from "../utils/I18n.js";
+import { localize, format, localizeData } from "../utils/I18n.js";
 import { HD_PENALTY, boostComfort, isComfortEnabled, getComfortDcMod, COMFORT_RANK, RANK_TO_KEY } from "../services/camp/gear/ComfortCalculator.js";
 import { isSimpleStationsMode } from "../services/rest/flow/RestProfileSettings.js";
 import { getFletchingYieldHint, isFletchingEnabled } from "../services/crafting/settings/FletchingSettings.js";
@@ -631,7 +631,7 @@ export function buildFollowUpDataForActivity(activityId, activity, actor, curren
     const fu = activity.followUp;
     const result = {
         type: fu.type,
-        label: fu.label,
+        label: localizeData(fu.labelKey, fu.label ?? ""),
         currentValue
     };
 
@@ -655,18 +655,33 @@ export function buildFollowUpDataForActivity(activityId, activity, actor, curren
 
         if (activityId === "act_scribe") {
             const currentGold = actor?.system?.currency?.gp ?? 0;
-            result.goldInfo = `${actor?.name ?? "Character"} has ${currentGold}gp`;
+            result.goldInfo = format("IONRIFT.RESPITE.FOLLOWUP.GoldInfo", {
+                name: actor?.name ?? localize("IONRIFT.RESPITE.FOLLOWUP.CharacterFallback"),
+                gold: currentGold
+            });
             result.options = (fu.options ?? []).map(opt => {
-                const cost = parseInt(opt.value, 10) * 50;
+                const level = parseInt(opt.value, 10) || 1;
+                const cost = level * 50;
+                const dc = 10 + level;
+                const baseLabel = localizeData(
+                    opt.labelKey,
+                    format("IONRIFT.RESPITE.FOLLOWUP.SpellLevelOption", { level, cost, dc })
+                );
                 return {
                     ...opt,
-                    label: currentGold >= cost ? opt.label : `${opt.label} (can't afford)`,
+                    label: currentGold >= cost
+                        ? baseLabel
+                        : format("IONRIFT.RESPITE.FOLLOWUP.CantAfford", { label: baseLabel }),
                     isSelected: opt.value === selectedVal,
                     isDisabled: currentGold < cost
                 };
             });
         } else {
-            result.options = (fu.options ?? []).map(opt => ({ ...opt, isSelected: opt.value === selectedVal }));
+            result.options = (fu.options ?? []).map(opt => ({
+                ...opt,
+                label: localizeData(opt.labelKey, opt.label ?? ""),
+                isSelected: opt.value === selectedVal
+            }));
         }
 
         if (result.options?.length && !result.options.some(o => o.isSelected)) {
@@ -726,7 +741,7 @@ export function buildCheckLabelForActivity(activity, actor, comfort = "sheltered
             const alt = rcAdapter ? rcAdapter.getSkillTotal(actor, rcAdapter.normalizeSkillKey(activity.check.altSkill)) : (actor.system?.skills?.[activity.check.altSkill]?.total ?? 0);
             if (alt > primary) chosenSkill = activity.check.altSkill;
         }
-        checkKind = chosenSkill.charAt(0).toUpperCase() + chosenSkill.slice(1);
+        checkKind = SKILL_NAMES[chosenSkill] ?? chosenSkill;
     } else if (activity.check.ability) {
         let abilityKey = activity.check.ability;
         if (abilityKey === "best" && actor) {
@@ -738,14 +753,21 @@ export function buildCheckLabelForActivity(activity, actor, comfort = "sheltered
             }
             abilityKey = bestKey;
         }
-        checkKind = abilityKey.toUpperCase();
+        checkKind = localize(`IONRIFT.RESPITE.ABILITY.${abilityKey}`) === `IONRIFT.RESPITE.ABILITY.${abilityKey}`
+            ? abilityKey.toUpperCase()
+            : localize(`IONRIFT.RESPITE.ABILITY.${abilityKey}`);
     }
 
     if (activity.check.dynamicDc === "copySpell") {
-        return `${checkKind} check, DC ${baseDc}`;
+        return format("IONRIFT.RESPITE.CHECK.Simple", { kind: checkKind, dc: baseDc });
     }
     if (comfortMod > 0) {
-        return `${checkKind} check, DC ${baseDc + comfortMod} (${baseDc} base +${comfortMod} terrain)`;
+        return format("IONRIFT.RESPITE.CHECK.WithTerrain", {
+            kind: checkKind,
+            dc: baseDc + comfortMod,
+            base: baseDc,
+            mod: comfortMod
+        });
     }
-    return `${checkKind} check, DC ${baseDc}`;
+    return format("IONRIFT.RESPITE.CHECK.Simple", { kind: checkKind, dc: baseDc + comfortMod });
 }

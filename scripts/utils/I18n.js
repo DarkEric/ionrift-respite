@@ -48,6 +48,12 @@ export function localizeActivityRecord(activity) {
   if (activity?.combatModifiers) {
     applyDataKeys(activity.combatModifiers, { description: "descriptionKey" });
   }
+  if (activity?.followUp) {
+    applyDataKeys(activity.followUp, { label: "labelKey" });
+    for (const opt of (activity.followUp.options ?? [])) {
+      applyDataKeys(opt, { label: "labelKey" });
+    }
+  }
   const outcomes = activity?.outcomes;
   if (outcomes && typeof outcomes === "object") {
     for (const tier of Object.values(outcomes)) {

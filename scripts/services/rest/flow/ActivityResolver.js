@@ -8,7 +8,7 @@ import {
 import { getTrainingXpValues, getTrainingXpReduction, isTrainingEnabled } from "../../crafting/settings/TrainingSettings.js";
 import { isProfessionActivityEnabled, isChefTreatCookingOnly } from "../../travel/settings/TravelSettings.js";
 import { hasChefFeat } from "../../meal/buffs/ChefFeat.js";
-import { localizeActivityRecord } from "../../../utils/I18n.js";
+import { localizeActivityRecord, localize, format } from "../../../utils/I18n.js";
 
 /** Activities hidden when the GM marks a safe rest spot (no encounter risk; no redundant camp duties). */
 export const SAFE_REST_SPOT_EXCLUDED_ACTIVITY_IDS = new Set([
@@ -859,14 +859,14 @@ export class ActivityResolver {
                     if (!fireIsBurning) {
                         faded.push({
                             ...activity,
-                            fadedHint: "Requires a lit fire."
+                            fadedHint: localize("IONRIFT.RESPITE.ACTIVITY.RequiresLitFire")
                         });
                         continue;
                     }
                     if (!fireAllowsCooking) {
                         faded.push({
                             ...activity,
-                            fadedHint: "Raise the fire to campfire or bonfire to cook."
+                            fadedHint: localize("IONRIFT.RESPITE.ACTIVITY.RaiseFireToCook")
                         });
                         continue;
                     }

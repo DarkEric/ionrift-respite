@@ -931,8 +931,10 @@ export class RestResolveDelegate {
                 } else {
                     const act = sub.activityId ? activityResolver?.activities?.get(sub.activityId) : null;
                     const cls = classifyActivity(sub.result);
+                    const tierNarrative = act?.outcomes?.[sub.result]?.narrative;
                     const enriched = {
                         ...sub,
+                        narrative: tierNarrative || sub.narrative,
                         displayName: act?.name ?? sub.activityId ?? "Activity",
                         verdictLabel: cls.label,
                         verdictIcon: cls.icon,

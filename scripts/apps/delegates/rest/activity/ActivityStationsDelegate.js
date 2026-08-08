@@ -960,7 +960,7 @@ export class ActivityStationsDelegate {
                 ?? app._gmFollowUps?.get(selectedCharacter.id) ?? null;
             followUpData = {
                 type: tile.followUp.type,
-                label: tile.followUp.label,
+                label: localizeData(tile.followUp.labelKey, tile.followUp.label ?? ""),
                 currentValue
             };
 
@@ -982,14 +982,25 @@ export class ActivityStationsDelegate {
                 if (tile.id === "act_scribe") {
                     const actor = game.actors.get(selectedCharacter.id);
                     const currentGold = actor?.system?.currency?.gp ?? 0;
-                    followUpData.goldInfo = `${actor?.name ?? "Character"} has ${currentGold}gp`;
+                    followUpData.goldInfo = format("IONRIFT.RESPITE.FOLLOWUP.GoldInfo", {
+                        name: actor?.name ?? localize("IONRIFT.RESPITE.FOLLOWUP.CharacterFallback"),
+                        gold: currentGold
+                    });
 
                     followUpData.options = tile.followUp.options.map(opt => {
-                        const cost = parseInt(opt.value, 10) * 50;
+                        const level = parseInt(opt.value, 10) || 1;
+                        const cost = level * 50;
+                        const dc = 10 + level;
+                        const baseLabel = localizeData(
+                            opt.labelKey,
+                            format("IONRIFT.RESPITE.FOLLOWUP.SpellLevelOption", { level, cost, dc })
+                        );
                         const canAfford = currentGold >= cost;
                         return {
                             ...opt,
-                            label: canAfford ? opt.label : `${opt.label} (can't afford)`,
+                            label: canAfford
+                                ? baseLabel
+                                : format("IONRIFT.RESPITE.FOLLOWUP.CantAfford", { label: baseLabel }),
                             isSelected: opt.value === selectedVal,
                             isDisabled: !canAfford
                         };
@@ -997,6 +1008,7 @@ export class ActivityStationsDelegate {
                 } else {
                     followUpData.options = tile.followUp.options.map(opt => ({
                         ...opt,
+                        label: localizeData(opt.labelKey, opt.label ?? ""),
                         isSelected: opt.value === selectedVal
                     }));
                 }
